@@ -1,2 +1,2 @@
-patent-front-end/node-modules
-patent-backend/node-modules
+/patent-backend/node_modules/*
+/patent-front-end/node-modules/*
