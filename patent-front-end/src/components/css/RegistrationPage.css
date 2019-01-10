@@ -1,3 +1,19 @@
-.register-btn {
-  margin-left:40%;
+.registration-div {
+  align-self: center;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  border: 1px lightgray solid;
+  border-radius: 2%;
+  padding: 2%;
+}
+
+.registration-btn {
+  align-self: center;
+  width: fit-content;
+}
+
+.main-content-container-div {
+  display: flex;
+  flex-direction: column;
 }

@@ -1,24 +1,52 @@
 import React, { Component } from "react";
+import { TextField, Divider } from "react-md";
 import "./css/RegistrationPage.css";
+
 class Registration extends Component {
   // state = {  }
   render() {
     return (
-      <div>
-        <h3>Register</h3>
-        <hr />
-        <form className="form form-group registrationForm">
-          <p className="m-2">Enter Name</p>
-          <input type="text" className="form-control" />
-          <p className="m-2">Enter E-mail address </p>
-          <input type="text" className="form-control" />
-          <p className="m-2">Enter Mobile</p>
-          <input type="text" className="form-control" />
-          <p className="m-2">Enter Username</p>
-          <input type="text" className="form-control" />
-        </form>
-        <button className="btn btn-primary register-btn">Register</button>
+      <div className="main-content-container-div">
+  <div className="registration-div md-grid">
+        <h3>Registration</h3>
+        <Divider style={{ background: "black" }} />
+        <TextField
+          id="placeholder-only-title"
+          inputStyle={{ border: "0", width: "100%" }}
+          type="text"
+          className="md-cell md-cell--bottom"
+          style={{ padding: "0px" }}
+          placeholder="Enter Name"
+        />
+        <TextField
+          id="placeholder-only-title"
+          inputStyle={{ border: "0", width: "100%" }}
+          type="email"
+          className="md-cell md-cell--bottom"
+          style={{ padding: "0px" }}
+          placeholder="Enter Email Address"
+        />
+        <TextField
+          id="placeholder-only-title"
+          inputStyle={{ border: "0", width: "100%" }}
+          type="text"
+          className="md-cell md-cell--bottom"
+          style={{ padding: "0px" }}
+          placeholder="Enter Mobile"
+        />
+        <TextField
+          id="placeholder-only-title"
+          inputStyle={{ border: "0", width: "100%" }}
+          type="text"
+          className="md-cell md-cell--bottom"
+          style={{ padding: "0px" }}
+          placeholder="Enter Username"
+        />
+
+        <button className="btn btn-primary registration-btn">Register</button>
       </div>
+        </div>
+    
     );
   }
 }

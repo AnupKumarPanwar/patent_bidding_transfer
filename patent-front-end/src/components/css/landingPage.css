@@ -1,0 +1,32 @@
+.landing-home {
+}
+
+.introduction {
+  display: flex;
+  height: 100vh;
+  width: 90%;
+  padding: 1%;
+}
+
+.introduction-para {
+  margin-top: 5%;
+  background: pink;
+}
+
+.login-div {
+  margin-top: 5%;
+  width: 100%;
+}
+
+.features {
+  height: 100vh;
+  background: yellow;
+}
+
+.introduction-div {
+  padding: 5%;
+}
+
+.haha {
+  background: pink;
+}
