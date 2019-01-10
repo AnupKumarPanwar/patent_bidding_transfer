@@ -1,15 +1,23 @@
 import React, { Component } from "react";
 import "./App.css";
-import Login from "./components/loginPage";
+import "bootstrap/dist/css/bootstrap.css";
+import { BrowserRouter, Route } from "react-router-dom";
+import Registration from "./components/registrationPage";
+
+import LandingPage from "./components/landingPage";
+import MainContent from "./components/mainContent";
+import Navbar from "./components/navbar";
 
 class App extends Component {
   render() {
     return (
-      <div className='App' >
-        <div className='login-box' >
-          <Login />
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <Route path={"/home"} component={LandingPage} />
+          <Route path={"/register"} component={Registration} />         
         </div>
-      </div>
+      </BrowserRouter>
     );
   }
 }
