@@ -7,6 +7,8 @@
     "bootstrap": "^4.1.1",
     "material-icons": "^0.3.0",
     "material-icons-react": "^1.0.4",
+    "node-pre-gyp": "^0.12.0",
+    "query-string": "^6.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-icons": "^3.3.0",

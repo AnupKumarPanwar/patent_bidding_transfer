@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./css/landingPage.css";
-import Registration from "./registrationPage";
+import Login from "./loginPage";
 
 class LandingPage extends Component {
   state = {};
@@ -19,7 +19,7 @@ class LandingPage extends Component {
           </div>
 
           <div className="login-div col-sm-6">
-            <Registration className="haha" />
+            <Login className="haha" />
           </div>
         </div>
 

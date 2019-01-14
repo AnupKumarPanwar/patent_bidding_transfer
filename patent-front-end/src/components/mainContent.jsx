@@ -10,9 +10,7 @@ class MainContent extends Component {
   state = {};
   render() {
     return (
-      <BrowserRouter>
-        
-      </BrowserRouter>
+      <React.Fragment></React.Fragment>
     );
   }
 }
