@@ -47,6 +47,7 @@ class Registration extends Component {
             onChange={this.handleInputChange}
             required={true}
           />
+          
           <TextField
             id="email"
             inputStyle={{ border: "0", width: "100%" }}
@@ -90,6 +91,7 @@ class Registration extends Component {
             value={this.state.password}
             onChange={this.handleInputChange}
             required={true}
+
           />
 
           <button onClick={this.registerUser} className="btn btn-primary registration-btn">Register</button>
