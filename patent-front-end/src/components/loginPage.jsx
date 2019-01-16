@@ -1,31 +1,92 @@
 import React, { Component } from "react";
-import "./css/loginCss.css";
+import axios from "axios";
+import controller from "../controller";
+import "./css/loginCss.scss";
+
+import { TextField, Button, Divider } from 'react-md';
+import { MdRemoveRedEye } from 'react-icons/md';
+
 class Login extends Component {
-  state = {};
+  state = {
+    username: '',
+    password: '',
+    modal_visible: false  
+  };
+
+  handleInputChange = (value, event) => {
+    this.setState({
+      [event.target.id]: value
+    })
+  }
+
+  verifyUser = () => {
+
+    console.log("starting the verify post");
+    const data = this.state;
+    const props = this.props;
+    axios.post(controller.login, { data }).then((res) => {
+      // console.log(res.data.message);
+      if (res.data.message) {
+        props.changeAuth(true);
+        props.routes.push("/dashboard");
+      } else {
+
+      }
+
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   render() {
     return (
-      <div className='form-container'>
-        <strong align='center'>
-          <h2>Login</h2>
-        </strong>
-        <form className='form-wrapper'>
-          <strong className='m-2'>UserId</strong>
-          <input type='text' className='form-control' placeholder='Userid' />
-          <strong className='m-2'>Password</strong>
-          <input
-            type='password'
-            className='form-control'
-            placeholder='password'
+      <div className="div-login container">
+        <h3>Login</h3>
+        <Divider />
+        <div className=" md-grid">
+          <TextField
+            id="username"
+            type="text"
+            className="md-cell md-cell--12"
+            placeholder="Username"
+            value={this.state.username}
+            onChange={this.handleInputChange}
           />
-        </form>
-        <br />
-        <div className='login-button'>
-          <button className='btn btn-primary btn-block '>Login</button>
+          <TextField
+            id="password"
+            type="password"
+            className="md-cell md-cell--12"
+            placeholder="Password"
+            value={this.state.password}
+            onChange={this.handleInputChange}
+            passwordIcon={<MdRemoveRedEye />}
+          />
 
-          {/* <button className='btn btn-primary m-2'>Register</button> */}
+          <div className="login-button">
+            <Button
+              raised
+              primary
+              onClick={this.verifyUser}
+              className="md-cell md-cell--6"
+            >
+
+              Login
+            </Button>
+
+            <Button
+              raised
+              primary
+              onClick={this.verifyUser}
+              className="md-cell md-cell--6"
+            >
+
+              Register
+            </Button>
+          </div>
+
+
         </div>
-      </div>
+      </div >
     );
   }
 }

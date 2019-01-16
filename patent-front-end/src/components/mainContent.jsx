@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 
-import "./css/MainContent.css";
+import "./css/MainContent.scss";
 
 import Registration from "./registrationPage";
 import LandingPage from "./landingPage";

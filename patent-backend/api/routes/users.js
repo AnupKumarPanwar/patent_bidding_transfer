@@ -61,10 +61,10 @@ router.post('/login', function (req, res, next) {
                 bcrypt.compare(user.password, res_user.password, (err, result) => {
                     console.log("RESULT : " + result);
                     if (result) {
-                        message = "VALID";
+                        message = true;
 
                     } else {
-                        message = "INVALID";
+                        message = false;
                     }
 
                     res.status(200).json({
