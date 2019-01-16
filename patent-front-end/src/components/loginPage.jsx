@@ -3,15 +3,31 @@ import axios from "axios";
 import controller from "../controller";
 import "./css/loginCss.scss";
 
-import { TextField, Button, Divider } from 'react-md';
+import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
 
 class Login extends Component {
   state = {
     username: '',
     password: '',
-    modal_visible: false  
+    modal_visible: false,
+    toasts: [], 
+    autohide: true 
   };
+
+  addToast = (text, action, autohide = true) => {
+    this.setState((state) => {
+      const toasts = state.toasts.slice();
+      toasts.push({ text, action });
+      return { toasts, autohide };
+    });
+  };
+
+  dismissToast = () => {
+    const [, ...toasts] = this.state.toasts;
+    this.setState({ toasts });
+  };
+
 
   handleInputChange = (value, event) => {
     this.setState({
@@ -27,10 +43,11 @@ class Login extends Component {
     axios.post(controller.login, { data }).then((res) => {
       // console.log(res.data.message);
       if (res.data.message) {
+        this.addToast('Incorrect username/password');
         props.changeAuth(true);
         props.routes.push("/dashboard");
       } else {
-
+        this.addToast('Incorrect username/password');
       }
 
     }).catch((err) => {
@@ -86,6 +103,12 @@ class Login extends Component {
 
 
         </div>
+        <Snackbar
+          id="example-snackbar"
+          toasts={this.state.toasts}
+          autohide={true}
+          onDismiss={this.dismissToast}
+        />
       </div >
     );
   }
