@@ -5,12 +5,13 @@ import "./css/loginCss.scss";
 
 import { TextField, Button, Divider } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
+import DashBoard from './dashboard';
 
 class Login extends Component {
   state = {
     username: '',
     password: '',
-    modal_visible: false  
+    modal_visible: false
   };
 
   handleInputChange = (value, event) => {
@@ -30,7 +31,7 @@ class Login extends Component {
         props.changeAuth(true);
         props.routes.push("/dashboard");
       } else {
-
+        props.changeAuth(false);
       }
 
     }).catch((err) => {
@@ -39,6 +40,7 @@ class Login extends Component {
   }
 
   render() {
+
     return (
       <div className="div-login container">
         <h3>Login</h3>
