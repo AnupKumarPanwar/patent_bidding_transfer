@@ -7,7 +7,7 @@ import { Card, CardTitle } from "react-md";
 const FilePatent = () => (
 
     <Card className="md-cell md-cell--12 md-text-container">
-        <CardTitle>FilePatent</CardTitle>
+        <CardTitle>File Patent</CardTitle>
     </Card>
 
 );

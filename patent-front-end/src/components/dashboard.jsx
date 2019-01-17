@@ -8,7 +8,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 import PatentBid from "./patentBid";
 import TransferPatent from "./transferpatent";
 import AuctionPage from "./auctionPage";
-import FilePatent from './filepatent';
+import HomePatent from './homePatent';
 import NavLinkItem from "./navItemLink";
 import { PropTypes } from 'prop-types';
 
@@ -97,7 +97,7 @@ class DashBoard extends Component {
 
                         <Switch>
 
-                            <Route path={navItems[0].to} exact component={FilePatent} />
+                            <Route path={navItems[0].to} exact component={HomePatent} />
                             <Route path={navItems[1].to} component={PatentBid} />
                             <Route path={navItems[2].to} component={TransferPatent} />
                             <Route path={navItems[3].to} component={AuctionPage} />
