@@ -47,7 +47,7 @@ class Login extends Component {
     axios.post(controller.login, { data }).then((res) => {
       // console.log(res.data.message);
       if (res.data.message) {
-        this.addToast('Incorrect username/password');
+        // this.addToast('Incorrect username/password');
         props.changeAuth(true);
         props.routes.push("/dashboard");
       } else {

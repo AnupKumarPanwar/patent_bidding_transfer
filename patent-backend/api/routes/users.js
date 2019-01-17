@@ -73,6 +73,13 @@ router.post('/login', function (req, res, next) {
 
                 })
             }
+            else {
+                message = false;
+                
+                res.status(200).json({
+                    "message": message
+                })
+            }
         })
         .catch(
             err => {
