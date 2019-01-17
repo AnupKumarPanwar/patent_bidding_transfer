@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import "./css/landingPage.css";
-import Registration from "./registrationPage";
+import "./css/landingPage.scss";
+import Login from "./loginPage";
 
 class LandingPage extends Component {
-  state = {};
+  // state = {};
   render() {
     return (
       <div className="landing-home">
-        <div id="introducton" className="row introduction">
-          <div className="introduction-div col-sm-6">
-            <h1>hahaha</h1>
+        <div id="introducton" className="introduction md-grid">
+          <div className="intro-div md-cell md-cell--8">
+            <h1>Patent Solutions</h1>
             <p className="introduction-para">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi
               temporibus aspernatur debitis ducimus earum doloremque minus
@@ -18,8 +18,8 @@ class LandingPage extends Component {
             </p>
           </div>
 
-          <div className="login-div col-sm-6">
-            <Registration className="haha" />
+          <div className="intro-div md-cell md-cell--4">
+            <Login changeAuth = {this.props.changeAuth} routes={this.props.history} />
           </div>
         </div>
 

@@ -1,16 +1,21 @@
+@import '~react-md/src/scss/react-md';
+
 .landing-home {
 }
 
 .introduction {
-  display: flex;
+  display :flex;
   height: 100vh;
-  width: 90%;
-  padding: 1%;
+}
+
+.intro-div{
+  padding : 5%;
+  
 }
 
 .introduction-para {
   margin-top: 5%;
-  background: pink;
+  text-align: justify;
 }
 
 .login-div {
