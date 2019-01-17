@@ -49,6 +49,11 @@ class DashBoard extends Component {
         console.log("Component Will Receive Props")
     }
 
+    componentWillUnmount() {
+        console.log("component unmounting");
+        this.props.changeAuth(false);
+    }
+
     showDrawer = () => {
         this.setState({ visible: true });
     };
@@ -64,50 +69,60 @@ class DashBoard extends Component {
     render() {
 
         const { visible } = this.state;
-        
-        return (
-            <div className="dashboard">
-                <Toolbar
-                    colored
-                    fixed
-                    title="Pider"
-                    nav={
-                        <Button icon onClick={this.showDrawer}><MdMenu></MdMenu></Button>
-                    }
-                />
 
-                <CSSTransitionGroup
-                    component="div"
-                    transitionName="md-cross-face"
-                    transitionEnterTimeout={300}
-                    transitionLeave={false}
-                    className='md-toolbar-relative md-grid'
-                >
-
-                    <Switch>
-
-                        <Route path={navItems[0].to} exact component={FilePatent} />
-                        <Route path={navItems[1].to} component={PatentBid} />
-                        <Route path={navItems[2].to} component={TransferPatent} />
-
-                    </Switch>
-
-                </CSSTransitionGroup>
-
-                <Drawer
-                    type={Drawer.DrawerTypes.TEMPORARY}
-                    visible={visible}
-                    onVisibilityChange={this.handleVisibility}
-                    header={<Toolbar
+        if (this.props.authtoken) {
+            return (
+                <div className="dashboard">
+                    <Toolbar
+                        colored
+                        fixed
                         title="Pider"
-                    />}
-                    renderNode={this.dialog}
-                    navItems={
-                        navItems.map(props => <NavLinkItem {...props} key={props.to} />)
-                    }
-                />
-            </div>
-        );
+                        nav={
+                            <Button icon onClick={this.showDrawer}><MdMenu></MdMenu></Button>
+                        }
+                    />
+
+                    <CSSTransitionGroup
+                        component="div"
+                        transitionName="md-cross-face"
+                        transitionEnterTimeout={300}
+                        transitionLeave={false}
+                        className='md-toolbar-relative md-grid'
+                    >
+
+                        <Switch>
+
+                            <Route path={navItems[0].to} exact component={FilePatent} />
+                            <Route path={navItems[1].to} component={PatentBid} />
+                            <Route path={navItems[2].to} component={TransferPatent} />
+
+                        </Switch>
+
+                    </CSSTransitionGroup>
+
+                    <Drawer
+                        type={Drawer.DrawerTypes.TEMPORARY}
+                        visible={visible}
+                        onVisibilityChange={this.handleVisibility}
+                        header={<Toolbar
+                            title="Pider"
+                        />}
+                        renderNode={this.dialog}
+                        navItems={
+                            navItems.map(props => <NavLinkItem {...props} key={props.to} />)
+                        }
+                    />
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <h1>Not Authorized !</h1>
+                </div>
+            );
+
+
+        }
     }
 }
 

@@ -19,17 +19,18 @@ class App extends Component {
     isAuthed: false
   }
 
-  changeAuthorization = () => {
-    this.setState({ isAuthed: true })
+  changeAuthorization = (variable) => {
+    this.setState({ isAuthed: variable })
   }
 
   render() {
+
     return (
 
       <div className="App">
         <Header />
         <Switch>
-          <SecureRoute path={"/dashboard"} render={() => <DashBoard />} />
+          <SecureRoute path={"/dashboard"} render={() => <DashBoard changeAuth={this.changeAuthorization} authtoken={this.state.isAuthed} />} />
           <Route path={"/register"} component={Registration} />
           <Route path={"/"} exact render={(routeProps) => <LandingPage {...routeProps} changeAuth={this.changeAuthorization} />} />
         </Switch>

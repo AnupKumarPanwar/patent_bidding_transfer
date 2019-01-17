@@ -5,14 +5,18 @@ import "./css/loginCss.scss";
 
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
+import DashBoard from './dashboard';
 
 class Login extends Component {
   state = {
     username: '',
     password: '',
+
     modal_visible: false,
     toasts: [], 
     autohide: true 
+
+
   };
 
   addToast = (text, action, autohide = true) => {
@@ -47,7 +51,9 @@ class Login extends Component {
         props.changeAuth(true);
         props.routes.push("/dashboard");
       } else {
+
         this.addToast('Incorrect username/password');
+
       }
 
     }).catch((err) => {
@@ -56,6 +62,7 @@ class Login extends Component {
   }
 
   render() {
+
     return (
       <div className="div-login container">
         <h3>Login</h3>
