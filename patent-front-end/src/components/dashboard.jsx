@@ -7,6 +7,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 
 import PatentBid from "./patentBid";
 import TransferPatent from "./transferpatent";
+import AuctionPage from "./auctionPage";
 import FilePatent from './filepatent';
 import NavLinkItem from "./navItemLink";
 import { PropTypes } from 'prop-types';
@@ -16,7 +17,7 @@ import "./css/dashboard.scss";
 const TO_PREFIX = "/dashboard";
 
 const navItems = [{
-    label: "File Patent",
+    label: "Home",
     to: TO_PREFIX,
     exact: true,
 }, {
@@ -26,6 +27,10 @@ const navItems = [{
 }, {
     label: "Transfer Patent",
     to: `${TO_PREFIX}/transfer`,
+    exact: true,
+}, {
+    label: "Auction",
+    to: `${TO_PREFIX}/auction`,
     exact: true,
 }];
 
@@ -95,6 +100,7 @@ class DashBoard extends Component {
                             <Route path={navItems[0].to} exact component={FilePatent} />
                             <Route path={navItems[1].to} component={PatentBid} />
                             <Route path={navItems[2].to} component={TransferPatent} />
+                            <Route path={navItems[3].to} component={AuctionPage} />
 
                         </Switch>
 
