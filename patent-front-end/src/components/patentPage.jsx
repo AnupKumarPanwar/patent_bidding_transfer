@@ -44,7 +44,7 @@ class PatentPage extends Component {
                 </CardText>
 
                 <AuctionForm visible={this.state.visible_auction} />
-                <TransferForm visible={this.state.visible_transfer}/>
+                {/* <TransferForm visible={this.state.visible_transfer}/> */}
 
 
             </Card>
