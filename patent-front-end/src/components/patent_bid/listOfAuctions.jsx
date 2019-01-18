@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 const TO_PREFIX = "/dashboard";
 
-class ManagePatents extends Component {
+class ListOfAuctions extends Component {
 
     state = {
         ascending: false,
@@ -40,13 +40,14 @@ class ManagePatents extends Component {
             
         <TableRow key={title} >
             <TableColumn><Link to={`${TO_PREFIX}/patent/${title}`}>{title}</Link></TableColumn>
-            <TableColumn numeric>{date}</TableColumn>
+            <TableColumn numeric>$ {date}</TableColumn>
+            <TableColumn>18/01/2019</TableColumn>
         </TableRow>
         ));
 
         return (
             <Card className="md-cell md-cell--12 md-text-container">
-                <CardTitle><h3>Manage patents</h3></CardTitle>
+                <CardTitle><h3>Patents under auction</h3></CardTitle>
                 <DataTable baseId="patent" plain={true} >
                     <TableHeader>
                     <TableRow>
@@ -54,7 +55,10 @@ class ManagePatents extends Component {
                         Title
                         </TableColumn>
                         <TableColumn numeric>
-                        Date
+                        Highest bid
+                        </TableColumn>
+                        <TableColumn>
+                        End date
                         </TableColumn>
                     </TableRow>
                     </TableHeader>
@@ -67,4 +71,4 @@ class ManagePatents extends Component {
     };
 };
 
-export default ManagePatents;
+export default ListOfAuctions;
