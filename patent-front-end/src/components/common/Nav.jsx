@@ -8,34 +8,27 @@ const Nav = ({ className }) =>
     <div className="className nav_elements">
 
 
-        <Link to="/">
-            <a className="nav-link">
-                Home
-                </a>
+        <Link to="/" className="nav-link">
+            Home
         </Link>
 
 
-        <Link to="/register">
-            <a className="nav-link">
-                Register
-                </a>
+        <Link to="/register" className="nav-link">
+            Register
         </Link>
 
 
-        <a className="nav-link">
+        <Link to="/" className="nav-link">
             Transfer
-    </a>
+        </Link>
 
-
-        <a className="nav-link">
+        <Link to="/" className="nav-link">
             About Us
-    </a>
+        </Link>
 
-
-        <a href="" className="nav-link">
+        <Link to="/" className="nav-link">
             Contact
-    </a>
-
+        </Link>
 
     </div>
     ;

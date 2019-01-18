@@ -37,6 +37,7 @@ class ManagePatents extends Component {
         const { ascending, sortedMovies } = this.state;
 
         const rows = sortedMovies.map(({ title, date }) => (
+            
         <TableRow key={title} >
             <TableColumn><Link to={`${TO_PREFIX}/patent/${title}`}>{title}</Link></TableColumn>
             <TableColumn numeric>{date}</TableColumn>
@@ -46,7 +47,7 @@ class ManagePatents extends Component {
         return (
             <Card className="md-cell md-cell--12 md-text-container">
                 <CardTitle><h3>Transfer a patent</h3></CardTitle>
-                <DataTable baseId="movies" plain={true} >
+                <DataTable baseId="patent" plain={true} >
                     <TableHeader>
                     <TableRow>
                         <TableColumn grow sorted={ascending} role="button" onClick={this.sort} sortIcon={<MdArrowDownward/>}>

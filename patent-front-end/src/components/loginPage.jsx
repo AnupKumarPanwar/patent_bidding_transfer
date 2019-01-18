@@ -11,12 +11,9 @@ class Login extends Component {
   state = {
     username: '',
     password: '',
-
     modal_visible: false,
-    toasts: [], 
-    autohide: true 
-
-
+    toasts: [],
+    autohide: true
   };
 
   addToast = (text, action, autohide = true) => {

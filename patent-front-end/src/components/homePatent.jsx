@@ -40,7 +40,6 @@ class FilePatent extends Component {
                         dropdownIcon={<MdArrowDropDown></MdArrowDropDown>}
                         onChange={this.onTypeChange}
                     />
-                    <Divider className="md-cell md-cell--12 m-2" />
 
                 </div>
 
