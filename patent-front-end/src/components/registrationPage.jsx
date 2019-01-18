@@ -13,6 +13,8 @@ class Registration extends Component {
     username: '',
     mobile: '',
     password: '',
+    nationality: '',
+    address: ''
   }
 
   handleInputChange = (value, event) => {
@@ -67,11 +69,21 @@ class Registration extends Component {
             />
 
             <TextField
-              id="username"
+              id="mobile"
               type="text"
               className="md-cell"
-              placeholder="Enter Username"
-              value={this.state.username}
+              placeholder="Enter Address"
+              value={this.state.address}
+              onChange={this.handleInputChange}
+              required={true}
+            />
+
+            <TextField
+              id="mobile"
+              type="text"
+              className="md-cell"
+              placeholder="Enter Nationality"
+              value={this.state.nationality}
               onChange={this.handleInputChange}
               required={true}
             />

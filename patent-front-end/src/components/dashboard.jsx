@@ -75,7 +75,8 @@ class DashBoard extends Component {
 
         const { visible } = this.state;
 
-        if (this.props.authtoken) {
+        // if (this.props.authtoken) {
+            if (1) {
             return (
                 <div className="dashboard">
                     <Toolbar
