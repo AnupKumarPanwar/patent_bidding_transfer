@@ -3,70 +3,57 @@ import React, { Component } from 'react';
 import { Card, CardTitle, CardText, Divider, Button, DialogContainer } from "react-md";
 
 import "./css/patentPage.scss";
+import AuctionForm from './manage/auctionPage';
 
 class PatentPage extends Component {
 
     state = {
-        title: ''
+        title: '',
+        visible_transfer: false,
+        visible_auction: false
     }
 
-    show = () => {
-        this.setState({ visible: true });
-    };
+    show_trans = () => {
+        this.setState({ visible_transfer: true })
+    }
 
-    hide = () => {
-        this.setState({ visible: false });
-    };
+    show_auction = () => {
+        this.setState({ visible_auction: true })
+    }
 
     componentDidMount() {
         this.setState({ title: this.props.match.params.id });
     }
 
     render() {
-
-        const { visible } = this.state;
-        const actions = [{
-            onClick: this.hide,
-            primary: false,
-            children: 'Yes I confirm',
-        }, {
-            onClick: this.hide,
-            primary: true,
-            children: 'No thanks',
-        }];
-
         return (
-            <div>
-                <Card className="md-cell md-cell--12 md-text-container">
-                    <CardTitle><h2>{this.state.title}</h2></CardTitle>
-                    <CardText>
-                        <p>
-                            This will contain the description of the patent.
-                    </p>
-                        <p><b>Type : </b></p>
-                        <p><b>Collaborators : </b></p>
-                        <Divider style={{ margin: '15px' }} />
-                        <Button flat primary swapTheming className="action-button">Transfer</Button>
-                        <Button flat secondary swapTheming className="action-button" onClick={this.show}>Auction</Button>
-                    </CardText>
-                </Card>
-                <DialogContainer
-                    id="speed-boost"
-                    visible={visible}
-                    title="Put on auction?"
-                    onHide={this.hide}
-                    aria-describedby="speed-boost-description"
-                    modal
-                    actions={actions}
-                >
-                    <p id="speed-boost-description" className="md-color--secondary-text">
-                        By putting on auction, other users can bid for your patent. You will lose your rights of the patent after auction ends successfully.
-                    </p>
-                </DialogContainer>
-            </div>
-        );
-    }
 
-}
+            <Card className="md-cell md-cell--12 md-text-container">
+                <CardTitle
+                    title="Commando"
+                />
+                <CardText>
+                    <p>
+                        This will contain the description of the patent.
+                        </p>
+                    <p><b>Type : </b></p>
+                    <p><b>Collaborators : </b></p>
+                    <Divider className="m-3" />
+                    <Button flat primary swapTheming id="transfer" className="action-button" onClick={this.show_trans}>Transfer</Button>
+                    <Button flat secondary swapTheming className="action-button" onClick={this.show_auction}>Auction</Button>
+                </CardText>
 
+                <AuctionForm visible={this.state.visible_auction} />
+                <TransferForm visible={this.state.visible_transfer}/>
+
+
+            </Card>
+
+
+
+                );
+            }
+        
+        }
+        
 export default PatentPage;
