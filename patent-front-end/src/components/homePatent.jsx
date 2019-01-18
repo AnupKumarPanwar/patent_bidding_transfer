@@ -29,17 +29,20 @@ class FilePatent extends Component {
     render() {
         return (
             <Card className="md-cell md-cell--12 md-text-container">
-                <CardTitle><h3>Apply a patent</h3></CardTitle>
-                <SelectField
-                    id="type"
-                    placeholder="Select the type of Intellectual Property"
-                    className="md-cell md-cell--12"
-                    menuItems={OBJECT_ITEMS}
-                    simplifiedMenu={true}
-                    dropdownIcon={<MdArrowDropDown></MdArrowDropDown>}
-                    onChange={this.onTypeChange}
-                />
-                <Divider />
+                <CardTitle><h3>Application for your Intellectual Property for</h3></CardTitle>
+                <div class="md-grid">
+                    <SelectField
+                        id="type"
+                        placeholder="Select the type of Intellectual Property"
+                        className="md-cell md-cell--12"
+                        menuItems={OBJECT_ITEMS}
+                        simplifiedMenu={true}
+                        dropdownIcon={<MdArrowDropDown></MdArrowDropDown>}
+                        onChange={this.onTypeChange}
+                    />
+                    <Divider className="md-cell md-cell--12 m-2" />
+
+                </div>
 
                 <AudioFiling type_visible={this.state.type_value} />
                 <PictureFiling type_visible={this.state.type_value} />
