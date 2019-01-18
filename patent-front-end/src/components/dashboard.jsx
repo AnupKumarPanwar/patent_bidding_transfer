@@ -6,8 +6,9 @@ import { withRouter } from 'react-router';
 import { Link, Route, Switch } from 'react-router-dom';
 
 import PatentBid from "./patentBid";
-import TransferPatent from "./transferpatent";
+import ManagePatents from "./managePatents";
 import AuctionPage from "./auctionPage";
+import PatentPage from "./patentPage";
 import HomePatent from './homePatent';
 import NavLinkItem from "./navItemLink";
 import { PropTypes } from 'prop-types';
@@ -25,8 +26,8 @@ const navItems = [{
     to: `${TO_PREFIX}/bid`,
     exact: true
 }, {
-    label: "Transfer Patent",
-    to: `${TO_PREFIX}/transfer`,
+    label: "Manage Patents",
+    to: `${TO_PREFIX}/patents`,
     exact: true,
 }, {
     label: "Auction",
@@ -100,8 +101,9 @@ class DashBoard extends Component {
 
                             <Route path={navItems[0].to} exact component={HomePatent} />
                             <Route path={navItems[1].to} component={PatentBid} />
-                            <Route path={navItems[2].to} component={TransferPatent} />
+                            <Route path={navItems[2].to} component={ManagePatents} />
                             <Route path={navItems[3].to} component={AuctionPage} />
+                            <Route path={`${TO_PREFIX}/patent/:id`} component={PatentPage} />
 
                         </Switch>
 
