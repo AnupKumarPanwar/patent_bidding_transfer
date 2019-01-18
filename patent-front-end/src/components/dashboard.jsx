@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import { Link, Route, Switch } from 'react-router-dom';
 
 import PatentBid from "./patentBid";
-import ManagePatents from "./managePatents";
+import ManagePatents from "./manage/managePatents";
 import AuctionPage from "./manage/auctionPage";
-import PatentPage from "./patentPage";
+import PatentPage from "./manage/patentPage";
 import HomePatent from './homePatent';
 import NavLinkItem from "./navItemLink";
 import { PropTypes } from 'prop-types';

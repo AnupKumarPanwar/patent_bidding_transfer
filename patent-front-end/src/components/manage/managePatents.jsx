@@ -11,7 +11,7 @@ import {
 import { MdArrowDownward } from 'react-icons/md';
 import { sortBy } from 'lodash/collection';
 
-import { movies } from './constants/sampleData';
+import { movies } from '../constants/sampleData';
 import { Link } from "react-router-dom";
 
 const TO_PREFIX = "/dashboard";

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import { Card, CardTitle, CardText, Divider, Button, DialogContainer } from "react-md";
+import { Card, CardTitle, CardText, Divider, Button } from "react-md";
 
-import "./css/patentPage.scss";
-import AuctionForm from './manage/auctionPage';
+import "../css/patentPage.scss";
+import AuctionForm from './auctionPage';
+import TransferForm from './transferPage';
 
 class PatentPage extends Component {
 
@@ -14,11 +15,11 @@ class PatentPage extends Component {
     }
 
     show_trans = () => {
-        this.setState({ visible_transfer: true })
+        this.setState({ visible_transfer: true, visible_auction: false })
     }
 
     show_auction = () => {
-        this.setState({ visible_auction: true })
+        this.setState({ visible_auction: true, visible_transfer: false })
     }
 
     componentDidMount() {
