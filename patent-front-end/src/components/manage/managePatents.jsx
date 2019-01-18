@@ -11,7 +11,7 @@ import {
 import { MdArrowDownward } from 'react-icons/md';
 import { sortBy } from 'lodash/collection';
 
-import { movies } from './constants/sampleData';
+import { movies } from '../constants/sampleData';
 import { Link } from "react-router-dom";
 
 const TO_PREFIX = "/dashboard";
@@ -46,7 +46,7 @@ class ManagePatents extends Component {
 
         return (
             <Card className="md-cell md-cell--12 md-text-container">
-                <CardTitle><h3>Transfer a patent</h3></CardTitle>
+                <CardTitle><h3>Manage patents</h3></CardTitle>
                 <DataTable baseId="patent" plain={true} >
                     <TableHeader>
                     <TableRow>
