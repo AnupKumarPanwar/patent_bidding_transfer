@@ -12,7 +12,7 @@ const Web3 = require('web3');
 // new user is not registered else  we register the user ! 
 // BCRYPT - USED !
 
-router.get('/register', function (req, res, next) {
+router.post('/register', function (req, res) {
     const user_data = req.body.data;
     let message = "";
     let account_created = false;
@@ -22,7 +22,7 @@ router.get('/register', function (req, res, next) {
             { 'username': user_data.username },
             { 'email': user_data.email }
         ]
-    }).exec((err, result) => {
+    }).exec(async (err, result) => {
         if (result) {
             message = "User Already Exists";
             account_created = false;
@@ -32,6 +32,22 @@ router.get('/register', function (req, res, next) {
             });
         } else {
             user_data.password = bcrypt.hashSync(user_data.password);
+
+            const provider = new Web3.providers.HttpProvider(
+                "http://127.0.0.1:9545"
+            );
+
+
+            const web3 = await new Web3(provider);
+
+            var contractABI = SimpleStorageContract.abi;
+            var contractAddress = SimpleStorageContract.networks.address;
+            var contract = await new web3.eth.Contract(contractABI, contractAddress);
+
+            var publicKey = await web3.eth.personal.newAccount();
+
+            user_data.publicKey = publicKey;
+
             const user = new User(user_data);
 
             user
@@ -56,7 +72,7 @@ router.get('/register', function (req, res, next) {
 })
 
 
-router.get('/login', function (req, res, next) {
+router.post('/login', function (req, res) {
     const user = req.body.data;
     let message = '';
     console.log(user);
@@ -81,7 +97,7 @@ router.get('/login', function (req, res, next) {
             }
             else {
                 message = false;
-                
+
                 res.status(200).json({
                     "message": message
                 })
@@ -95,31 +111,6 @@ router.get('/login', function (req, res, next) {
         )
 
 
-
-})
-
-
-router.get('/generatePK', function (req, res, next) {
-
-    const provider = new Web3.providers.HttpProvider(
-      "http://127.0.0.1:9545"
-    );
-
-    const web3 = new Web3(provider);
-
-    var contractABI =SimpleStorageContract;
-    var contractAddress ="0x6c58Ebc7146A23e82e396cFAEA8bEe0CB5423215";
-    //creating contract object
-    var contract = new web3js.eth.Contract(contractABI,contractAddress);
-
-    var accounts = web3.eth.getAccounts();
-
-    console.log('accounts');
-    console.log(accounts);
-
-    res.status(200).json({
-        "message": accounts
-    });
 
 })
 
