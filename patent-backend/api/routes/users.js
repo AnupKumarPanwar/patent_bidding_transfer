@@ -42,7 +42,10 @@ router.post('/register', function (req, res, next) {
                         account_created: account_created
                     })
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    message = "Account Could Not be Created"
+                    res.status()
+                });
         }
     });
 
