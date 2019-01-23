@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 router.post('/register', function (req, res, next) {
     const user_data = req.body.data;
+    console.log(user_data);
     let message = "";
     let account_created = false;
 
@@ -78,7 +79,7 @@ router.post('/login', function (req, res, next) {
             }
             else {
                 message = false;
-                
+
                 res.status(200).json({
                     "message": message
                 })

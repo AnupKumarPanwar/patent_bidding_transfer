@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import axios from "axios";
-import controller from "../controller";
 import "./css/loginCss.scss";
 
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
 import DashBoard from './dashboard';
+import service from '../services/userService';
 
 class Login extends Component {
   state = {
@@ -37,25 +36,18 @@ class Login extends Component {
   }
 
   verifyUser = () => {
-
-    console.log("starting the verify post");
     const data = this.state;
     const props = this.props;
-    axios.post(controller.login, { data }).then((res) => {
-      // console.log(res.data.message);
-      if (res.data.message) {
-        // this.addToast('Incorrect username/password');
+    service.login(data).then((response) => {
+      console.log(response);
+      if (response) {
         props.changeAuth(true);
         props.routes.push("/dashboard");
       } else {
-
         this.addToast('Incorrect username/password');
-
       }
+    });
 
-    }).catch((err) => {
-      console.log(err);
-    })
   }
 
   render() {
