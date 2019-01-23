@@ -1,19 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.status(200).json({ hey: "name" })
-});
-
-
-
-router.get('/', function (req, res, next) {
-  print(req);
-  res.status(200).json({
-    message: "Got Regis form"
-  })
+router.post("/auction", function (req, res, next) {
+    console.log(req.body.data);
 })
 
-
 module.exports = router;
+

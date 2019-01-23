@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextField, Button } from 'react-md';
-import { axios } from "axios";
-import { controller } from "/controller";
+import axios from "axios";
+import controller from '../../controller';
 
 class AuctionForm extends Component {
     state = {
@@ -13,8 +13,9 @@ class AuctionForm extends Component {
     }
 
     sendAuction = () => {
+        // console.log(controller);
         const data = this.state;
-        axios.post(controller.patent_auction, { data }).then((message) => {
+        axios.post(controller.login, { data }).then((message) => {
             console.log(message)
         }).catch((err) => {
             console.log(err);

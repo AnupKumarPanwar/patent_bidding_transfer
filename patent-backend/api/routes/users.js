@@ -14,6 +14,7 @@ const Web3 = require('web3');
 
 router.post('/register', function (req, res) {
     const user_data = req.body.data;
+    console.log(user_data);
     let message = "";
     let account_created = false;
 

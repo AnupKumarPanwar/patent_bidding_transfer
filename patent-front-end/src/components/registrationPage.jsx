@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { TextField, Divider } from "react-md";
 import "./css/RegistrationPage.scss";
-import axios from "axios";
-import controller from '../controller';
 import { MdRemoveRedEye } from 'react-icons/md';
+
+import service from "../services/userService";
 // impor
 class Registration extends Component {
 
@@ -26,8 +26,8 @@ class Registration extends Component {
   registerUser = () => {
     console.log("starting the post call")
     const data = this.state;
-    axios.post(controller.register, { data }).then(res => {
-      console.log(res);
+    service.register(data).then(response => {
+      console.log(response);
     })
   }
 
@@ -69,7 +69,7 @@ class Registration extends Component {
             />
 
             <TextField
-              id="mobile"
+              id="address"
               type="text"
               className="md-cell"
               placeholder="Enter Address"
@@ -79,7 +79,7 @@ class Registration extends Component {
             />
 
             <TextField
-              id="mobile"
+              id="nationality"
               type="text"
               className="md-cell"
               placeholder="Enter Nationality"
