@@ -550,12 +550,12 @@
     "4447": {
       "events": {},
       "links": {},
-      "address": "0x99AD37D58Fd83558f89b67f950DfE185d522bBB4",
-      "transactionHash": "0x2473cbae1efe2435b55215b88ef4c2287f2cbbc7608790018429a759560ab064"
+      "address": "0xb6059D3E27F49A97Fe5A625b2718DD02AFF1EBAB",
+      "transactionHash": "0xe754f355a7be22084b232fd7e29ebc1acf358d20758212262978211fb99ff47f"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-24T06:16:23.197Z",
+  "updatedAt": "2019-01-24T08:07:35.167Z",
   "devdoc": {
     "methods": {}
   },

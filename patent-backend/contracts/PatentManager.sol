@@ -10,7 +10,8 @@ contract PatentManager {
     Patent[] private patents;
     
     function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders) public returns (uint) {
-        return (patents.push(Patent(owners, lisenceHolders)) - 1);
+        patents.push(Patent(owners, lisenceHolders));
+        return (patents.length-1);
     }
 
     function addOwner(uint id, address payable person) public {
