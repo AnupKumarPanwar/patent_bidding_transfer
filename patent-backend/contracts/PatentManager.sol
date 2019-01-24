@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract PatentManager {
 
@@ -31,7 +31,7 @@ contract PatentManager {
         }
     }
 
-    function getPatents(uint id) public view returns (address payable[] memory, address payable[] memory) {
-        return (patents[id].owners, patents[id].lisenceHolders);
+    function getPatents(uint id) public view returns (Patent memory) {
+        return (patents[id]);
     }
 }
