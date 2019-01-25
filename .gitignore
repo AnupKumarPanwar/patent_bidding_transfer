@@ -1,2 +1,3 @@
 /patent-backend/node_modules/*
 /patent-front-end/node-modules/*
+/solc
