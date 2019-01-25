@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const SimpleStorageContract = require("./contracts/SimpleStorage.json");
 const Web3 = require('web3');
+const ganache = require('ganache-cli');
 
 
 // register resource is used to register a user on the MongoDB
@@ -18,56 +19,70 @@ router.post('/register', function (req, res) {
     let message = "";
     let account_created = false;
 
-    User.findOne({
-        $or: [
-            { 'username': user_data.username },
-            { 'email': user_data.email }
-        ]
-    }).exec(async (err, result) => {
-        if (result) {
-            message = "User Already Exists";
-            account_created = false;
-            res.status(201).json({
-                message: message,
-                account_created: account_created
-            });
-        } else {
-            user_data.password = bcrypt.hashSync(user_data.password);
 
-            const provider = new Web3.providers.HttpProvider(
-                "http://127.0.0.1:9545"
-            );
+    const web3 = new Web3();
+
+    
+    web3.setProvider(ganache.provider());
+    web3.eth.personal.newAccount().then(result => {
+        console.log(result)
+        web3.eth.getAccounts().then(console.log);
+    })
+    // console.log(x)
+
+    // web3.eth.getAccounts().then(console.log);
+
+    
+    // User.findOne({
+    //     $or: [
+    //         { 'username': user_data.username },
+    //         { 'email': user_data.email }
+    //     ]
+    // }).exec(async (err, result) => {
+    //     if (result) {
+    //         message = "User Already Exists";
+    //         account_created = false;
+    //         res.status(201).json({
+    //             message: message,
+    //             account_created: account_created
+    //         });
+    //     } else {
+    //         user_data.password = bcrypt.hashSync(user_data.password);
+
+    //         const provider = new Web3.providers.HttpProvider(
+    //             "http://127.0.0.1:8545"
+    //         );
 
 
-            const web3 = await new Web3(provider);
+    //         const web3 = await new Web3(provider);
 
-            var contractABI = SimpleStorageContract.abi;
-            var contractAddress = SimpleStorageContract.networks.address;
-            var contract = await new web3.eth.Contract(contractABI, contractAddress);
+    //         var contractABI = SimpleStorageContract.abi;
+    //         var contractAddress = SimpleStorageContract.networks.address;
+    //         var contract = await new web3.eth.Contract(contractABI, contractAddress);
 
-            var publicKey = await web3.eth.personal.newAccount();
+    //         var publicKey = await web3.eth.personal.newAccount();
 
-            user_data.publicKey = publicKey;
+    //         user_data.publicKey = publicKey;
 
-            const user = new User(user_data);
+    //         const user = new User(user_data);
 
-            user
-                .save()
-                .then(msg => {
-                    console.log(msg);
-                    message = "Account Created";
-                    account_created = true;
-                    res.status(201).json({
-                        message: message,
-                        account_created: account_created
-                    })
-                })
-                .catch(err => {
-                    message = "Account Could Not be Created"
-                    res.status()
-                });
-        }
-    });
+    //         user
+    //             .save()
+    //             .then(msg => {
+    //                 console.log(msg);
+    //                 message = "Account Created";
+    //                 account_created = true;
+    //                 res.status(201).json({
+    //                     message: message,
+    //                     account_created: account_created
+    //                 })
+    //             })
+    //             .catch(err => {
+    //                 message = "Account Could Not be Created"
+    //                 res.status()
+    //             });
+    //     }
+    // });
 
 
 })
