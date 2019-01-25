@@ -54,3 +54,4 @@ contract PatentManager {
         return (patentNameMap[patentId]);
     }
 }
+
