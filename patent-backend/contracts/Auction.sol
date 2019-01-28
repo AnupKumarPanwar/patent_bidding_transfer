@@ -19,6 +19,8 @@ contract Auction is PatentManager{
 
     //
     mapping(address => uint[]) public userBidMap;
+    mapping(address => uint[]) public userBidAmountMap;
+    
     
 
     function addBid(uint patentId, uint bidAmount) public {
@@ -27,7 +29,9 @@ contract Auction is PatentManager{
         // string memory name = getPatentName(patentId);
 
         bidList.push(Bid(patentOwners, msg.sender, bidAmount, patentId, now));
-        userBidMap[msg.sender].push(now);
+        userBidMap[msg.sender].push(patentId);
+        userBidAmountMap[msg.sender].push(bidAmount);
+        
     }
 
     function allBids(uint patentId) public view returns (string memory){
@@ -36,17 +40,7 @@ contract Auction is PatentManager{
     }
 
     // By a person who is biding for multiple IPs
-    function getMyBids() public view returns (string[] memory, uint[] memory){
-        uint[] memory patents = userBidMap[msg.sender];
-        // return (patents);
-        string[] memory patentNames = new string[](patents.length);
-        uint[] memory patentAmounts = new uint[](patents.length);
-
-        for( uint i = 0; i<patents.length; i++){
-            patentNames[i] = getPatentName(patents[i]);
-            patentAmounts[i] = bidList[i].minimumBid;
-        }
-
-        return (patentNames, patents);
+    function getMyBids() public view returns (uint[] memory, uint[] memory){
+        return (userBidMap[msg.sender], userBidAmountMap[msg.sender]);
     }   
 }

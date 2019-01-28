@@ -3,7 +3,7 @@ const User = require('../models/Users');
 const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
-const SimpleStorageContract = require("./contracts/SimpleStorage.json");
+// const SimpleStorageContract = require("./contracts/SimpleStorage.json");
 const Web3 = require('web3');
 const ganache = require('ganache-cli');
 

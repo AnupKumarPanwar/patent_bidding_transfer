@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const PatentManager = require("./contracts/PatentManager.json");
+const Auction = require("../../build/contracts/Auction.json");
 const Web3 = require('web3');
 
 const provider = new Web3.providers.HttpProvider(
-    "http://127.0.0.1:9545"
+    "http://127.0.0.1:8545"
 );
 
 const web3 = new Web3(provider);
-var contractABI = PatentManager.abi;
-var contractAddress = PatentManager.networks.address;
+var contractABI = Auction.abi;
+var contractAddress = Auction.networks.address;
 var instance = new web3.eth.Contract(contractABI, contractAddress);
 
-instance.options.address = "0x3F3035fb802F2f24055adf521A4FF6B54a831cbb"
+// change the address when ever there is a change in machine !
+instance.options.address = "0xfe4e2178395430069d9590e4a4c61820f03f57c5"
 
 router.post("/auction", function (req, res, next) {
     console.log(req.body.data);
@@ -52,6 +53,24 @@ router.post('/getPatents', async function (req, res) {
         message: JSON.stringify(patent)
     })
 
+})
+
+router.post("/bidPatent", async function(req, res){
+    
+    // create contract Instance
+    const bid = req.body;
+    console.log(bid);
+    const response = await instance.methods.addBid(parseInt(bid.patentId), parseInt(bid.minimum_bid))
+    .send({
+        from : "0xfe4e2178395430069d9590e4a4c61820f03f57c5" , gas : 2000000
+    }).catch(err => {
+        console.log(err);
+    });
+
+    console.log(response);
+    res.status(201).json({
+        message : JSON.stringify(response)
+    })
 })
 
 module.exports = router;
