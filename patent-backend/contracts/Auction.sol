@@ -21,7 +21,6 @@ contract Auction is PatentManager{
     mapping(address => uint[]) public userBidMap;
     mapping(address => uint[]) public userBidAmountMap;
     
-    
 
     function addBid(uint patentId, uint bidAmount) public {
 

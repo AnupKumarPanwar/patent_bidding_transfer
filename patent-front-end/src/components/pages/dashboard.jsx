@@ -4,14 +4,14 @@ import { MdMenu } from 'react-icons/md';
 import CSSTransitionGroup from 'react-transition-group/CSSTransition';
 import { Route, Switch } from 'react-router-dom';
 
-import PatentBid from "./patent_bid/listOfAuctions";
-import ManagePatents from "./manage/managePatents";
-import AuctionPage from "./manage/auctionPage";
-import PatentPage from "./manage/patentPage";
+import PatentBid from "../patent_bid/listOfAuctions";
+import ManagePatents from "../manage/managePatents";
+import AuctionPage from "../manage/auctionPage";
+import PatentPage from "../manage/patentPage";
 import HomePatent from './homePatent';
-import NavLinkItem from "./navItemLink";
+import NavLinkItem from "../common/navItemLink";
 
-import "./css/dashboard.scss";
+import "../css/dashboard.scss";
 
 const TO_PREFIX = "/dashboard";
 

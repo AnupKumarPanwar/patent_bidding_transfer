@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-import "./css/Navbar.scss";
+import "../css/Navbar.scss";
 // import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap/lib/';
 // import { Link } from "react-router-dom";
 import { Toolbar } from 'react-md';
 
 
 
-import Nav from './common/Nav';
+import Nav from './Nav';
 
 class Header extends Component {
   render() {

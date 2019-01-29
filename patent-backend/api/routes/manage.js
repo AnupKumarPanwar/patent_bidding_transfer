@@ -3,6 +3,8 @@ const router = express.Router();
 const Auction = require("../../build/contracts/Auction.json");
 const Web3 = require('web3');
 
+
+
 const provider = new Web3.providers.HttpProvider(
     "http://127.0.0.1:8545"
 );
@@ -53,6 +55,12 @@ router.post('/getPatents', async function (req, res) {
         message: JSON.stringify(patent)
     })
 
+})
+
+router.post("/fileUpload", function(req, res, err){
+    if(err)throw err;
+    console.log(req.files.file);
+    
 })
 
 router.post("/bidPatent", async function(req, res){

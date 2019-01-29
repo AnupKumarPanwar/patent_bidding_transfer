@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "./css/loginCss.scss";
+import "../css/loginCss.scss";
 
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
 import DashBoard from './dashboard';
-import service from '../services/userService';
+import service from '../../services/userService';
 
 class Login extends Component {
   state = {

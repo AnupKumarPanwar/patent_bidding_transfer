@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { TextField, Divider } from "react-md";
-import "./css/RegistrationPage.scss";
+import "../css/RegistrationPage.scss";
 import { MdRemoveRedEye } from 'react-icons/md';
 
-import service from "../services/userService";
+import service from "../../services/userService";
 // impor
 class Registration extends Component {
 

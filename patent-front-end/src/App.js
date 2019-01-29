@@ -7,10 +7,10 @@ import "./App.scss";
 import "bootstrap/dist/js/bootstrap.js";
 import "bootstrap/dist/css/bootstrap.css"
 
-import Registration from "./components/registrationPage";
-import LandingPage from "./components/landingPage";
-import Header from "./components/navbar";
-import DashBoard from "./components/dashboard";
+import Registration from "./components/pages/registrationPage";
+import LandingPage from "./components/pages/landingPage";
+import Header from "./components/common/navbar";
+import DashBoard from "./components/pages/dashboard";
 // import { NavigationDrawer } from 'react-md';
 
 class App extends Component {
