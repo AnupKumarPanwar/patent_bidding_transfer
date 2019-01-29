@@ -2,23 +2,26 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser')
 const logger = require('morgan');
-
+const multer = require('multer');
 const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
-
+const busboy = require('connect-busboy');
 const app = express();
+const fileUpload = require('express-fileupload');
 
 const mongoose = require('mongoose');
 const url = "mongodb://localhost/pider";
 mongoose.connect(url, { useNewUrlParser: true });
 
+// multer
+app.use(fileUpload());
 app.use(logger('dev'));
-app.use(express.json({limit : '50mb'}));
-app.use(express.urlencoded({limit : '50mb', extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use( bodyParser.json({limit: "15360mb", type:'application/json'}) ); 
+app.use( bodyParser.urlencoded({limit: "15360mb", type:'application/json'}) );    
 
 // Prevent CORS error !!!!!!! that are enforced by the browser !
 app.use((req, res, next) => {
@@ -34,9 +37,9 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/manage', manageRouter);
+app.use('/users', usersRouter);
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

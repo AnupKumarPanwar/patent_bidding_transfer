@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Auction = require("../../build/contracts/Auction.json");
 const Web3 = require('web3');
+var Busboy = require('busboy');
+const fs = require('fs');
 
-
-
+const path = require('path');
+const formidable = require('formidable');
+// const multer = 
 const provider = new Web3.providers.HttpProvider(
     "http://127.0.0.1:8545"
 );
@@ -57,10 +60,17 @@ router.post('/getPatents', async function (req, res) {
 
 })
 
-router.post("/fileUpload", function(req, res, err){
-    if(err)throw err;
-    console.log(req.files.file);
-    
+router.post("/fileUpload", function(req, res){
+    console.log(req.files.file.name);
+    let uploadFile = req.files.file;
+    uploadFile.mv('./' + req.files.file.name, (err)=>{
+        if(err) console.log(err);
+        res.status(200).json({
+            message: "Hey"
+        })
+    })
+
+
 })
 
 router.post("/bidPatent", async function(req, res){
