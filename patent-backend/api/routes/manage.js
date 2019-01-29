@@ -13,6 +13,7 @@ const web3 = new Web3(provider);
 var contractABI = Auction.abi;
 var contractAddress = Auction.networks.address;
 var instance = new web3.eth.Contract(contractABI, contractAddress);
+var accounts = web3.eth.getAccounts();
 
 // change the address when ever there is a change in machine !
 instance.options.address = "0xfe4e2178395430069d9590e4a4c61820f03f57c5"
@@ -26,7 +27,6 @@ router.post('/registerPatent', async function (req, res) {
     const patent_data = req.body.data;
 
     // var instance = await contract.deployed();
-    var accounts = await web3.eth.getAccounts();
 
     console.log(accounts);
 

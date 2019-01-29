@@ -8,7 +8,7 @@ contract PatentManager {
         string patentName;
         string patentType;
         string issueDate;
-        string patentId;
+        uint patentId;
     }
 
     Patent[] private patents;
@@ -22,7 +22,7 @@ contract PatentManager {
 
     function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders, string memory patentName, string memory issueDate, string memory patentType) public returns (uint) {
         uint patentId = patents.length;
-        patents.push(Patent(owners, lisenceHolders, patentName, patentType, issueDate));
+        patents.push(Patent(owners, lisenceHolders, patentName, patentType, issueDate, patentId));
         patentOwnerMap[patentId] = owners;
         patentNameMap[patentId] = patentName;
         for (uint i = 0; i < owners.length; i++) {
@@ -49,7 +49,14 @@ contract PatentManager {
         }
 
         for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
-            if (ownerPatentsMap[msg.sender][i].)
+            uint pos = 0;
+            if (ownerPatentsMap[msg.sender][i].patentId==patentId) {
+                pos = i;
+                break;
+            }
+            uint last = ownerPatentsMap[msg.sender].length - 1;
+            ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
+            delete ownerPatentsMap[msg.sender][last];
         }
     }
 
