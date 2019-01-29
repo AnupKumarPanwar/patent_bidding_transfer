@@ -8,6 +8,7 @@ contract PatentManager {
         string patentName;
         string patentType;
         string issueDate;
+        string patentId;
     }
 
     Patent[] private patents;
@@ -17,32 +18,42 @@ contract PatentManager {
     //store name of the patent for a particular patentId
     mapping(uint => string) public patentNameMap;
 
+    mapping(address => Patent[]) public ownerPatentsMap;
+
     function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders, string memory patentName, string memory issueDate, string memory patentType) public returns (uint) {
+        uint patentId = patents.length;
         patents.push(Patent(owners, lisenceHolders, patentName, patentType, issueDate));
-        uint patentId = patents.length-1;
         patentOwnerMap[patentId] = owners;
         patentNameMap[patentId] = patentName;
-        return (patents.length-1);
+        for (uint i = 0; i < owners.length; i++) {
+            ownerPatentsMap[owners[i]].push(patents[patentId]);
+        }
+        return patentId;
     }
 
     function addOwner(uint patentId, address payable person) public {
         patents[patentId].owners.push(person);
+        ownerPatentsMap[person].push(patents[patentId]);
     }
 
     function addLisenceHolder(uint patentId, address payable person) public {
         patents[patentId].lisenceHolders.push(person);
     }
     
-    function transferPatent(uint patentid, address payable receiver) public {
-        for (uint i = 0; i < patents[patentid].owners.length; i++) {
-            if (patents[patentid].owners[i]==msg.sender) {
-                patents[patentid].owners[i]=receiver;
+    function transferPatent(uint patentId, address payable receiver) public {
+        for (uint i = 0; i < patents[patentId].owners.length; i++) {
+            if (patents[patentId].owners[i]==msg.sender) {
+                patents[patentId].owners[i]=receiver;
                 break;
             }
         }
+
+        for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
+            if (ownerPatentsMap[msg.sender][i].)
+        }
     }
 
-    function getPatents(uint patentId) public view returns (Patent memory) {
+    function getPatent(uint patentId) public view returns (Patent memory) {
         return (patents[patentId]);
     }
 
@@ -52,6 +63,10 @@ contract PatentManager {
 
     function getPatentName(uint patentId) public view returns (string memory){
         return (patentNameMap[patentId]);
+    }
+
+    function getPatentsByOwner(address owner) public view returns (Patent[] memory){
+        return ownerPatentsMap[owner];
     }
 }
 
