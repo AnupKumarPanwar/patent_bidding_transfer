@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { MdFileUpload, MdCheck } from 'react-icons/md';
 import { TextField, FileUpload, LinearProgress, Button } from 'react-md';
-
+import service from "../../services/patentService";
+import  axios  from "axios";
 class ManageFile extends Component {
     state = {
         sending: false,
@@ -17,20 +18,23 @@ class ManageFile extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        // console.log(e.target);
 
         const data = new FormData(e.target);
         const file = data.get('file');
         if (!file || !file.name) {
-            this.addToast('A file is required.');
+            // this.addToast('A file is required.');
+            alert("A file is required");
             return;
         }
 
-        console.log("Uploading File !")
+        console.log(data)
 
-        // fetch(`${API_ENDPOINT}${FAKE_UPLOAD_ENDPOINT}`, {
-        //   method: 'POST',
-        //   body: data,
-        // }).then((response) => {
+        // console.log("Uploading File !")
+
+        service.fileUpload(data);
+
+        // axios.post("http://localhost:4000/manage/fileUpload/", data).then((response) => {
         //   this.setState({ sending: false, uploadProgress: 0 });
         //   if (!response.ok) {
         //     const error = new Error(response.statusText);
@@ -40,9 +44,7 @@ class ManageFile extends Component {
 
         //   return this.handleServerProgress(response.body.getReader());
         // }).catch((error) => {
-        //   if (__DEV__) {
-        //     throw error;
-        //   }
+        //  console.error(error)
 
         // });
 
@@ -104,26 +106,34 @@ class ManageFile extends Component {
             progress,
             sending,
             uploadProgress,
+            fileSize
         } = this.state;
 
-        let progressBar;
-        if (typeof progress === 'number') {
-            progressBar = (
-                <span className="file-inputs__upload-form__progress">
-                    <LinearProgress id="file-upload-status" value={progress} />
-                </span>
-            );
-        } else if (sending || typeof uploadProgress === 'number') {
-            progressBar = (
-                <span className="file-inputs__upload-form__progress">
-                    <LinearProgress id="file-upload-server-status" query value={uploadProgress} />
-                </span>
-            );
-        }
+        // let progressBar;
+        // if (typeof progress === 'number') {
+        //     progressBar = (
+        //         <span className="file-inputs__upload-form__progress">
+        //             <LinearProgress id="file-upload-status" value={progress} />
+        //         </span>
+        //     );
+        // } else if (sending || typeof uploadProgress === 'number') {
+        //     progressBar = (
+        //         <span className="file-inputs__upload-form__progress">
+        //             <LinearProgress id="file-upload-server-status" query value={uploadProgress} />
+        //         </span>
+        //     );
+        // }
 
         return (<div className="md-grid">
-
-            {progressBar}
+            <form
+               id="server-upload-form"
+               ref={this.setForm}
+               onSubmit={this.handleSubmit}
+               onReset={this.handleReset}
+               name="server-upload-form"
+               className="file-inputs__upload-form"
+            >
+            {/* {progressBar/} */}
             <FileUpload
                 id="server-upload-file"
                 label={<div>Choose file</div>}
@@ -133,7 +143,7 @@ class ManageFile extends Component {
                 onLoadStart={this.handleLoadStart}
                 onProgress={this.handleProgress}
                 name="file"
-                className="md-cell md-cell--4"
+                className="file-inputs__upload-form__file-upload md-cell md-cell--4"
                 primary
                 icon={<MdFileUpload />}
                 iconBefore
@@ -144,20 +154,23 @@ class ManageFile extends Component {
                 id="server-upload-file-field"
                 placeholder="No file chosen"
                 value={fileName}
-                className="md-cell md-cell--8"
+                className=" file-inputs__upload-form__file-upload md-cell md-cell--8"
                 readOnly
                 fullWidth={false}
             />
 
             <p className="md-cell md-cell--6 m-2">Once the File has upload - Click on check button to validate the authenticity of your file</p>
             <Button raised primary className="md-cell md-cell--3"
-                id="check-audio-file">Check <MdCheck></MdCheck></Button>
+                id="check-audio-file" type = "submit">Check <MdCheck></MdCheck></Button>
 
-            <p className="md-cell md-cell--6 m-2">On Successful Validation Click on Submit Button</p>
+            {/* <p className="md-cell md-cell--6 m-2">On Successful Validation Click on Submit Button</p>
             <Button raised primary className="md-cell md-cell--3"
-                id="check-audio-file">Submit           <MdFileUpload></MdFileUpload></Button>
+                id="check-audio-file">Submit           <MdFileUpload></MdFileUpload></Button> */}
 
 
+
+            </form>
+            
         </div>);
     }
 }

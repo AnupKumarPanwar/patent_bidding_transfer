@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 import { Card, CardTitle, SelectField, Divider } from "react-md";
 
-import AudioFiling from './ip_filing/audiofiling';
-import PictureFiling from './ip_filing/picturefiling';
+import AudioFiling from '../ip_filing/audiofiling';
+import PictureFiling from '../ip_filing/picturefiling';
 
 
 const OBJECT_ITEMS = [{
