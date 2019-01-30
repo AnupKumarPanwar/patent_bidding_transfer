@@ -5,6 +5,7 @@ const PatentManager = require("../../build/contracts/PatentManager.json");
 const Web3 = require('web3');
 var Busboy = require('busboy');
 const fs = require('fs');
+var exec = require('child_process').exec;
 
 const path = require('path');
 const formidable = require('formidable');
@@ -58,9 +59,18 @@ router.post('/registerPatent', async function (req, res) {
     patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas:3000000 }, function (error, data) {
         console.log(data);
 
-        res.status(201).json({
-            message: JSON.stringify(data)
-        })
+        if (patentType === "Audio") {
+            exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/'+fileName, (err, stdout, stderr) => {
+                res.status(201).json({
+                    message: JSON.stringify(data)
+                })
+            })
+        }
+        else {
+            res.status(201).json({
+                message: JSON.stringify(data)
+            })
+        }
     });
 
 })
@@ -95,14 +105,24 @@ router.post('/myPatents', async function (req, res) {
 router.post("/fileUpload", function(req, res){
     console.log(req.files.file.name);
     let uploadFile = req.files.file;
-    uploadFile.mv('./' + req.files.file.name, (err)=>{
+    let uploadFileName = 'u' + Date.now() + req.files.file.name;
+    uploadFile.mv('./uploads/' + uploadFileName, (err)=>{
         if(err) console.log(err);
         res.status(200).json({
-            message: "Hey"
+            message: uploadFileName
         })
     })
+})
 
-
+router.post('/checkSignature', function (req, res) {
+    var fileName = req.body.fileName;
+    // console.log(fileName);
+	exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file uploads/'+fileName, (err, stdout, stderr) => {
+		var result = stdout.replace(/\'/g, '"');
+		result = JSON.parse(result);
+        console.log(result);
+  		res.status(200).json(result)
+	})
 })
 
 router.post("/bidPatent", async function(req, res){
