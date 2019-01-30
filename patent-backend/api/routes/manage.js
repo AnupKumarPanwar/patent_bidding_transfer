@@ -55,12 +55,13 @@ router.post('/registerPatent', async function (req, res) {
     var patentName = patent_data.patentName;
     var patentType = patent_data.patentType;
     var issueDate = patent_data.issueDate;
+    var uploadFileName = patent_data.uploadFileName;
 
     patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
         console.log(data);
 
         if (patentType === "Audio") {
-            exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/' + fileName, (err, stdout, stderr) => {
+            exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/' + uploadFileName, (err, stdout, stderr) => {
                 res.status(201).json({
                     message: JSON.stringify(data)
                 })
