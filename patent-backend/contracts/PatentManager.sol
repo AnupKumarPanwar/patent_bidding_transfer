@@ -80,4 +80,5 @@ contract PatentManager {
         return ownerPatentsMap[owner];
 
     }
+
 }
