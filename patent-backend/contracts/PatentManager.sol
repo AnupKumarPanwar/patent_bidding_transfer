@@ -58,6 +58,17 @@ contract PatentManager {
             ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
             delete ownerPatentsMap[msg.sender][last];
         }
+
+        for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
+            uint pos = 0;
+            if (ownerPatentsMap[msg.sender][i].patentId==patentId) {
+                pos = i;
+                break;
+            }
+            uint last = ownerPatentsMap[msg.sender].length - 1;
+            ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
+            delete ownerPatentsMap[msg.sender][last];
+        }
     }
 
     function getPatent(uint patentId) public view returns (Patent memory) {
@@ -71,13 +82,14 @@ contract PatentManager {
     function getPatentName(uint patentId) public view returns (string memory){
         return (patentNameMap[patentId]);
     }
-
-    function getPatentsByOwner(address owner) public view returns (Patent[] memory){
-        return ownerPatentsMap[owner];
-    }
     
     function getPatentType(uint patentId) public view returns(string memory){
         return patents[patentId].patentType;
     }
-}
 
+    function getPatentsByOwner(address owner) public view returns (Patent[] memory){
+        return ownerPatentsMap[owner];
+
+    }
+
+}

@@ -22,7 +22,7 @@ router.post('/register', function (req, res) {
 
     const web3 = new Web3();
 
-    
+
     web3.setProvider(ganache.provider());
     web3.eth.personal.newAccount().then(result => {
         console.log(result)
@@ -32,7 +32,7 @@ router.post('/register', function (req, res) {
 
     // web3.eth.getAccounts().then(console.log);
 
-    
+
     // User.findOne({
     //     $or: [
     //         { 'username': user_data.username },

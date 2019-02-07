@@ -58,6 +58,7 @@ router.post('/registerPatent', async function (req, res) {
     var uploadFileName = patent_data.uploadFileName;
 
     patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
+
         console.log(data);
 
         if (patentType === "Audio") {
@@ -103,17 +104,6 @@ router.post('/myPatents', async function (req, res) {
 
 })
 
-// router.post("/fileUpload", function (req, res) {
-//     console.log(req.files.file.name);
-//     let uploadFile = req.files.file;
-//     let uploadFileName = 'u' + Date.now() + req.files.file.name;
-//     uploadFile.mv('./uploads/' + uploadFileName, (err) => {
-//         if (err) console.log(err);
-//         res.status(200).json({
-//             message: uploadFileName
-//         })
-//     })
-// })
 
 router.post('/checkSignature', function (req, res) {
     let uploadFile = req.files.file;
@@ -139,7 +129,7 @@ router.post('/checkSignature', function (req, res) {
                     res.status(200).json({
                         message: uploadFileName,
                         similarPatentFound: false
-                    }) 
+                    })
                 }
             }
             else {
@@ -152,8 +142,45 @@ router.post('/checkSignature', function (req, res) {
     })
 })
 
-router.post("/bidPatent", async function (req, res) {
+router.post('/checkSignature', function (req, res) {
+    let uploadFile = req.files.file;
+    let uploadFileName = 'u' + Date.now() + req.files.file.name;
+    uploadFile.mv('./uploads/' + uploadFileName, (err) => {
+        if (err) console.log(err);
+        exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file "uploads/' + uploadFileName + '"', (err, stdout, stderr) => {
+            console.log(stderr);
+            console.log(err);
+            console.log(stdout);
+            var result = stdout.replace(/\'/g, '"');
+            if (result !== 'None\n') {
+                result = JSON.parse(result);
+                console.log(result);
+                if (parseInt(result.confidence) > 100) {
+                    res.status(200).json({
+                        message: uploadFileName,
+                        similarPatentFound: true,
+                        similarPatent: result
+                    })
+                }
+                else {
+                    res.status(200).json({
+                        message: uploadFileName,
+                        similarPatentFound: false
+                    })
+                }
+            }
+            else {
+                res.status(200).json({
+                    message: uploadFileName,
+                    similarPatentFound: false
+                })
+            }
+        })
+    })
+})
 
+
+router.post("/bidPatent", async function (req, res) {
     // create contract auctionInstance
     const bid = req.body;
     console.log(bid);
