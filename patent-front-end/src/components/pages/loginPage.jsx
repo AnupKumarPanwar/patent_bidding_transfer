@@ -6,6 +6,9 @@ import { MdRemoveRedEye } from 'react-icons/md';
 import DashBoard from './dashboard';
 import service from '../../services/userService';
 
+import {connect} from  'react-thunk';
+import {loginThunk} from "../../store/thunk/loginThunk";
+
 class Login extends Component {
   state = {
     username: '',
@@ -37,17 +40,16 @@ class Login extends Component {
 
   verifyUser = () => {
     const data = this.state;
-    const props = this.props;
-    service.login(data).then((response) => {
-      console.log(response);
-      if (response) {
-        props.changeAuth(true);
-        props.routes.push("/dashboard");
-      } else {
-        this.addToast('Incorrect username/password');
-      }
-    });
-
+    this.props.loginThunk(data);
+    // service.login(data).then((response) => {
+    //   console.log(response);
+    //   if (response) {
+    //     props.changeAuth(true);
+    //     props.routes.push("/dashboard");
+    //   } else {
+    //     this.addToast('Incorrect username/password');
+    //   }
+    // });
   }
 
   render() {
@@ -110,4 +112,17 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    login: state.login
+  };
+};
+
+const mapDispatchToProps = {
+  loginThunk
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

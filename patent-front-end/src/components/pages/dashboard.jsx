@@ -45,14 +45,6 @@ class DashBoard extends Component {
         this.dialog = document.getElementById('drawer-routering-example-dialog');
     }
 
-    componentWillMount() {
-        console.log("Component Will Mount")
-    }
-
-    componentWillReceiveProps() {
-        console.log("Component Will Receive Props")
-    }
-
     componentWillUnmount() {
         console.log("component unmounting");
         this.props.changeAuth(false);
