@@ -75,5 +75,9 @@ contract PatentManager {
     function getPatentsByOwner(address owner) public view returns (Patent[] memory){
         return ownerPatentsMap[owner];
     }
+    
+    function getPatentType(uint patentId) public view returns(string memory){
+        return patents[patentId].patentType;
+    }
 }
 

@@ -120,16 +120,27 @@ router.post('/checkSignature', function (req, res) {
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
     uploadFile.mv('./uploads/' + uploadFileName, (err) => {
         if (err) console.log(err);
-        exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file uploads/' + uploadFileName, (err, stdout, stderr) => {
+        exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file "uploads/' + uploadFileName + '"', (err, stdout, stderr) => {
+            console.log(stderr);
+            console.log(err);
+            console.log(stdout);
             var result = stdout.replace(/\'/g, '"');
             if (result !== 'None\n') {
                 result = JSON.parse(result);
                 console.log(result);
-                res.status(200).json({
-                    message: uploadFileName,
-                    similarPatentFound: true,
-                    similarPatent:result
-                })
+                if (parseInt(result.confidence) > 100) {
+                    res.status(200).json({
+                        message: uploadFileName,
+                        similarPatentFound: true,
+                        similarPatent: result
+                    })
+                }
+                else {
+                    res.status(200).json({
+                        message: uploadFileName,
+                        similarPatentFound: false
+                    }) 
+                }
             }
             else {
                 res.status(200).json({

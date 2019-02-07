@@ -6,14 +6,20 @@ export default {
         const response = await axios.post(controller.auction, data);
         console.log(response);
     },
-    fileUpload : function(data){
+    fileUpload : async function(data){
         
-        console.log(data)
-        axios.post(controller.fileUpload, data).then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.error(err);
-        });
+        // console.log(data)
+        var res = axios.post(controller.fileUpload, data);
+        return res;
         
+    },
+    registerPatent: async function (data) {
+        try {
+            const res = await axios.post(controller.registerPatent, { data });
+            return (res.data.message);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 }
