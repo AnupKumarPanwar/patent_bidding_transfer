@@ -34,9 +34,9 @@ contract AuctionProcess is PatentManager, Bidding{
         return (auctionId);
     }
 
-    function getResult(uint auctionId) private returns (string, address){
+    function getResult(uint auctionId) private returns (string memory , address){
         // this function is going to define the result process i.e how are we going to take out the result and decide the winner for the auction. 
-        AddressPrice[] priceMap = allBids(auctionId);
+        AddressPrice[] memory priceMap = allBids(auctionId);
         uint maxBid = auctionToPriceMap[auctionId];
         address winner;
         for ( uint bidderCount = 0; bidderCount < priceMap.length ; bidderCount++ ){
@@ -46,10 +46,10 @@ contract AuctionProcess is PatentManager, Bidding{
             }
         }
 
-        if(winner != 0x0){
-            return ("SUCCESS", winner)
+        if(winner != address(0x0)){
+            return ("SUCCESS", winner);
         }else{
-            return ("FAILURE", winner)
+            return ("FAILURE", winner);
         }
     } 
 }

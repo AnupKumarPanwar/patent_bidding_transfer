@@ -8,7 +8,7 @@ contract Bidding{
     event NewBid(uint patentId, string name);
 
     struct AddressPrice{
-        address bidderAddess;
+        address bidderAddress;
         uint bidPrice;
     }
 
