@@ -1,18 +1,16 @@
 pragma experimental ABIEncoderV2;
 
-import "./PatentManager.sol";
+import "./AuctionProcess.sol";
 
-contract Auction is PatentManager{
+contract Auction is AuctionProcess{
 
     // event;
     event NewBid(uint patentId, string name);
     
     struct Bid{
-        address[] auctioneer;
         address bider;
-        uint minimumBid;
-        uint patentId;
-        uint time;
+        uint minimumBidBidder; // set by the bidder !
+        uint auctionId;
     }
 
     Bid[] public bidList;
@@ -20,6 +18,7 @@ contract Auction is PatentManager{
     //
     mapping(address => uint[]) public userBidMap;
     mapping(address => uint[]) public userBidAmountMap;
+    mapping(uint => address[]) public auctionToBidersMap;
     
 
     function addBid(uint patentId, uint bidAmount) public {
@@ -27,7 +26,7 @@ contract Auction is PatentManager{
         address[] memory patentOwners = getOwnerList(patentId);
         // string memory name = getPatentName(patentId);
 
-        bidList.push(Bid(patentOwners, msg.sender, bidAmount, patentId, now));
+        bidList.push(Bid( msg.sender, bidAmount, patentId));
         userBidMap[msg.sender].push(patentId);
         userBidAmountMap[msg.sender].push(bidAmount);
         
@@ -42,4 +41,8 @@ contract Auction is PatentManager{
     function getMyBids() public view returns (uint[] memory, uint[] memory){
         return (userBidMap[msg.sender], userBidAmountMap[msg.sender]);
     }   
+
+    function getBidders(uint auctionId) public returns(address[] memory){
+        return auctionToBidersMap[auctionId]
+    }
 }

@@ -53,5 +53,9 @@ contract PatentManager {
     function getPatentName(uint patentId) public view returns (string memory){
         return (patentNameMap[patentId]);
     }
+
+    function getPatentType(uint patentId) public view returns(string memory){
+        return patents[patentId].patentType;
+    }
 }
 
