@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, Route } from 'react-router-dom';
-import { FontIcon, ListItem } from 'react-md';
+import { ListItem } from 'react-md';
 
 const NavItemLink = ({ label, to, icon, exact }) => (
     <Route path={to} exact={exact}>

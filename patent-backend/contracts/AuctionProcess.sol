@@ -1,5 +1,3 @@
-// In this particular contract our aim would be to 
-// write a contract which would handle the auctioning process for the bids made for a particular Item 
 pragma experimental ABIEncoderV2;
 
 import "./PatentManager.sol";
@@ -22,20 +20,20 @@ contract AuctionProcess is PatentManager, Bidding{
     mapping(uint=>uint) auctionToPriceMap;
 
     function createAuction(uint patentId, uint minimumBid, uint numberOfDays) public returns(uint) {
-            
-        uint auctionId = uint(keccak256(abi.encode(patentId)));
+                    
+
+        uint auctionId = patentId;
         uint num_seconds = numberOfDays*24*60*60;
-        uint endTime = block.timestamp - num_seconds;
+        uint endTime = block.timestamp + num_seconds;
 
-        // useless warning invoked !
-        auctioneerAuctionMap[msg.sender].push(Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId)));
+        Auction memory a = Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId));
+        auctioneerAuctionMap[msg.sender].push(a);
         auctionToPriceMap[auctionId] = minimumBid;
-
+    
         return (auctionId);
     }
 
-    function getResult(uint auctionId) private returns (string memory , address){
-        // this function is going to define the result process i.e how are we going to take out the result and decide the winner for the auction. 
+    function getResult(uint auctionId) public view returns (string memory , address){
         AddressPrice[] memory priceMap = allBids(auctionId);
         uint maxBid = auctionToPriceMap[auctionId];
         address winner;
@@ -52,4 +50,9 @@ contract AuctionProcess is PatentManager, Bidding{
             return ("FAILURE", winner);
         }
     } 
+
+    function getAuctions() public view returns(Auction[] memory){   
+        Auction[] memory auction = auctioneerAuctionMap[msg.sender]; 
+        return auction;
+    }
 }

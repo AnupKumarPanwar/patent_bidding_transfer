@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { MdArrowDropDown, MdAdd, MdFileUpload, MdRemove, MdCheck } from 'react-icons/md';
-import { TextField, SelectField, Button, FileUpload, LinearProgress, Divider } from 'react-md';
-import { CSSTransitionGroup } from 'react-transition-group/CSSTransition';
-
+import { MdArrowDropDown } from 'react-icons/md';
+import { TextField, SelectField, Divider } from 'react-md';
 import ManageFile from "./fileUpload";
 import ManageCollaborators from './manageCollaborators';
 

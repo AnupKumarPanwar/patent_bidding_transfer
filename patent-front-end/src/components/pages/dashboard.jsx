@@ -4,6 +4,9 @@ import { MdMenu } from 'react-icons/md';
 import CSSTransitionGroup from 'react-transition-group/CSSTransition';
 import { Route, Switch } from 'react-router-dom';
 
+import {logoutAction} from "../../store/actions/login/LoginAction";
+import {connect} from "react-redux";
+
 import PatentBid from "../patent_bid/listOfAuctions";
 import ManagePatents from "../manage/managePatents";
 import AuctionPage from "../manage/auctionPage";
@@ -33,21 +36,19 @@ const navItems = [{
     exact: true,
 }];
 
-
 class DashBoard extends Component {
-
+    
     state = {
         visible: false
     };
 
-    componentDidMount() {
-        console.log("Component Did Mount")
+    componentDidMount() {     
         this.dialog = document.getElementById('drawer-routering-example-dialog');
     }
 
     componentWillUnmount() {
-        console.log("component unmounting");
-        this.props.changeAuth(false);
+        // this.props.logout();
+        // this.props.history.push("/")
     }
 
     showDrawer = () => {
@@ -66,14 +67,15 @@ class DashBoard extends Component {
 
         const { visible } = this.state;
 
-        // if (this.props.authtoken) {
+        // if (this.props.auth) {
             if (1) {
             return (
                 <div className="dashboard">
+
                     <Toolbar
                         colored
                         fixed
-                        title="Pider"
+                        title={"Pider, Welcome "+this.props.user.name}
                         nav={
                             <Button icon onClick={this.showDrawer}><MdMenu></MdMenu></Button>
                         }
@@ -114,16 +116,29 @@ class DashBoard extends Component {
                     />
                 </div>
             );
-        } else {
+        }else{
             return (
                 <div>
                     <h1>Not Authorized !</h1>
                 </div>
-            );
-
-
+            )
         }
     }
 }
 
-export default DashBoard;
+const mapStateToProps = (state) => {
+    return {
+        auth : state.login.auth,
+        user : state.login.userInfo
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return({
+        logout : () => {
+            dispatch(logoutAction());
+        }
+    })
+}
+
+export default connect( mapStateToProps , mapDispatchToProps)(DashBoard);

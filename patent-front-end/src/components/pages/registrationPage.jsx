@@ -41,7 +41,7 @@ class Registration extends Component {
             <TextField
               id="name"
               type="text"
-              className="md-cell"
+              className="md-cell--12 m-2"
               placeholder="Enter Name"
               value={this.state.name}
               onChange={this.handleInputChange}
@@ -51,7 +51,7 @@ class Registration extends Component {
             <TextField
               id="email"
               type="email"
-              className="md-cell"
+              className="md-cell--12 m-2"
               placeholder="Enter Email Address"
               value={this.state.email}
               onChange={this.handleInputChange}
@@ -61,7 +61,7 @@ class Registration extends Component {
             <TextField
               id="mobile"
               type="text"
-              className="md-cell"
+              className="md-cell--12 m-2"
               placeholder="Enter Mobile"
               value={this.state.mobile}
               onChange={this.handleInputChange}
@@ -71,7 +71,7 @@ class Registration extends Component {
             <TextField
               id="address"
               type="text"
-              className="md-cell"
+              className="md-cell--12 m-2"
               placeholder="Enter Address"
               value={this.state.address}
               onChange={this.handleInputChange}
@@ -81,7 +81,7 @@ class Registration extends Component {
             <TextField
               id="nationality"
               type="text"
-              className="md-cell"
+              className="md-cell--12 m-2"
               placeholder="Enter Nationality"
               value={this.state.nationality}
               onChange={this.handleInputChange}
@@ -89,9 +89,19 @@ class Registration extends Component {
             />
 
             <TextField
+              id="username"
+              type="text"
+              className="md-cell--12 m-2"
+              placeholder="Enter Username"
+              value={this.state.username}
+              onChange={this.handleInputChange}
+              required={true}
+            />
+
+            <TextField
               id="password"
               type="password"
-              className="md-cell"
+              className="md-cell--12 m-2"
               style={{ padding: "0px" }}
               placeholder="Enter Password"
               value={this.state.password}
