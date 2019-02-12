@@ -62,7 +62,7 @@ router.post('/registerPatent', async function (req, res) {
         console.log(data);
 
         if (patentType === "Audio") {
-            exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/' + uploadFileName, (err, stdout, stderr) => {
+            exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
                 res.status(201).json({
                     message: JSON.stringify(data)
                 })
@@ -108,9 +108,9 @@ router.post('/myPatents', async function (req, res) {
 router.post('/checkSignature', function (req, res) {
     let uploadFile = req.files.file;
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
-    uploadFile.mv('./uploads/' + uploadFileName, (err) => {
+    uploadFile.mv('./uploads/Audio/' + uploadFileName, (err) => {
         if (err) console.log(err);
-        exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file "uploads/' + uploadFileName + '"', (err, stdout, stderr) => {
+        exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"', (err, stdout, stderr) => {
             console.log(stderr);
             console.log(err);
             console.log(stdout);

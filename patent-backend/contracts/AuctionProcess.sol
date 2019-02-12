@@ -22,13 +22,13 @@ contract AuctionProcess is PatentManager, Bidding{
     mapping(uint=>uint) auctionToPriceMap;
 
     function createAuction(uint patentId, uint minimumBid, uint numberOfDays) public returns(uint) {
-            
+        
         uint auctionId = uint(keccak256(abi.encode(patentId)));
         uint num_seconds = numberOfDays*24*60*60;
         uint endTime = block.timestamp - num_seconds;
 
         // useless warning invoked !
-        auctioneerAuctionMap[msg.sender].push(Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId)));
+        auctioneerAuctionMap[msg.sender].push(Auction(auctionId, patentId, endTime, minimumBid,getPatentType(patentId), getOwnerList(patentId)));
         auctionToPriceMap[auctionId] = minimumBid;
 
         return (auctionId);
