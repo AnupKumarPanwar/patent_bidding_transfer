@@ -27,7 +27,7 @@ router.post("/auction", function (req, res, next) {
 })
 
 router.post('/registerPatent', async function (req, res) {
-    
+
     const patent_data = req.body.data;
     var auctionInstance = await contract.deployed();
     var accounts = await web3.eth.getAccounts();
@@ -42,7 +42,7 @@ router.post('/registerPatent', async function (req, res) {
     var uploadFileName = patent_data.uploadFileName;
 
 
-    patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas:3000000 }, function (error, data) {
+    patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
 
         console.log(data);
 
@@ -76,51 +76,51 @@ router.post('/getPatent', async function (req, res) {
 router.post('/getPatents', async function (req, res) {
     console.log("Hey");
     res.status(200).json([{
-            title: 'Conan the Barbarian',
-            date: '1982',
-          }, {
-            title: 'Conan the Destroyer',
-            date: '1984',
-          }, {
-            title: 'The Terminator',
-            date: '1984',
-          }, {
-            title: 'Red Sonja',
-            date: '1985',
-          }, {
-            title: 'Commando',
-            date: '1985',
-          }, {
-            title: 'Raw Deal',
-            date: '1986',
-          }, {
-            title: 'The Running Man',
-            date: '1987',
-          }, {
-            title: 'Total Recal',
-            date: '1990',
-          }, {
-            title: 'Terminator 2: Judgement Day',
-            date: '1991',
-          }, {
-            title: 'Eraser',
-            date: '1996',
-          }, {
-            title: 'Jingle All The Way',
-            date: '1986',
-          }, {
-            title: 'The 6th Day',
-            date: '2000',
-          }, {
-            title: 'Terminator 3: Rise of the Machines',
-            date: '2003',
-          }, {
-            title: 'The Last Stand',
-            date: '2013',
-          }, {
-            title: 'Terminator Genisys',
-            date: '2015',
-          }]
+        title: 'Conan the Barbarian',
+        date: '1982',
+    }, {
+        title: 'Conan the Destroyer',
+        date: '1984',
+    }, {
+        title: 'The Terminator',
+        date: '1984',
+    }, {
+        title: 'Red Sonja',
+        date: '1985',
+    }, {
+        title: 'Commando',
+        date: '1985',
+    }, {
+        title: 'Raw Deal',
+        date: '1986',
+    }, {
+        title: 'The Running Man',
+        date: '1987',
+    }, {
+        title: 'Total Recal',
+        date: '1990',
+    }, {
+        title: 'Terminator 2: Judgement Day',
+        date: '1991',
+    }, {
+        title: 'Eraser',
+        date: '1996',
+    }, {
+        title: 'Jingle All The Way',
+        date: '1986',
+    }, {
+        title: 'The 6th Day',
+        date: '2000',
+    }, {
+        title: 'Terminator 3: Rise of the Machines',
+        date: '2003',
+    }, {
+        title: 'The Last Stand',
+        date: '2013',
+    }, {
+        title: 'Terminator Genisys',
+        date: '2015',
+    }]
     )
     // const patent_data = req.body.data;
 
@@ -135,11 +135,41 @@ router.post('/getPatents', async function (req, res) {
 
 
 router.post('/checkSignature', function (req, res) {
-    let uploadFile = req.files.file;
-    let uploadFileName = 'u' + Date.now() + req.files.file.name;
-    uploadFile.mv('./uploads/' + uploadFileName, (err) => {
-        if (err) console.log(err);
-        exec('python dejavu/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --recognize file "uploads/' + uploadFileName + '"', (err, stdout, stderr) => {
+    var uploadFile = req.files.file;
+    var uploadFileName = 'u' + Date.now() + req.files.file.name;
+    var fileExtention = path.extname(uploadFileName);
+    var allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
+    var allowedAudioExtentions = ['.mp3', '.wav'];
+
+    if (allowedImageExtentions.includes(fileExtention)) {
+        patentType = "Image";
+    }
+    else if (allowedAudioExtentions.includes(fileExtention)) {
+        patentType = "Audio";
+    }
+    else {
+        res.status(200).json({
+            success: false,
+            message: 'Invalid file format.'
+        })
+    }
+
+    var uploadPath = '';
+    var command = '';
+
+    if (patentType === "Image") {
+        uploadPath = './uploads/Image/' + uploadFileName;
+        command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
+    }
+    else if (patentType === "Audio") {
+        uploadPath = './uploads/Audio/' + uploadFileName;
+        command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
+    }
+
+    
+    uploadFile.mv(uploadPath, (err) => {
+        if (err) console.log('error'+err);
+        exec(command, (err, stdout, stderr) => {
             console.log(stderr);
             console.log(err);
             console.log(stdout);
@@ -149,6 +179,7 @@ router.post('/checkSignature', function (req, res) {
                 console.log(result);
                 if (parseInt(result.confidence) > 100) {
                     res.status(200).json({
+                        success: true,
                         message: uploadFileName,
                         similarPatentFound: true,
                         similarPatent: result
@@ -156,6 +187,7 @@ router.post('/checkSignature', function (req, res) {
                 }
                 else {
                     res.status(200).json({
+                        success: true,
                         message: uploadFileName,
                         similarPatentFound: false
                     })
@@ -163,6 +195,7 @@ router.post('/checkSignature', function (req, res) {
             }
             else {
                 res.status(200).json({
+                    success: true,
                     message: uploadFileName,
                     similarPatentFound: false
                 })
@@ -171,7 +204,9 @@ router.post('/checkSignature', function (req, res) {
     })
 })
 
-router.post("/bidPatent", async function(req, res){
+
+router.post("/bidPatent", async function (req, res) {
+
     // create contract auctionInstance
     const bid = req.body;
     console.log(bid);

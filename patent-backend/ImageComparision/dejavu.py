@@ -8,12 +8,12 @@ option = sys.argv[1]
 
 db = MySQLdb.connect("localhost", "root", "biappanwar", "dejavu")
 cursor = db.cursor()
-hash = imagehash.average_hash(Image.open(sys.argv[2]))
+hash = imagehash.dhash(Image.open(sys.argv[2]))
 
 if option == "--recognize":
     getAllHashesQuery = "SELECT * FROM images"
     try:
-        minDiff = 30
+        minDiff = 20
         similarFound = False
         similarImage = {}
         cursor.execute(getAllHashesQuery)
@@ -25,11 +25,10 @@ if option == "--recognize":
                 similarFound = True
                 similarImage = row
         if(similarFound):
-            res = {'similarFound': True,
-                   'image_id': similarImage[0], 'image_name': similarImage[1], 'difference': minDiff}
+            res = {'image_id': int(similarImage[0]), 'image_name': similarImage[1], 'confidence': 120-minDiff}
             print(res)
         else:
-            res = {'similarFound': False}
+            res = 'None\n'
             print(res)
     except Exception as e:
         print(e)
