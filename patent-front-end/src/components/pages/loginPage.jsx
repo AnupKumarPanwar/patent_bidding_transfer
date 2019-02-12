@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import "../css/loginCss.scss";
-
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
-import DashBoard from './dashboard';
-import service from '../../services/userService';
 
-import {connect} from  'react-thunk';
+import {connect} from  'react-redux';
 import {loginThunk} from "../../store/thunk/loginThunk";
 
 class Login extends Component {
@@ -14,7 +11,6 @@ class Login extends Component {
     username: '',
     password: '',
     modal_visible: false,
-    toasts: [],
     autohide: true
   };
 
@@ -23,7 +19,7 @@ class Login extends Component {
       const toasts = state.toasts.slice();
       toasts.push({ text, action });
       return { toasts, autohide };
-    });
+    })
   };
 
   dismissToast = () => {
@@ -39,20 +35,15 @@ class Login extends Component {
   }
 
   verifyUser = () => {
-    const data = this.state;
-    this.props.loginThunk(data);
-    // service.login(data).then((response) => {
-    //   console.log(response);
-    //   if (response) {
-    //     props.changeAuth(true);
-    //     props.routes.push("/dashboard");
-    //   } else {
-    //     this.addToast('Incorrect username/password');
-    //   }
-    // });
+    const {username, password} = this.state;
+    this.props.loginThunk({username:username, password : password});
   }
 
   render() {
+
+    if(this.props.auth){
+      this.props.routes.push("/dashboard");
+    }
 
     return (
       <div className="div-login container">
@@ -114,7 +105,7 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    login: state.login
+    auth: state.login.auth
   };
 };
 

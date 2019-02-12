@@ -1,14 +1,11 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser')
 const logger = require('morgan');
-const multer = require('multer');
 const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
-const busboy = require('connect-busboy');
 const app = express();
 const fileUpload = require('express-fileupload');
 
@@ -20,8 +17,7 @@ mongoose.connect(url, { useNewUrlParser: true });
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use( bodyParser.json({limit: "15360mb", type:'application/json'}) ); 
-app.use( bodyParser.urlencoded({limit: "15360mb", type:'application/json'}) );    
+app.use( bodyParser.json({type:'application/json'}) ); 
 
 // Prevent CORS error !!!!!!! that are enforced by the browser !
 app.use((req, res, next) => {

@@ -32,15 +32,12 @@ class App extends Component {
     return (
 
       <div className="App">
-        {/* <Button
-          disabled = {this.}
-        >Hey</Button> */}
         <Provider store = {store}>
         <Header />
         <Switch>
-          <SecureRoute path={"/dashboard"} render={() => <DashBoard changeAuth={this.changeAuthorization} authtoken={this.state.isAuthed} />} />
+          <Route path={"/dashboard"} component = {DashBoard} />
           <Route path={"/register"} component={Registration} />
-          <Route path={"/"} exact render={(routeProps) => <LandingPage {...routeProps} changeAuth={this.changeAuthorization} />} />
+          <Route path={"/"} exact render={(routeProps) => <LandingPage {...routeProps} />} />
         </Switch>
         </Provider>
       </div>
