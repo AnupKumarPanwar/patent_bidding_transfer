@@ -166,9 +166,9 @@ router.post('/checkSignature', function (req, res) {
         command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
     }
 
-    
+
     uploadFile.mv(uploadPath, (err) => {
-        if (err) console.log('error'+err);
+        if (err) console.log('error' + err);
         exec(command, (err, stdout, stderr) => {
             console.log(stderr);
             console.log(err);
