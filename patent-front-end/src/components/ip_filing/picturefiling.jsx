@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { TextField, SelectField, LinearProgress, Divider, FileUpload } from 'react-md';
-import { MdArrowDropDown, MdFileUpload } from 'react-icons/md';
+import { TextField, SelectField, Divider } from 'react-md';
+import { MdArrowDropDown } from 'react-icons/md';
 
 import ManageFile from "./fileUpload";
 import ManageCollaborators from './manageCollaborators';

@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-
 import "../css/Navbar.scss";
-// import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap/lib/';
-// import { Link } from "react-router-dom";
-import { Toolbar } from 'react-md';
-
-
-
-import Nav from './Nav';
+import { Toolbar } from "react-md";
+import Nav from "./Nav";
 
 class Header extends Component {
   render() {
     return (
-      <div className="toolbars__examples">
+      <div className="toolbars__examples" style= {{boxShadow :"0px 0px 5px #888888"}}>
         <Toolbar
           children={<Nav />}
           title="Pider"

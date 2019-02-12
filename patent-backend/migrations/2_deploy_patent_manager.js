@@ -1,5 +1,5 @@
-var AuctionProcess = artifacts.require("./AuctionProcess.sol");
+var PatentManager = artifacts.require("./PatentManager.sol");
 
 module.exports = function(deployer){
-    deployer.deploy(AuctionProcess);
+    deployer.deploy(PatentManager);
 }

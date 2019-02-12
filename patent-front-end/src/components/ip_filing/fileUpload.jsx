@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { MdFileUpload, MdCheck } from 'react-icons/md';
-import { TextField, FileUpload, LinearProgress, Button } from 'react-md';
+import { MdCheck } from 'react-icons/md';
+import { Button } from 'react-md';
 import service from "../../services/patentService";
 
 class ManageFile extends Component {

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-
 import { Card, CardTitle, CardText, Divider, Button } from "react-md";
 
 import "../css/patentPage.scss";
 import AuctionForm from './auctionPage';
-import TransferForm from './transferPage';
 
 class PatentPage extends Component {
 

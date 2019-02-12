@@ -4,11 +4,10 @@ import controller from "../controller";
 export default {
     auction: async function (data) {
         const response = await axios.post(controller.auction, data);
-        console.log(response);
+        return response
     },
+
     fileUpload : async function(data){
-        
-        // console.log(data)
         var res = axios.post(controller.fileUpload, data);
         return res;
         
@@ -19,6 +18,14 @@ export default {
             return (res.data.message);
         }
         catch (err) {
+            console.log(err);
+        }
+    },
+    getMyPatents : async function(data){
+        try{
+            const res = await axios.post(controller.getPatents, {data});
+            return res.data;
+        }catch(err){
             console.log(err);
         }
     }

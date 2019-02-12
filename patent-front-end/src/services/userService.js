@@ -19,7 +19,7 @@ export default {
     login: async function (data) {
         try {
             const res = await axios.post(controller.login, { data });
-            return (res.data.message);
+            return (res.data);
         }
         catch (err) {
             console.log(err);
