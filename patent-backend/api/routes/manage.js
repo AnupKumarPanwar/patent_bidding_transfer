@@ -174,7 +174,7 @@ router.post('/checkSignature', function (req, res) {
             console.log(err);
             console.log(stdout);
             var result = stdout.replace(/\'/g, '"');
-            if (result !== 'None\n') {
+            if (result[0] !== 'N' ) {
                 result = JSON.parse(result);
                 console.log(result);
                 if (parseInt(result.confidence) > 100) {
