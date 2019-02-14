@@ -2,21 +2,22 @@ const express = require('express');
 const router = express.Router();
 const AuctionProcess = require("../../build/contracts/AuctionProcess.json");
 const Web3 = require('web3');
-var Busboy = require('busboy');
+let Busboy = require('busboy');
 const fs = require('fs');
-var exec = require('child_process').exec;
-
+let exec = require('child_process').exec;
+const Patent = require('../models/Patents');
+const mongoose = require('mongoose');
 const path = require('path');
 const formidable = require('formidable');
 // const multer = 
 const provider = new Web3.providers.HttpProvider(
-    "http://127.0.0.1:8545"
+    "http://127.0.0.1:9545"
 );
 
 const web3 = new Web3(provider);
-var contractABI = AuctionProcess.abi;
-var contractAddress = AuctionProcess.networks.address;
-var auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
+let contractABI = AuctionProcess.abi;
+let contractAddress = AuctionProcess.networks.address;
+let auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
 // change the address when ever there is a change in machine !
 auctionInstance.options.address = "0x99AD37D58Fd83558f89b67f950DfE185d522bBB4"
@@ -29,42 +30,68 @@ router.post("/auction", function (req, res, next) {
 router.post('/registerPatent', async function (req, res) {
 
     const patent_data = req.body.data;
-    var auctionInstance = await contract.deployed();
-    var accounts = await web3.eth.getAccounts();
+    // let auctionInstance = await contract.deployed();
+    let accounts = await web3.eth.getAccounts();
 
     console.log(accounts);
 
-    var owners = patent_data.owners;
-    var lisenceHolders = patent_data.lisenceHolders;
-    var patentName = patent_data.patentName;
-    var patentType = patent_data.patentType;
-    var issueDate = patent_data.issueDate;
-    var uploadFileName = patent_data.uploadFileName;
+    let owners = patent_data.owners;
+    let lisenceHolders = patent_data.lisenceHolders;
+    let patentName = patent_data.patentName;
+    let patentType = patent_data.patentType;
+    let patentSubType = patent_data.patentSubType;
+    let issueDate = ''+new Date().getTime();
+    let uploadFileName = patent_data.uploadFileName;
+    patent_data.status = 'false';
 
+    const patent = new Patent(patent_data);
 
-    patentManagerInstance.methods.registerPatent(owners, lisenceHolders, patentName, patentType, issueDate).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
 
         console.log(data);
 
         if (patentType === "Audio") {
             exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-                res.status(201).json({
-                    message: JSON.stringify(data)
-                })
+                patent
+                    .save()
+                    .then(msg => {
+                        res.status(200).json({
+                            success: true,
+                            message: 'Patent registered successfully',
+                            data: JSON.stringify(data)
+                        })
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            success: false,
+                            message: 'Patent registration failed.',
+                            data: err
+                        })
+                    })
             })
         }
-        else {
-            res.status(201).json({
-                message: JSON.stringify(data)
+        else if (patentType === "Image") {
+            exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                patent
+                    .save()
+                    .then(msg => {
+                        res.status(201).json({
+                            message: JSON.stringify(data)
+                        })
+                    })
+                    .catch(err => {
+                        message = "Patent could not be registered"
+                        res.status()
+                    })
             })
         }
-    });
+    })
 })
 
 
 router.post('/getPatent', async function (req, res) {
     const patent_data = req.body.data;
-    var patent = await patentManagerInstance.methods.getPatent(patent_data.id).call();
+    let patent = await auctionInstance.methods.getPatent(patent_data.id).call();
     console.log(patent);
 
     res.status(201).json({
@@ -73,73 +100,12 @@ router.post('/getPatent', async function (req, res) {
 
 })
 
-router.post('/getPatents', async function (req, res) {
-    console.log("Hey");
-    res.status(200).json([{
-        title: 'Conan the Barbarian',
-        date: '1982',
-    }, {
-        title: 'Conan the Destroyer',
-        date: '1984',
-    }, {
-        title: 'The Terminator',
-        date: '1984',
-    }, {
-        title: 'Red Sonja',
-        date: '1985',
-    }, {
-        title: 'Commando',
-        date: '1985',
-    }, {
-        title: 'Raw Deal',
-        date: '1986',
-    }, {
-        title: 'The Running Man',
-        date: '1987',
-    }, {
-        title: 'Total Recal',
-        date: '1990',
-    }, {
-        title: 'Terminator 2: Judgement Day',
-        date: '1991',
-    }, {
-        title: 'Eraser',
-        date: '1996',
-    }, {
-        title: 'Jingle All The Way',
-        date: '1986',
-    }, {
-        title: 'The 6th Day',
-        date: '2000',
-    }, {
-        title: 'Terminator 3: Rise of the Machines',
-        date: '2003',
-    }, {
-        title: 'The Last Stand',
-        date: '2013',
-    }, {
-        title: 'Terminator Genisys',
-        date: '2015',
-    }]
-    )
-    // const patent_data = req.body.data;
-
-    // var patent = await patentManagerInstance.methods.getPatentsByOwner(patent_data.owner).call();
-
-    // console.log(patent);
-
-    // res.status(201).json({
-    //     message: JSON.stringify(patent)
-    // })
-})
-
-
 router.post('/checkSignature', function (req, res) {
-    var uploadFile = req.files.file;
-    var uploadFileName = 'u' + Date.now() + req.files.file.name;
-    var fileExtention = path.extname(uploadFileName);
-    var allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
-    var allowedAudioExtentions = ['.mp3', '.wav'];
+    let uploadFile = req.files.file;
+    let uploadFileName = 'u' + Date.now() + req.files.file.name;
+    let fileExtention = path.extname(uploadFileName);
+    let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
+    let allowedAudioExtentions = ['.mp3', '.wav'];
 
     if (allowedImageExtentions.includes(fileExtention)) {
         patentType = "Image";
@@ -154,8 +120,8 @@ router.post('/checkSignature', function (req, res) {
         })
     }
 
-    var uploadPath = '';
-    var command = '';
+    let uploadPath = '';
+    let command = '';
 
     if (patentType === "Image") {
         uploadPath = './uploads/Image/' + uploadFileName;
@@ -173,8 +139,8 @@ router.post('/checkSignature', function (req, res) {
             console.log(stderr);
             console.log(err);
             console.log(stdout);
-            var result = stdout.replace(/\'/g, '"');
-            if (result[0] !== 'N' ) {
+            let result = stdout.replace(/\'/g, '"');
+            if (result[0] !== 'N') {
                 result = JSON.parse(result);
                 console.log(result);
                 if (parseInt(result.confidence) > 100) {
@@ -186,7 +152,7 @@ router.post('/checkSignature', function (req, res) {
                     })
                 }
                 else {
-                    res.status(200).json({
+                    res.status(201).json({
                         success: true,
                         message: uploadFileName,
                         similarPatentFound: false
@@ -194,7 +160,7 @@ router.post('/checkSignature', function (req, res) {
                 }
             }
             else {
-                res.status(200).json({
+                res.status(201).json({
                     success: true,
                     message: uploadFileName,
                     similarPatentFound: false

@@ -5,6 +5,8 @@ import { MdArrowDropDown } from 'react-icons/md';
 
 import ManageFile from "./fileUpload";
 import ManageCollaborators from './manageCollaborators';
+import { connect } from 'react-redux';
+import { changePatentName, changePatentSubType } from '../../store/actions/patent/PatentAction';
 
 
 const PICTURE_ITEM = [
@@ -18,10 +20,29 @@ const PICTURE_ITEM = [
 
 class PictureFiling extends Component {
 
+    handleInputChange = (value, event) => {
+        this.props.changePatentName(value);
+    }
+
+    onTypeChange = (value, event) => {
+        this.props.changePatentSubType(value);
+    }
+
     render() {
 
-        if (this.props.type_visible === 'B') {
+        if (this.props.type_visible === 'Image') {
             return (<div className='container md-grid'>
+
+                <TextField
+                    id="name"
+                    type="text"
+                    label="Enter the name of the image"
+                    className="md-cell md-cell--12"
+                    placeholder="Enter name"
+                    value={this.props.patentName}
+                    onChange={this.handleInputChange}
+                    required={true}
+                />
 
                 <SelectField
                     id="type"
@@ -31,17 +52,6 @@ class PictureFiling extends Component {
                     simplifiedMenu={false}
                     dropdownIcon={<MdArrowDropDown></MdArrowDropDown>}
                     onChange={this.onTypeChange}
-                />
-
-                <TextField
-                    id="name"
-                    type="text"
-                    label="Enter the name of the image"
-                    className="md-cell md-cell--12"
-                    placeholder="Enter name"
-                    //   value={this.state.name}
-                    //   onChange={this.handleInputChange}
-                    required={true}
                 />
 
                 <ManageCollaborators className="md-cell" />
@@ -60,4 +70,18 @@ class PictureFiling extends Component {
     }
 }
 
-export default PictureFiling;
+const mapStatetoProps = (state) => {
+    return {
+        patentName: state.patent.patentName
+    }
+}
+
+const mapDispatchToProps = {
+    changePatentName,
+    changePatentSubType
+}
+
+export default connect(
+    mapStatetoProps,
+    mapDispatchToProps
+)(PictureFiling);

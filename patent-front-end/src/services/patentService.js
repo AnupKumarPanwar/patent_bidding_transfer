@@ -7,10 +7,10 @@ export default {
         return response
     },
 
-    fileUpload : async function(data){
+    fileUpload: async function (data) {
         var res = axios.post(controller.fileUpload, data);
         return res;
-        
+
     },
     registerPatent: async function (data) {
         try {
@@ -21,11 +21,11 @@ export default {
             console.log(err);
         }
     },
-    getMyPatents : async function(data){
-        try{
-            const res = await axios.post(controller.getPatents, {data});
+    getMyPatents: async function (data) {
+        try {
+            const res = await axios.post(controller.getPatents, { data });
             return res.data;
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }

@@ -4,5 +4,6 @@ module.exports = {
     login: ipAddress + "/users/login",
     auction: ipAddress + "/manage/auction",
     fileUpload : ipAddress + "/manage/checkSignature", 
-    getPatents : ipAddress + "/manage/getPatents"
+    getPatents : ipAddress + "/manage/getPatents",
+    registerPatent : ipAddress + "/manage/registerPatent"
 }
