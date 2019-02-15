@@ -3,8 +3,8 @@ import "../css/loginCss.scss";
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
 
-import {connect} from  'react-redux';
-import {loginThunk} from "../../store/thunk/loginThunk";
+import { connect } from 'react-redux';
+import { loginThunk } from "../../store/thunk/loginThunk";
 
 class Login extends Component {
   state = {
@@ -35,13 +35,13 @@ class Login extends Component {
   }
 
   verifyUser = () => {
-    const {username, password} = this.state;
-    this.props.loginThunk({username:username, password : password});
+    const { username, password } = this.state;
+    this.props.loginThunk({ username: username, password: password });
   }
 
   render() {
 
-    if(this.props.auth){
+    if (this.props.auth) {
       this.props.routes.push("/dashboard");
     }
 

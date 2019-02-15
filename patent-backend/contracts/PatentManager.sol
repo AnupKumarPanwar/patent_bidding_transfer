@@ -7,6 +7,7 @@ contract PatentManager {
         address payable[] lisenceHolders;
         string patentName;
         string patentType;
+        string patentSubType;
         string issueDate;
         uint patentId;
     }
@@ -20,9 +21,9 @@ contract PatentManager {
 
     mapping(address => Patent[]) public ownerPatentsMap;
 
-    function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders, string memory patentName, string memory issueDate, string memory patentType) public returns (uint) {
+    function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders, string memory patentName, string memory issueDate, string memory patentType, string memory patentSubType) public returns (uint) {
         uint patentId = patents.length;
-        patents.push(Patent(owners, lisenceHolders, patentName, patentType, issueDate, patentId));
+        patents.push(Patent(owners, lisenceHolders, patentName, patentType, patentSubType, issueDate, patentId));
         patentOwnerMap[patentId] = owners;
         patentNameMap[patentId] = patentName;
         for (uint i = 0; i < owners.length; i++) {
@@ -58,6 +59,17 @@ contract PatentManager {
             ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
             delete ownerPatentsMap[msg.sender][last];
         }
+
+        for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
+            uint pos = 0;
+            if (ownerPatentsMap[msg.sender][i].patentId==patentId) {
+                pos = i;
+                break;
+            }
+            uint last = ownerPatentsMap[msg.sender].length - 1;
+            ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
+            delete ownerPatentsMap[msg.sender][last];
+        }
     }
 
     function getPatent(uint patentId) public view returns (Patent memory) {
@@ -71,7 +83,7 @@ contract PatentManager {
     function getPatentName(uint patentId) public view returns (string memory){
         return (patentNameMap[patentId]);
     }
-
+    
     function getPatentType(uint patentId) public view returns(string memory){
         return patents[patentId].patentType;
     }
