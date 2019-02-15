@@ -3,6 +3,8 @@ import { MdArrowDropDown } from 'react-icons/md';
 import { TextField, SelectField, Divider } from 'react-md';
 import ManageFile from "./fileUpload";
 import ManageCollaborators from './manageCollaborators';
+import { connect } from 'react-redux';
+import { changePatentName, changePatentSubType } from '../../store/actions/patent/PatentAction';
 
 const GENRE_ITEMS = [
     { label: 'Rock', value: 'Rock' },
@@ -16,7 +18,13 @@ const GENRE_ITEMS = [
 
 class AudioFiling extends Component {
 
-    state = {}
+    handleInputChange = (value, event) => {
+        this.props.changePatentName(value);
+    }
+
+    onTypeChange = (value, event) => {
+        this.props.changePatentSubType(value);
+    }
 
     componentWillUnmount() {
         if (this.progressTimeout) {
@@ -30,7 +38,7 @@ class AudioFiling extends Component {
 
     render() {
 
-        if (this.props.type_visible === 'A') {
+        if (this.props.type_visible === 'Audio') {
             // this.set_component(this.);
 
             return (<div className='container md-grid'>
@@ -40,8 +48,8 @@ class AudioFiling extends Component {
                     label={"Enter the name of the Audio"}
                     className="md-cell md-cell--12"
                     placeholder="Enter name"
-                    //   value={this.state.name}
-                    //   onChange={this.handleInputChange}
+                    value={this.props.patentName}
+                    onChange={this.handleInputChange}
                     required={true}
                 />
 
@@ -59,7 +67,7 @@ class AudioFiling extends Component {
                 <ManageCollaborators />
 
                 <Divider className="md-cell md-cell--12 m-3" />
-
+                patentSubType
                 <ManageFile className="md-cell" />
 
             </div >);
@@ -72,4 +80,18 @@ class AudioFiling extends Component {
     }
 }
 
-export default AudioFiling;
+const mapStatetoProps = (state) => {
+    return {
+        patentName: state.patent.patentName
+    }
+}
+
+const mapDispatchToProps = {
+    changePatentName,
+    changePatentSubType
+}
+
+export default connect(
+    mapStatetoProps,
+    mapDispatchToProps
+)(AudioFiling);

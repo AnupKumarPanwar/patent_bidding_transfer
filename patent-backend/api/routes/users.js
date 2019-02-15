@@ -19,9 +19,9 @@ router.post('/register', async function (req, res) {
     let account_created = false;
 
     res.status(200).json({
-        message : "Test the Registration"
+        message: "Test the Registration"
     })
-    
+
     User.findOne({
         $or: [
             { 'username': user_data.username },
@@ -88,8 +88,8 @@ router.post('/login', function (req, res) {
                     }
 
                     res.status(200).json({
-                        "message": message, 
-                        "userInfo" : userInfo
+                        "message": message,
+                        "userInfo": userInfo
 
                     })
 
