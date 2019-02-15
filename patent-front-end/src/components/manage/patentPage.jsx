@@ -50,9 +50,9 @@ class PatentPage extends Component {
 
 
 
-                );
-            }
-        
-        }
-        
+        );
+    }
+
+}
+
 export default PatentPage;
