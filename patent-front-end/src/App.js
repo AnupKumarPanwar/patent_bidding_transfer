@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { SecureRoute } from 'react-route-guard';
 
 import store from "./store/configureStore";
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 
 import "./App.scss";
 // import "jquery/dist/jquery.min.js";

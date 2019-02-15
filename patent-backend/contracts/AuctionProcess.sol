@@ -19,12 +19,11 @@ contract AuctionProcess is PatentManager, Bidding{
     mapping(address => Auction[]) auctioneerAuctionMap;
     mapping(uint=>uint) auctionToPriceMap;
 
-    function createAuction(uint patentId, uint minimumBid, uint numberOfDays, uint) public returns(uint) {
-                
+
+    function createAuction(uint patentId, uint minimumBid, uint numberOfDays) public returns(uint) {
         uint auctionId = patentId;
         uint num_seconds = numberOfDays*24*60*60;
         uint endTime = block.timestamp + num_seconds;
-
         Auction memory a = Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId));
         auctioneerAuctionMap[msg.sender].push(a);
         auctionToPriceMap[auctionId] = minimumBid;
