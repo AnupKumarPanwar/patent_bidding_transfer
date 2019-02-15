@@ -23,11 +23,6 @@ const TO_PREFIX = "/dashboard";
 
 class ManagePatents extends Component {
 
-    state = {
-        ascending: false,
-        sortedPatents: this.props.patents
-    };
-
     componentDidMount(){
         console.log(this.props.patents)
         this.props.getPatentThunk({
@@ -36,38 +31,32 @@ class ManagePatents extends Component {
         });
     }
     
-    // sort = () => {
-    //     const ascending = !this.state.ascending;
-    //     const sortedPatents = this.state.sortedPatents.slice();
-    //     sortedPatents.reverse();
-    //     this.setState({ ascending, sortedPatents });
-    // };
-
-
     render() {
 
-        // const { ascending, sortedPatents } = this.state;
-
-        const rows = this.props.patents.map(({ title, date }) => (
-            <TableRow key={title} >
-                <TableColumn><Link to={`${TO_PREFIX}/patent/${title}`}>{title}</Link></TableColumn>
-                <TableColumn numeric>{date}</TableColumn>
+        const rows = this.props.patents.map( ({patentId, patentName, patentType }, index) => (
+            <TableRow key={patentId} >
+                <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
+                <TableColumn numeric>{patentName}</TableColumn>
+                <TableColumn>{patentType}</TableColumn>
             </TableRow>
         ));
 
         return (
             <Card className="md-cell md-cell--12 md-text-container">
                 <CardTitle><h3>Manage patents</h3></CardTitle>
-                <DataTable baseId="patent" plain={true} >
+                <DataTable baseId="patent" plain={true} responsive >
                     <TableHeader>
-                    <TableRow>
-                        <TableColumn grow sorted={this.props.ascending} role="button" onClick={()=>{this.props.sortPatentAction(this.props.ascending)}} sortIcon={<MdArrowDownward/>}>
-                        Title
-                        </TableColumn>
-                        <TableColumn numeric>
-                        Date
-                        </TableColumn>
-                    </TableRow>
+                        <TableRow>
+                            <TableColumn grow={false} sorted={this.props.ascending} onClick={()=>{this.props.sortPatentAction(this.props.ascending, this.props.patents)}} sortIcon={<MdArrowDownward/>}>
+                                Patent Id
+                            </TableColumn>
+                            <TableColumn numeric>
+                                Patent Name
+                            </TableColumn>
+                            <TableColumn>
+                                Patent Type
+                            </TableColumn>
+                        </TableRow>
                     </TableHeader>
                     <TableBody>
                     {rows}
@@ -82,7 +71,6 @@ const mapStateToProps = (state) => {
         patents : state.patent.patents,
         ascending : state.patent.ascending,
         user : state.login.userInfo
-
     }
 }
 

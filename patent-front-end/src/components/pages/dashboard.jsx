@@ -95,7 +95,8 @@ class DashBoard extends Component {
                             <Route path={navItems[1].to} component={PatentBid} />
                             <Route path={navItems[2].to} component={ManagePatents} />
                             <Route path={navItems[3].to} component={AuctionPage} />
-                            {/* Route of a particular patent */}
+                            
+                        {/* Route of a particular patent */}
                             <Route path={`${TO_PREFIX}/patent/:id`} component={PatentPage} />
 
                         </Switch>

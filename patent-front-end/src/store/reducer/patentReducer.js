@@ -1,8 +1,10 @@
-import {GET_PATENTS, SORT_PATENTS} from "../actions/patent/PatentActionTypes";
+import {GET_PATENTS, SORT_PATENTS, SHOW_AUCTION, PATENT_AUCTION} from "../actions/patent/PatentActionTypes";
 
 export const initialState = {
   patents : [],
-  ascending : false
+  ascending : false,
+  visibleAuction : false,
+  visibleTransfer : false,
 }
 
 export const patentReducer = (state = initialState, action) => {
@@ -10,9 +12,19 @@ export const patentReducer = (state = initialState, action) => {
     case GET_PATENTS:
       return({...state, patents : action.patents})
     case SORT_PATENTS :
+      const sortedPatents = action.patents.slice();
+      sortedPatents.reverse();
       return ({
         ...state, 
-        ascending : action.ascending
+        ascending : action.ascending,
+        patents : sortedPatents
+      })
+    case SHOW_AUCTION :
+      return({...state, visibleAuction:action.visibleAuction, visibleTransfer : action.visibleTransfer})
+    case PATENT_AUCTION :
+      return({
+        ...state, 
+        auctionResponse : action.auctionResponse
       })
     default : 
       return state

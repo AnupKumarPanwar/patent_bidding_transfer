@@ -1,4 +1,4 @@
-import {getPatentAction} from "../actions/patent/PatentAction";
+import {getPatentAction, patentAuctionAction} from "../actions/patent/PatentAction";
 import service from "../../services/patentService";
 
 export const getPatentThunk = (data) => {
@@ -14,3 +14,16 @@ export const getPatentThunk = (data) => {
 
   };
 };
+
+export const patentForAuctionThunk = (data) => {
+  return(dispatch) => {
+
+    service.auctionMyPatent(data).then(res => {
+      console.log(res)
+      return dispatch(patentAuctionAction(res));
+    }).catch(err =>{
+      console.error(err);
+    })
+
+  }
+}

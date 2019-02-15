@@ -6,6 +6,7 @@ const logger = require('morgan');
 const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
+const auctionRouter = require('./api/routes/auction');
 const app = express();
 const fileUpload = require('express-fileupload');
 
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/auction', auctionRouter)
 app.use('/manage', manageRouter);
 app.use('/users', usersRouter);
 app.use('/', indexRouter);

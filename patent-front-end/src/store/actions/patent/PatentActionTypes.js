@@ -1,2 +1,4 @@
 export const GET_PATENTS = "GET_PATENTS";
-export const SORT_PATENTS = "SORT_PATENTS"
+export const SORT_PATENTS = "SORT_PATENTS";
+export const SHOW_AUCTION = "SHOW_AUCTION";
+export const PATENT_AUCTION = "PATENT_AUCTION";
