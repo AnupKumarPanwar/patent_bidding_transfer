@@ -15,21 +15,21 @@ export const initialState = {
 export const patentReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_PATENTS:
-      return({...state, patents : action.patents})
-    case SORT_PATENTS :
+      return ({ ...state, patents: action.patents })
+    case SORT_PATENTS:
       const sortedPatents = action.patents.slice();
       sortedPatents.reverse();
       return ({
-        ...state, 
-        ascending : action.ascending,
-        patents : sortedPatents
+        ...state,
+        ascending: action.ascending,
+        patents: sortedPatents
       })
-    case SHOW_AUCTION :
-      return({...state, visibleAuction:action.visibleAuction, visibleTransfer : action.visibleTransfer})
-    case PATENT_AUCTION :
-      return({
-        ...state, 
-        auctionResponse : action.auctionResponse
+    case SHOW_AUCTION:
+      return ({ ...state, visibleAuction: action.visibleAuction, visibleTransfer: action.visibleTransfer })
+    case PATENT_AUCTION:
+      return ({
+        ...state,
+        auctionResponse: action.auctionResponse
       })
     case CHANGE_PATENT_TYPE:
       return ({ ...state, patentType: action.patentType })
