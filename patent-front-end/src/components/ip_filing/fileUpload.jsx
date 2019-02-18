@@ -32,7 +32,7 @@ class ManageFile extends Component {
         var response = await service.fileUpload(data);
         if (response.data.success) {
             var similarPatentFound = response.data.similarPatentFound;
-            var uploadFileName = response.data.uploadFileName;
+            var uploadFileName = response.data.message;
             self.setState({ similarPatentFound, checked: true, checking: false });
             this.props.changeFileName(uploadFileName);
         }
@@ -54,6 +54,7 @@ class ManageFile extends Component {
         };
         var response = await service.registerPatent(data);
         console.log(response);
+        alert("Patent registered successfully.");
     }
 
 

@@ -7,6 +7,7 @@ let Busboy = require('busboy');
 const fs = require('fs');
 let exec = require('child_process').exec;
 const Patent = require('../models/Patents');
+const User = require('../models/Users');
 const mongoose = require('mongoose');
 const path = require('path');
 const formidable = require('formidable');
@@ -23,26 +24,26 @@ const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionCont
 router.post('/getPatents', async function (req, res) {
 
     let patentRes = []
-    
-    const list = ["owners", "licenseHolders","patentName", "patentType","patentDate", "patentId"];
+
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentDate", "patentId"];
 
     const ownerAddress = req.body.data.publicAddress;
-    try{
+    try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
 
         patent.map((arraya) => {
             obj = {}
             arraya.map((val, index) => {
-                obj[list[index]]=val
-            
-        })
+                obj[list[index]] = val
+
+            })
             patentRes.push(obj)
-        
-        }) 
+
+        })
 
         console.log(patentRes)
         res.status(200).send(patentRes)
-    }catch(err) {
+    } catch (err) {
         console.error(err)
     }
 })
@@ -64,7 +65,7 @@ router.post('/registerPatent', async function (req, res) {
     let patentName = patent_data.patentName;
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
-    let issueDate = ''+new Date().getTime();
+    let issueDate = '' + new Date().getTime();
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
@@ -76,6 +77,9 @@ router.post('/registerPatent', async function (req, res) {
 
         if (patentType === "Audio") {
             exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                console.log(err);
+                console.log(stdout);
+                console.log(stderr);
                 patent
                     .save()
                     .then(msg => {
@@ -96,6 +100,9 @@ router.post('/registerPatent', async function (req, res) {
         }
         else if (patentType === "Image") {
             exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                console.log(err);
+                console.log(stdout);
+                console.log(stderr);
                 patent
                     .save()
                     .then(msg => {
@@ -206,8 +213,56 @@ router.post("/bidPatent", async function (req, res) {
         }).catch(err => {
             console.log(err);
         });
->>>>>>> backup
+})
 
+
+router.post('/search', async function (req, res) {
+    let query = new RegExp(req.body.data.query, "i");
+    console.log(query);
+    let message = '';
+    let patents = [];
+    let users = [];
+    await Patent.find({
+        $or: [
+            { 'patentName': query },
+            { 'patentType': query },
+            { 'patentSubType': query }
+        ]
+    })
+        .then((res_patents) => {
+            patents = res_patents;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+
+    await User.find({
+        $or: [
+            { 'name': query },
+            { 'email': query },
+            { 'username': query },
+            { 'nationality': query }
+        ]
+    })
+        .then((res_user) => {
+            users = res_user;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+        res.status(200).json({
+                success: true,
+                message: {
+                    patents : patents,
+                    users : users
+                }
+            })
+});
 
 module.exports = router;
-

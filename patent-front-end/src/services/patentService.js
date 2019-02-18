@@ -28,11 +28,19 @@ export default {
             console.log(err);
         }
     },
-    auctionMyPatent : async function(data){
+    auctionMyPatent: async function (data) {
         try {
-            const res = await axios.post(controller.auctionPatent, {data});
+            const res = await axios.post(controller.auctionPatent, { data });
             return res.data;
-        }catch(err){
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    searchService: async function (data) {
+        try {
+            const res = await axios.post(controller.search, { data });
+            return res.data;
+        } catch (err) {
             console.log(err);
         }
     }
