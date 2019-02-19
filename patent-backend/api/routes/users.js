@@ -5,12 +5,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const Web3 = require('web3');
 const ganache = require('ganache-cli');
-
+const AuctionProcess = require("../../build/contracts/AuctionProcess.json");
+const ethConfig = require("../../blockchainConfig");
 
 // register resource is used to register a user on the MongoDB
 // the existence of a user is first checked by checking the DB and if an instance already exists then 
 // new user is not registered else  we register the user ! 
 // BCRYPT - USED !
+
+const provider = new Web3.providers.HttpProvider(
+    ethConfig.networkAddress
+);
 
 router.post('/register', async function (req, res) {
     const user_data = req.body.data;
@@ -36,12 +41,12 @@ router.post('/register', async function (req, res) {
                 account_created: account_created
             });
         } else {
-            const web3 = new Web3();
-            web3.setProvider(ganache.provider());
-
+            const web3 = new Web3(provider);
+            const contractABI = AuctionProcess.abi;
+            const instance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
             // the below line with create a new account and return a public key !
             // these accounts are created with 0 eth balance !
-            let publicKey = await web3.eth.personal.newAccount();
+            let publicKey = await web3.eth.personal.newAccount(user_data.password);
             console.log("Address generated : " + publicKey);
 
             user_data.password = bcrypt.hashSync(user_data.password);
