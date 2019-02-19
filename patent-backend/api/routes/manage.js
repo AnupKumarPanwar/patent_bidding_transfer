@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const AuctionProcess = require("../../build/contracts/AuctionProcess.json");
-const ethConfig = require("../../blockchainConfig");
+const AuctionProcess = require('../../build/contracts/AuctionProcess.json');
+const ethConfig = require('../../blockchainConfig');
 const Web3 = require('web3');
 let Busboy = require('busboy');
 const fs = require('fs');
@@ -21,13 +21,11 @@ const contractABI = AuctionProcess.abi;
 const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
 
-router.post('/getPatents', async function (req, res) {
+async function getPatents(ownerAddress) {
+    let patentRes = [];
 
-    let patentRes = []
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "patentDate", "patentId"];
 
-    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentDate", "patentId"];
-
-    const ownerAddress = req.body.data.publicAddress;
     try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
 
@@ -40,12 +38,17 @@ router.post('/getPatents', async function (req, res) {
             patentRes.push(obj)
 
         })
-
-        console.log(patentRes)
-        res.status(200).send(patentRes)
+        return patentRes;
     } catch (err) {
-        console.error(err)
+        return err;
     }
+}
+
+router.post('/getPatents', async function (req, res) {
+    const ownerAddress = req.body.data.publicAddress;
+    let patentRes = await getPatents(ownerAddress);
+    console.log(patentRes)
+    res.status(200).send(patentRes)    
 })
 
 router.post("/auction", function (req, res, next) {
@@ -66,14 +69,31 @@ router.post('/registerPatent', async function (req, res) {
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
     let issueDate = '' + new Date().getTime();
+    console.log(typeof(issueDate));
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
-    const patent = new Patent(patent_data);
+    
+    console.log(patent_data);
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas:2900000, from: accounts[0] }, async function (error, data) {
 
         console.log(data);
+        console.log(error);
+        
+        let patentId = 0;
+        
+        let patentRes = await getPatents(owners[0]);
+
+        for(var i=0; i< patentRes.length; i++) {
+            if(patentRes[i].patentId>=patentId) {
+                patentId = patentRes[i].patentId;
+            }
+        }
+
+        patent_data.patentId = patentId;
+
+        const patent = new Patent(patent_data);
 
         if (patentType === "Audio") {
             exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {

@@ -12,7 +12,7 @@ contract PatentManager {
         uint patentId;
     }
 
-    Patent[] private patents;
+    Patent[] public patents;
 
     mapping(uint => address[]) public patentOwnerMap;
     
