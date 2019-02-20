@@ -185,7 +185,9 @@ router.post('/checkSignature', function (req, res) {
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
     let fileExtention = path.extname(uploadFileName);
     let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
-    let allowedAudioExtentions = ['.mp3', '.wav']; if (allowedImageExtentions.includes(fileExtention)) {
+    let allowedAudioExtentions = ['.mp3', '.wav'];
+
+    if (allowedImageExtentions.includes(fileExtention)) {
         patentType = "Image";
     }
     else if (allowedAudioExtentions.includes(fileExtention)) {
@@ -196,15 +198,22 @@ router.post('/checkSignature', function (req, res) {
             success: false,
             message: 'Invalid file format.'
         })
-    } let uploadPath = '';
-    let command = ''; if (patentType === "Image") {
+    }
+
+    let uploadPath = '';
+    let command = '';
+
+    if (patentType === "Image") {
         uploadPath = './uploads/Image/' + uploadFileName;
         command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
     }
     else if (patentType === "Audio") {
         uploadPath = './uploads/Audio/' + uploadFileName;
         command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
-    } uploadFile.mv(uploadPath, (err) => {
+    }
+
+
+    uploadFile.mv(uploadPath, (err) => {
         if (err) console.log('error' + err);
         exec(command, (err, stdout, stderr) => {
             console.log(stderr);
