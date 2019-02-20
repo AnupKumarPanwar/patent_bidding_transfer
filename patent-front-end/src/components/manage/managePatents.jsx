@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { Card, CardTitle } from "react-md";
 import {
     DataTable,
@@ -7,7 +7,7 @@ import {
     TableBody,
     TableRow,
     TableColumn,
-  } from 'react-md';
+} from 'react-md';
 
 import { MdArrowDownward } from 'react-icons/md';
 import { sortBy } from 'lodash/collection';
@@ -15,25 +15,25 @@ import { sortBy } from 'lodash/collection';
 import { movies } from '../constants/sampleData';
 import { Link } from "react-router-dom";
 
-import {getPatentThunk} from "../../store/thunk/managePatentThunk";
-import {sortPatentAction} from "../../store/actions/patent/PatentAction";
+import { getPatentThunk } from "../../store/thunk/managePatentThunk";
+import { sortPatentAction } from "../../store/actions/patent/PatentAction";
 
 
 const TO_PREFIX = "/dashboard";
 
 class ManagePatents extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         console.log(this.props.patents)
         this.props.getPatentThunk({
-            username : this.props.user.username, 
-            publicAddress : this.props.user.publicAddress
+            username: this.props.user.username,
+            publicAddress: this.props.user.publicAddress
         });
     }
-    
+
     render() {
 
-        const rows = this.props.patents.map( ({patentId, patentName, patentType }, index) => (
+        const rows = this.props.patents.map(({ patentId, patentName, patentType }, index) => (
             <TableRow key={patentId} >
                 <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
                 <TableColumn numeric>{patentName}</TableColumn>
@@ -47,7 +47,7 @@ class ManagePatents extends Component {
                 <DataTable baseId="patent" plain={true} responsive >
                     <TableHeader>
                         <TableRow>
-                            <TableColumn grow={false} sorted={this.props.ascending} onClick={()=>{this.props.sortPatentAction(this.props.ascending, this.props.patents)}} sortIcon={<MdArrowDownward/>}>
+                            <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
                                 Patent Id
                             </TableColumn>
                             <TableColumn numeric>
@@ -59,7 +59,7 @@ class ManagePatents extends Component {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                    {rows}
+                        {rows}
                     </TableBody>
                 </DataTable>
             </Card>);
@@ -68,9 +68,9 @@ class ManagePatents extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        patents : state.patent.patents,
-        ascending : state.patent.ascending,
-        user : state.login.userInfo
+        patents: state.patent.patents,
+        ascending: state.patent.ascending,
+        user: state.login.userInfo
     }
 }
 

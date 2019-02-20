@@ -1,8 +1,8 @@
 import {LOGIN, LOGOUT} from '../actions/login/LoginActionTypes';
 
 export const initialState = {
-    auth : false,
-    userInfo : {} 
+    auth : '',
+    userInfo : {}, 
 }
 
 const loginReducer = (state = initialState, action) =>{

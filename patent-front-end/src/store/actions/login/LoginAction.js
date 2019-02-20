@@ -4,8 +4,8 @@ import {
 
 export const loginAction = (server_response) => ({
     type : LOGIN,
-    auth : server_response.message,
-    userInfo : server_response.userInfo
+    auth : server_response.success,
+    userInfo : server_response.data
 })
 
 export const logoutAction = () => ({
