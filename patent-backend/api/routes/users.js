@@ -23,10 +23,6 @@ router.post('/register', async function (req, res) {
     let message = "";
     let account_created = false;
 
-    res.status(200).json({
-        message: "Test the Registration"
-    })
-
     User.findOne({
         $or: [
             { 'username': user_data.username },
@@ -34,12 +30,12 @@ router.post('/register', async function (req, res) {
         ]
     }).exec(async (err, result) => {
         if (result) {
-            message = "User Already Exists";
+            message = "User Already Exists.";
             account_created = false;
-            res.status(201).json({
-                message: message,
-                account_created: account_created
-            });
+            res.status(200).json({
+                success: false,
+                message: message
+            })
         } else {
             const web3 = new Web3(provider);
             const contractABI = AuctionProcess.abi;
@@ -58,16 +54,20 @@ router.post('/register', async function (req, res) {
                 .save()
                 .then(msg => {
                     console.log(msg);
-                    message = "Account Created";
+                    message = "Account Created.";
                     account_created = true;
                     res.status(201).json({
+                        success: true,
                         message: message,
-                        account_created: account_created
+                        data: account_created
                     })
                 })
                 .catch(err => {
                     message = "Account Could Not be Created"
-                    res.status()
+                    res.status(500).json({
+                        success: false,
+                        message: message
+                    })
                 });
         }
     });
@@ -88,30 +88,37 @@ router.post('/login', function (req, res) {
                         userInfo.name = res_user.name;
                         userInfo.username = res_user.username;
                         userInfo.publicAddress = res_user.publicKey;
+                        res.status(200).json({
+                            success: true,
+                            message: "User logged in successfully.",
+                            data: userInfo
+                        })
+
                     } else {
-                        message = false;
+                        res.status(200).json({
+                            success: false,
+                            message: "Invalid password."
+                        })
                     }
 
-                    res.status(200).json({
-                        "message": message,
-                        "userInfo": userInfo
 
-                    })
 
                 })
             }
             else {
-                message = false;
-
                 res.status(200).json({
-                    "message": message
+                    success: false,
+                    message: "User not registered."
                 })
             }
         })
         .catch(
             err => {
                 console.error("ERROR : " + err)
-                message = "SERVER ERROR";
+                res.status(500).json({
+                    success: false,
+                    message: "Server Error."
+                })
             }
         )
 });
