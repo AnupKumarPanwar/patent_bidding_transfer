@@ -1,64 +1,128 @@
 const express = require('express');
 const router = express.Router();
-const AuctionProcess = require("../../build/contracts/AuctionProcess.json");
+const AuctionProcess = require('../../build/contracts/AuctionProcess.json');
+const ethConfig = require('../../blockchainConfig');
 const Web3 = require('web3');
 let Busboy = require('busboy');
 const fs = require('fs');
 let exec = require('child_process').exec;
 const Patent = require('../models/Patents');
+const User = require('../models/Users');
 const mongoose = require('mongoose');
 const path = require('path');
 const formidable = require('formidable');
-// const multer = 
+
 const provider = new Web3.providers.HttpProvider(
-    "http://127.0.0.1:9545"
+    ethConfig.networkAddress
 );
 
 const web3 = new Web3(provider);
-let contractABI = AuctionProcess.abi;
-let contractAddress = AuctionProcess.networks.address;
-let auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
+const contractABI = AuctionProcess.abi;
+const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
-// change the address when ever there is a change in machine !
-auctionInstance.options.address = "0x99AD37D58Fd83558f89b67f950DfE185d522bBB4"
 
+async function getPatents(ownerAddress) {
+    let patentRes = [];
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
+
+
+    try {
+        const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
+
+        patent.map((arraya) => {
+            obj = {}
+            arraya.map((val, index) => {
+                obj[list[index]] = val
+
+            })
+            patentRes.push(obj)
+
+        })
+        return patentRes;
+    } catch (err) {
+        return err;
+    }
+}
+
+router.post('/getPatents', async function (req, res) {
+    const ownerAddress = req.body.data.publicAddress;
+    let patentRes = await getPatents(ownerAddress);
+    console.log(patentRes)
+    res.status(200).send(patentRes)
+})
 
 router.post("/auction", function (req, res, next) {
     console.log(req.body.data);
 })
 
+var count = 0;
+
 router.post('/registerPatent', async function (req, res) {
+    console.log('Request Method ' + req.method)
+    if (req.method === 'OPTIONS') {
+        console.log('OPTIONS')
+        return;
+    }
+
+
 
     const patent_data = req.body.data;
     // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
 
-    console.log(accounts);
+
+    // console.log(accounts);
 
     let owners = patent_data.owners;
     let lisenceHolders = patent_data.lisenceHolders;
     let patentName = patent_data.patentName;
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
-    let issueDate = ''+new Date().getTime();
+    let issueDate = '' + new Date().getTime();
+    console.log(typeof (issueDate));
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
-    const patent = new Patent(patent_data);
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
+    // console.log(patent_data);
 
-        console.log(data);
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] }, async function (error, data) {
+
+        // console.log(data);
+        // console.log(error);
+
+        let patentId = 0;
+
+        let patentRes = await getPatents(owners[0]);
+
+        for (let i = 0; i < patentRes.length; i++) {
+            if (patentRes[i].patentId >= patentId) {
+                patentId = patentRes[i].patentId;
+            }
+        }
+
+        patent_data.patentId = patentId;
+
+        const patent = await new Patent(patent_data);
 
         if (patentType === "Audio") {
+            console.log("Audio");
+            console.log(count++);
+            if (count === 1) {
+                return;
+            }
             exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                // console.log(err);
+                // console.log(stdout);
+                // console.log(stderr);
                 patent
                     .save()
                     .then(msg => {
-                        res.status(200).json({
+                        console.log("saved")
+                        res.status(201).json({
                             success: true,
                             message: 'Patent registered successfully',
-                            data: JSON.stringify(data)
+                            data: data
                         })
                     })
                     .catch(err => {
@@ -71,21 +135,37 @@ router.post('/registerPatent', async function (req, res) {
             })
         }
         else if (patentType === "Image") {
+            console.log("Image");
+            console.log(count++);
+            if (count === 1) {
+                return;
+            }
             exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                // console.log(err);
+                // console.log(stdout);
+                // console.log(stderr);
                 patent
                     .save()
                     .then(msg => {
+                        console.log("saved")
                         res.status(201).json({
-                            message: JSON.stringify(data)
+                            success: true,
+                            message: 'Patent registered successfully',
+                            data: data
                         })
                     })
                     .catch(err => {
-                        message = "Patent could not be registered"
-                        res.status()
+                        res.status(200).json({
+                            success: false,
+                            message: 'Patent registration failed.',
+                            data: err
+                        })
                     })
             })
         }
     })
+
+    res.send(200);
 })
 
 
@@ -182,12 +262,56 @@ router.post("/bidPatent", async function (req, res) {
         }).catch(err => {
             console.log(err);
         });
-
-    console.log(response);
-    res.status(201).json({
-        message: JSON.stringify(response)
-    })
 })
 
-module.exports = router;
 
+router.post('/search', async function (req, res) {
+    let query = new RegExp(req.body.data.query, "i");
+    console.log(query);
+    let message = '';
+    let patents = [];
+    let users = [];
+    await Patent.find({
+        $or: [
+            { 'patentName': query },
+            { 'patentType': query },
+            { 'patentSubType': query }
+        ]
+    })
+        .then((res_patents) => {
+            patents = res_patents;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+
+    await User.find({
+        $or: [
+            { 'name': query },
+            { 'email': query },
+            { 'username': query },
+            { 'nationality': query }
+        ]
+    })
+        .then((res_user) => {
+            users = res_user;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+    res.status(200).json({
+        success: true,
+        message: {
+            patents: patents,
+            users: users
+        }
+    })
+});
+
+module.exports = router;

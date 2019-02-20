@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import PatentBid from "../patent_bid/listOfAuctions";
 import ManagePatents from "../manage/managePatents";
 import AuctionPage from "../manage/auctionPage";
+import SearchPage from "../manage/searchPage";
 import PatentPage from "../manage/patentPage";
 import HomePatent from './homePatent';
 import NavLinkItem from "../common/navItemLink";
@@ -33,6 +34,10 @@ const navItems = [{
 }, {
     label: "Active Auction",
     to: `${TO_PREFIX}/auction`,
+    exact: true,
+}, {
+    label: "Search",
+    to: `${TO_PREFIX}/search`,
     exact: true,
 }];
 
@@ -95,7 +100,9 @@ class DashBoard extends Component {
                             <Route path={navItems[1].to} component={PatentBid} />
                             <Route path={navItems[2].to} component={ManagePatents} />
                             <Route path={navItems[3].to} component={AuctionPage} />
-                            {/* Route of a particular patent */}
+                            <Route path={navItems[4].to} component={SearchPage} />
+                            
+                        {/* Route of a particular patent */}
                             <Route path={`${TO_PREFIX}/patent/:id`} component={PatentPage} />
 
                         </Switch>

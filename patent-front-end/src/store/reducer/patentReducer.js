@@ -1,4 +1,4 @@
-import { GET_PATENTS, SORT_PATENTS, CHANGE_PATENT_TYPE, CHANGE_PATENT_NAME, CHANGE_PATENT_SUB_TYPE, CHANGE_COLLABORATORS, CHANGE_FILE_NAME } from "../actions/patent/PatentActionTypes";
+import { GET_PATENTS, SORT_PATENTS, SHOW_AUCTION, PATENT_AUCTION, CHANGE_PATENT_TYPE, CHANGE_PATENT_NAME, CHANGE_PATENT_SUB_TYPE, CHANGE_COLLABORATORS, CHANGE_FILE_NAME } from "../actions/patent/PatentActionTypes";
 
 export const initialState = {
   patents: [],
@@ -17,7 +17,20 @@ export const patentReducer = (state = initialState, action) => {
     case GET_PATENTS:
       return ({ ...state, patents: action.patents })
     case SORT_PATENTS:
-      return ({ ...state, ascending: action.ascending })
+      const sortedPatents = action.patents.slice();
+      sortedPatents.reverse();
+      return ({
+        ...state,
+        ascending: action.ascending,
+        patents: sortedPatents
+      })
+    case SHOW_AUCTION:
+      return ({ ...state, visibleAuction: action.visibleAuction, visibleTransfer: action.visibleTransfer })
+    case PATENT_AUCTION:
+      return ({
+        ...state,
+        auctionResponse: action.auctionResponse
+      })
     case CHANGE_PATENT_TYPE:
       return ({ ...state, patentType: action.patentType })
     case CHANGE_PATENT_SUB_TYPE:
@@ -28,7 +41,6 @@ export const patentReducer = (state = initialState, action) => {
       return ({ ...state, owners: action.owners })
     case CHANGE_FILE_NAME:
       return ({ ...state, uploadFileName: action.uploadFileName })
-
     default:
       return state
   }

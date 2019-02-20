@@ -14,17 +14,20 @@ contract AuctionProcess is PatentManager, Bidding{
         address[] auctioneer;
     }
 
+    event AuctionIdReturn(uint auctionId);
+    
     // Maps auctioneer to the aucitonId 
     // May contain multiple auctionIds 
     mapping(address => Auction[]) auctioneerAuctionMap;
     mapping(uint=>uint) auctionToPriceMap;
 
-    function createAuction(uint patentId, uint minimumBid, uint numberOfDays) public returns(uint) {
+
+    function createAuction(uint patentId, uint minimumBid, uint numberOfDays, address publicAddress) public returns(uint) {
         uint auctionId = patentId;
         uint num_seconds = numberOfDays*24*60*60;
         uint endTime = block.timestamp + num_seconds;
-        Auction memory a = Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId));
-        auctioneerAuctionMap[msg.sender].push(a);
+        // Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId));
+        auctioneerAuctionMap[publicAddress].push(Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId)));
         auctionToPriceMap[auctionId] = minimumBid;
     
         return (auctionId);
@@ -48,8 +51,8 @@ contract AuctionProcess is PatentManager, Bidding{
         }
     } 
 
-    function getAuctions() public view returns(Auction[] memory){   
-        Auction[] memory auction = auctioneerAuctionMap[msg.sender]; 
-        return auction;
+    function getAuctions(address owner) public view returns(Auction[] memory){   
+        // Auction[] memory auction = auctioneerAuctionMap[owner]; 
+        return auctioneerAuctionMap[owner];
     }
 }

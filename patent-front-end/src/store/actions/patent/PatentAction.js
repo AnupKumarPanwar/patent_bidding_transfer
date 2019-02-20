@@ -1,18 +1,36 @@
-import { SORT_PATENTS, GET_PATENTS, CHANGE_PATENT_TYPE, CHANGE_PATENT_NAME, CHANGE_PATENT_SUB_TYPE, CHANGE_COLLABORATORS, CHANGE_FILE_NAME } from "./PatentActionTypes";
+import { SORT_PATENTS, GET_PATENTS,SHOW_AUCTION, PATENT_AUCTION, CHANGE_PATENT_TYPE, CHANGE_PATENT_NAME, CHANGE_PATENT_SUB_TYPE, CHANGE_COLLABORATORS, CHANGE_FILE_NAME } from "./PatentActionTypes";
 
 export const getPatentAction = (patents) => {
+  console.log("PAtents " + patents)
   return {
     type: GET_PATENTS,
     patents: patents
   }
 };
 
-export const sortPatentAction = (ascending) => {
+export const sortPatentAction = (ascending, patents) => {
   return {
-    type: SORT_PATENTS,
-    ascending: !ascending
+    type : SORT_PATENTS, 
+    ascending : !ascending,
+    patents
   }
-};
+}
+
+export const showAuctionAction = (visibleAuction, transferAuction) => {
+  return {
+    type : SHOW_AUCTION,
+    visibleAuction : !visibleAuction,
+    transferAuction : false
+  }
+}
+
+export const patentAuctionAction = (serverResponse) => {
+  return {
+    type : PATENT_AUCTION,
+    auctionResponse : serverResponse.status
+  }
+}
+
 
 export const changePatentType = (patentType) => {
   return {

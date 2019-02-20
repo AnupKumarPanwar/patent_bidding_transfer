@@ -9,7 +9,8 @@ const PatentSchema = mongoose.Schema({
     uploadFileName: { type: String },
     owners: [{ type: String }],
     lisenceHolders: [{ type: String }],
-    status: { type: String }
+    status: { type: String },
+    patentId: {type: Number}
 });
 
 module.exports = mongoose.model('Patents', PatentSchema, 'patent_collection');

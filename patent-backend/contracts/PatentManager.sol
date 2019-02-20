@@ -12,7 +12,7 @@ contract PatentManager {
         uint patentId;
     }
 
-    Patent[] private patents;
+    Patent[] public patents;
 
     mapping(uint => address[]) public patentOwnerMap;
     
@@ -89,8 +89,7 @@ contract PatentManager {
     }
 
     function getPatentsByOwner(address owner) public view returns (Patent[] memory){
-        return ownerPatentsMap[owner];
-
+        return ownerPatentsMap[owner];  
     }
 
 }

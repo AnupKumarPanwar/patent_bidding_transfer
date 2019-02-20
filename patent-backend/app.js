@@ -6,15 +6,19 @@ const logger = require('morgan');
 const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
-const app = express();
+const auctionRouter = require('./api/routes/auction');
 const fileUpload = require('express-fileupload');
+const app = express();
 
 const mongoose = require('mongoose');
 const url = "mongodb://localhost/pider";
 mongoose.connect(url, { useNewUrlParser: true });
 
 // multer
-app.use(fileUpload());
+app.use(fileUpload({
+  useTempFiles : false
+}));
+
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use( bodyParser.json({type:'application/json'}) ); 
@@ -33,6 +37,7 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/auction', auctionRouter)
 app.use('/manage', manageRouter);
 app.use('/users', usersRouter);
 app.use('/', indexRouter);
