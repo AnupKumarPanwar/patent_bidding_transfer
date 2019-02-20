@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const AuctionProcess = require("../../build/contracts/AuctionProcess.json");
-const ethConfig = require("../../blockchainConfig");
+const AuctionProcess = require('../../build/contracts/AuctionProcess.json');
+const ethConfig = require('../../blockchainConfig');
 const Web3 = require('web3');
 let Busboy = require('busboy');
 const fs = require('fs');
@@ -21,13 +21,11 @@ const contractABI = AuctionProcess.abi;
 // const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
 
-router.post('/getPatents', async function (req, res) {
-
-    let patentRes = []
-
+async function getPatents(ownerAddress) {
+    let patentRes = [];
     const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType","issueDate", "patentId"];
 
-    const ownerAddress = req.body.data.publicAddress;
+
     try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
 
@@ -40,12 +38,17 @@ router.post('/getPatents', async function (req, res) {
             patentRes.push(obj)
 
         })
-
-        console.log(patentRes)
-        res.status(200).send(patentRes)
+        return patentRes;
     } catch (err) {
-        console.error(err)
+        return err;
     }
+}
+
+router.post('/getPatents', async function (req, res) {
+    const ownerAddress = req.body.data.publicAddress;
+    let patentRes = await getPatents(ownerAddress);
+    console.log(patentRes)
+    res.status(200).send(patentRes)    
 })
 
 router.post("/auction", function (req, res, next) {
@@ -62,65 +65,83 @@ router.post('/registerPatent', async function (req, res) {
     
 
     console.log(accounts);
+
+    let owners = patent_data.owners;
+    let lisenceHolders = patent_data.lisenceHolders;
+    let patentName = patent_data.patentName;
+    let patentType = patent_data.patentType;
+    let patentSubType = patent_data.patentSubType;
+    let issueDate = '' + new Date().getTime();
+    console.log(typeof(issueDate));
+    let uploadFileName = patent_data.uploadFileName;
+    patent_data.status = 'false';
+
+    
+    console.log(patent_data);
+
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas:2900000, from: accounts[0] }, async function (error, data) {
+
+        console.log(data);
+        console.log(error);
+        
+        let patentId = 0;
+        
+        let patentRes = await getPatents(owners[0]);
+
+        for(var i=0; i< patentRes.length; i++) {
+            if(patentRes[i].patentId>=patentId) {
+                patentId = patentRes[i].patentId;
+            }
+        }
+
+        patent_data.patentId = patentId;
+
+        const patent = new Patent(patent_data);
+
+        if (patentType === "Audio") {
+            exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                console.log(err);
+                console.log(stdout);
+                console.log(stderr);
+                patent
+                    .save()
+                    .then(msg => {
+                        res.status(200).json({
+                            success: true,
+                            message: 'Patent registered successfully',
+                            data: JSON.stringify(data)
+                        })
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            success: false,
+                            message: 'Patent registration failed.',
+                            data: err
+                        })
+                    })
+            })
+        }
+        else if (patentType === "Image") {
+            exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                console.log(err);
+                console.log(stdout);
+                console.log(stderr);
+                patent
+                    .save()
+                    .then(msg => {
+                        res.status(201).json({
+                            message: JSON.stringify(data)
+                        })
+                    })
+                    .catch(err => {
+                        message = "Patent could not be registered"
+                        res.status()
+                    })
+            })
+        }
+    })
+
     res.send(200);
-
-    // let owners = patent_data.owners;
-    // let lisenceHolders = patent_data.lisenceHolders;
-    // let patentName = patent_data.patentName;
-    // let patentType = patent_data.patentType;
-    // let patentSubType = patent_data.patentSubType;
-    // let issueDate = '' + new Date().getTime();
-    // let uploadFileName = patent_data.uploadFileName;
-    // patent_data.status = 'false';
-
-    // const patent = new Patent(patent_data);
-
-    // auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 }, function (error, data) {
-
-    //     console.log(data);
-
-    //     if (patentType === "Audio") {
-    //         exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-    //             console.log(err);
-    //             console.log(stdout);
-    //             console.log(stderr);
-    //             patent
-    //                 .save()
-    //                 .then(msg => {
-    //                     res.status(200).json({
-    //                         success: true,
-    //                         message: 'Patent registered successfully',
-    //                         data: JSON.stringify(data)
-    //                     })
-    //                 })
-    //                 .catch(err => {
-    //                     res.status(200).json({
-    //                         success: false,
-    //                         message: 'Patent registration failed.',
-    //                         data: err
-    //                     })
-    //                 })
-    //         })
-    //     }
-    //     else if (patentType === "Image") {
-    //         exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
-    //             console.log(err);
-    //             console.log(stdout);
-    //             console.log(stderr);
-    //             patent
-    //                 .save()
-    //                 .then(msg => {
-    //                     res.status(201).json({
-    //                         message: JSON.stringify(data)
-    //                     })
-    //                 })
-    //                 .catch(err => {
-    //                     message = "Patent could not be registered"
-    //                     res.status()
-    //                 })
-    //         })
-    //     }
-    // })
 })
 
 

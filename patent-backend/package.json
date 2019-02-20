@@ -25,6 +25,6 @@
     "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.10"
   }
 }
