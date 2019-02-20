@@ -53,10 +53,12 @@ class AuctionForm extends Component {
                         const obj = {
                             username : this.props.user.username,
                             publicAddress : this.props.user.publicAddress, 
-                            patentId : patentData.patentId
+                            patentId : patentData.patentId,
+                            minimumBid : this.state.minimumBid,
+                            numberOfDays : this.state.numberOfDays
                         }
                         // console.log(obj)
-                        this.props.patentForAuctionThunk({obj})
+                        this.props.patentForAuctionThunk(obj)
                     }}
                 />
             </div>

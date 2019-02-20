@@ -18,13 +18,13 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+// const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
 
 async function getPatents(ownerAddress) {
     let patentRes = [];
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType","issueDate", "patentId"];
 
-    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "patentDate", "patentId"];
 
     try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
@@ -64,10 +64,12 @@ router.post('/registerPatent', async function (req, res) {
         return;
     }
 
-    // if(req.)
+    
+
     const patent_data = req.body.data;
     // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
+    
 
     // console.log(accounts);
 
@@ -162,6 +164,8 @@ router.post('/registerPatent', async function (req, res) {
             })
         }
     })
+
+    res.send(200);
 })
 
 
@@ -183,6 +187,8 @@ router.post('/checkSignature', function (req, res) {
     let fileExtention = path.extname(uploadFileName);
     let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
     let allowedAudioExtentions = ['.mp3', '.wav'];
+    // let accounts = await web3.eth.getAccounts();
+    // console.log(accounts);
 
     if (allowedImageExtentions.includes(fileExtention)) {
         patentType = "Image";
@@ -212,17 +218,14 @@ router.post('/checkSignature', function (req, res) {
 
     uploadFile.mv(uploadPath, (err) => {
         if (err) console.log('error' + err);
+        res.status(201).json({
+            success: true,
+            message: uploadFileName,
+            similarPatentFound: false
+        });
         exec(command, (err, stdout, stderr) => {
             console.log(stderr);
             console.log(err);
-            console.log(stdout);
-            let result = stdout.replace(/\'/g, '"');
-            if (result[0] !== 'N') {
-                result = JSON.parse(result);
-                console.log(result);
-                if (parseInt(result.confidence) > 100) {
-                    res.status(200).json({
-                        success: true,
                         message: uploadFileName,
                         similarPatentFound: true,
                         similarPatent: result
