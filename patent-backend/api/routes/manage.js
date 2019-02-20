@@ -162,9 +162,7 @@ router.post('/checkSignature', function (req, res) {
     let fileExtention = path.extname(uploadFileName);
     let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
     let allowedAudioExtentions = ['.mp3', '.wav'];
-    // let accounts = await web3.eth.getAccounts();
-    // console.log(accounts);
-
+ 
     if (allowedImageExtentions.includes(fileExtention)) {
         patentType = "Image";
     }
@@ -177,10 +175,10 @@ router.post('/checkSignature', function (req, res) {
             message: 'Invalid file format.'
         })
     }
-
+ 
     let uploadPath = '';
     let command = '';
-
+ 
     if (patentType === "Image") {
         uploadPath = './uploads/Image/' + uploadFileName;
         command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
@@ -189,18 +187,21 @@ router.post('/checkSignature', function (req, res) {
         uploadPath = './uploads/Audio/' + uploadFileName;
         command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
     }
-
-
+ 
+ 
     uploadFile.mv(uploadPath, (err) => {
         if (err) console.log('error' + err);
-        res.status(201).json({
-            success: true,
-            message: uploadFileName,
-            similarPatentFound: false
-        });
         exec(command, (err, stdout, stderr) => {
             console.log(stderr);
             console.log(err);
+            console.log(stdout);
+            let result = stdout.replace(/\'/g, '"');
+            if (result[0] !== 'N') {
+                result = JSON.parse(result);
+                console.log(result);
+                if (parseInt(result.confidence) > 100) {
+                    res.status(200).json({
+                        success: true,
                         message: uploadFileName,
                         similarPatentFound: true,
                         similarPatent: result
@@ -223,7 +224,7 @@ router.post('/checkSignature', function (req, res) {
             }
         })
     })
-})
+ })
 
 
 router.post("/bidPatent", async function (req, res) {
