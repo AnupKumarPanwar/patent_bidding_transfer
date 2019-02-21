@@ -48,6 +48,9 @@ class AuctionForm extends Component {
 
     render() {
 
+        const patentLabel = this.state.query.length>0?"Patents ("+this.state.patents.length+")" : "Patents";
+        const userLabel = this.state.query.length>0?"Users ("+this.state.users.length+")" : "Users";
+
         const patentRows = this.state.patents.map(({ patentName, patentType }, index) => (
             <TableRow key={index} >
                 <TableColumn>{patentName}</TableColumn>
@@ -87,17 +90,17 @@ class AuctionForm extends Component {
 
                 <TabsContainer panelClassName="md-grid" className="md-cell md-cell--12" colored>
                     <Tabs tabId="simple-tab">
-                        <Tab label="Patents">
+                        <Tab label={patentLabel}>
                             <DataTable baseId="patent" plain={true} responsive >
                                 <TableBody>
-                                    {this.state.patents.length > 0 ? patentRows : this.state.query.length > 0 ? noResultsFound : noSearchQuery}
+                                    {this.state.query.length > 0 ? this.state.patents.length > 0 ? patentRows : noResultsFound : noSearchQuery}
                                 </TableBody>
                             </DataTable>
                         </Tab>
-                        <Tab label="Users">
+                        <Tab label={userLabel}>
                             <DataTable baseId="patent" plain={true} responsive >
                                 <TableBody>
-                                    {this.state.users.length > 0 ? userRows : this.state.query.length > 0 ? noResultsFound : noSearchQuery}
+                                    {this.state.query.length > 0 ? this.state.users.length > 0 ? userRows : noResultsFound : noSearchQuery}
                                 </TableBody>
                             </DataTable>
                         </Tab>
