@@ -43,5 +43,21 @@ export default {
         } catch (err) {
             console.log(err);
         }
+    }, 
+    getActiveAuctions : async function (data) {
+        try {
+            const res = await axios.get(controller.getActiveAuctions, { data });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    getUserActiveAuctions : async function(data) {
+        try {
+            const res = await axios.post(controller.getUserActiveAuctions, { data });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

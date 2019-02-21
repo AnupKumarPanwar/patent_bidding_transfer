@@ -51,31 +51,20 @@ router.post('/getPatents', async function (req, res) {
     res.status(200).send(patentRes)
 })
 
-router.post("/auction", function (req, res, next) {
-    console.log(req.body.data);
-})
 
 router.post('/registerPatent', async function (req, res) {
 
     const patent_data = req.body.data;
-    // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
 
-
-    // console.log(accounts);
-
     let owners = patent_data.owners;
-    let lisenceHolders = patent_data.lisenceHolders;
+    let lisenceHolders = []
     let patentName = patent_data.patentName;
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
     let issueDate = '' + new Date().getTime();
-    console.log(typeof (issueDate));
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
-
-
-    // console.log(patent_data);
 
     auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] })
         .on('receipt', async function (data) {
@@ -85,6 +74,7 @@ router.post('/registerPatent', async function (req, res) {
             let patentId = data['events'].printIntValue.raw.data;
 
             patent_data.patentId = parseInt(patentId);
+            patent_data.auctionId = null;
 
             const patent = new Patent(patent_data);
 
@@ -156,6 +146,7 @@ router.post('/getPatent', async function (req, res) {
 })
 
 router.post('/checkSignature', function (req, res) {
+  
     let uploadFile = req.files.file;
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
     let fileExtention = path.extname(uploadFileName);
