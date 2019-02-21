@@ -4,7 +4,9 @@ import "../css/RegistrationPage.scss";
 import { MdRemoveRedEye } from 'react-icons/md';
 
 import service from "../../services/userService";
-// impor
+import {loginAction} from "../../store/actions/login/LoginAction";
+import { connect } from 'react-redux';
+
 class Registration extends Component {
 
   state = {
@@ -26,12 +28,19 @@ class Registration extends Component {
   registerUser = () => {
     console.log("starting the post call")
     const data = this.state;
-    service.register(data).then(response => {
+    service.register(data).then((response) => {
       console.log(response);
+      console.log(this.props.auth);
+      this.props.loginAction(response);
     })
   }
 
   render() {
+
+    if (this.props.auth) {
+      this.props.history.push("/dashboard");
+    }
+
     return (
       <div className="main-content-container-div">
         <div className="registration-div">
@@ -120,4 +129,17 @@ class Registration extends Component {
   }
 }
 
-export default Registration;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.login.auth
+  };
+};
+
+const mapDispatchToProps = {
+  loginAction,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Registration);
