@@ -18,7 +18,8 @@ mongoose.connect(url, { useNewUrlParser: true });
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use( bodyParser.json({type:'application/json'}) ); 
+app.use( bodyParser.json({limit: "15360mb", type:'application/json'}) ); 
+// app.use( bodyParser.urlencoded({limit: "15360mb", type:'application/json'}) );    
 
 // Prevent CORS error !!!!!!! that are enforced by the browser !
 app.use((req, res, next) => {

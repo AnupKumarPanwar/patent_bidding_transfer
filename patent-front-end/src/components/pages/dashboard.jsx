@@ -9,7 +9,8 @@ import {connect} from "react-redux";
 
 import PatentBid from "../patent_bid/listOfAuctions";
 import ManagePatents from "../manage/managePatents";
-import AuctionPage from "../manage/auctionPage";
+// import AuctionPage from "../manage/auctionPage";
+import ActiveAuciton from '../manage/activeAuction';
 import SearchPage from "../manage/searchPage";
 import PatentPage from "../manage/patentPage";
 import HomePatent from './homePatent';
@@ -99,7 +100,7 @@ class DashBoard extends Component {
                             <Route path={navItems[0].to} exact component={HomePatent} />
                             <Route path={navItems[1].to} component={PatentBid} />
                             <Route path={navItems[2].to} component={ManagePatents} />
-                            <Route path={navItems[3].to} component={AuctionPage} />
+                            <Route path={navItems[3].to} render = {()=><ActiveAuciton/>}/>
                             <Route path={navItems[4].to} component={SearchPage} />
                             
                         {/* Route of a particular patent */}
