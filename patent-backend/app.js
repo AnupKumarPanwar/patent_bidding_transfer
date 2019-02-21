@@ -7,15 +7,18 @@ const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
 const auctionRouter = require('./api/routes/auction');
-const app = express();
 const fileUpload = require('express-fileupload');
+const app = express();
 
 const mongoose = require('mongoose');
 const url = "mongodb://localhost/pider";
 mongoose.connect(url, { useNewUrlParser: true });
 
 // multer
-app.use(fileUpload());
+app.use(fileUpload({
+  useTempFiles : false
+}));
+
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use( bodyParser.json({limit: "15360mb", type:'application/json'}) ); 

@@ -23,7 +23,7 @@ const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionCont
 
 async function getPatents(ownerAddress) {
     let patentRes = [];
-    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType","issueDate", "patentId"];
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
 
 
     try {
@@ -48,7 +48,7 @@ router.post('/getPatents', async function (req, res) {
     const ownerAddress = req.body.data.publicAddress;
     let patentRes = await getPatents(ownerAddress);
     console.log(patentRes)
-    res.status(200).send(patentRes)    
+    res.status(200).send(patentRes)
 })
 
 
@@ -66,69 +66,71 @@ router.post('/registerPatent', async function (req, res) {
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas:2900000, from: accounts[0] }, async function (error, data) {
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] })
+        .on('receipt', async function (data) {
 
-        console.log(data);
-        console.log(error);
-        
-        let patentId = 0;
-        
-        let patentRes = await getPatents(owners[0]);
+            console.log(data);
+            console.log(data['events'].printIntValue.raw.data);
+            let patentId = data['events'].printIntValue.raw.data;
 
-        for(var i=0; i< patentRes.length; i++) {
-            if(patentRes[i].patentId>=patentId) {
-                patentId = patentRes[i].patentId;
+            patent_data.patentId = parseInt(patentId);
+            patent_data.auctionId = null;
+
+            const patent = new Patent(patent_data);
+
+            if (patentType === "Audio") {
+                console.log("Audio");
+                exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                    // console.log(err);
+                    // console.log(stdout);
+                    // console.log(stderr);
+                    patent
+                        .save()
+                        .then(msg => {
+                            console.log("saved")
+                            res.status(201).json({
+                                success: true,
+                                message: 'Patent registered successfully',
+                                data: data
+                            })
+                        })
+                        .catch(err => {
+                            res.status(200).json({
+                                success: false,
+                                message: 'Patent registration failed.',
+                                data: err
+                            })
+                        })
+                })
             }
-        }
+            else if (patentType === "Image") {
+                console.log("Image");
 
-        patent_data.patentId = patentId;
-        patent_data.auctionId = null;
-
-        const patent = new Patent(patent_data);
-
-        if (patentType === "Audio") {
-            exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-                console.log(err);
-                console.log(stdout);
-                console.log(stderr);
-                patent
-                    .save()
-                    .then(msg => {
-                        res.status(200).json({
-                            success: true,
-                            message: 'Patent registered successfully',
-                            data: JSON.stringify(data)
+                exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                    console.log(err);
+                    console.log(stdout);
+                    console.log(stderr);
+                    patent
+                        .save()
+                        .then(msg => {
+                            console.log(msg)
+                            res.status(201).json({
+                                success: true,
+                                message: 'Patent registered successfully',
+                                data: data
+                            })
                         })
-                    })
-                    .catch(err => {
-                        res.status(200).json({
-                            success: false,
-                            message: 'Patent registration failed.',
-                            data: err
+                        .catch(err => {
+                            console.log(err);
+                            res.status(200).json({
+                                success: false,
+                                message: 'Patent registration failed.',
+                                data: err
+                            })
                         })
-                    })
-            })
-        }
-        else if (patentType === "Image") {
-            exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
-                console.log(err);
-                console.log(stdout);
-                console.log(stderr);
-                patent
-                    .save()
-                    .then(msg => {
-                        res.status(201).json({
-                            message: JSON.stringify(data)
-                        })
-                    })
-                    .catch(err => {
-                        message = "Patent could not be registered"
-                        res.status()
-                    })
-            })
-        }
-    })
-
+                })
+            }
+        })
 })
 
 
@@ -144,73 +146,74 @@ router.post('/getPatent', async function (req, res) {
 })
 
 router.post('/checkSignature', function (req, res) {
-   let uploadFile = req.files.file;
-   let uploadFileName = 'u' + Date.now() + req.files.file.name;
-   let fileExtention = path.extname(uploadFileName);
-   let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
-   let allowedAudioExtentions = ['.mp3', '.wav'];
+  
+    let uploadFile = req.files.file;
+    let uploadFileName = 'u' + Date.now() + req.files.file.name;
+    let fileExtention = path.extname(uploadFileName);
+    let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
+    let allowedAudioExtentions = ['.mp3', '.wav'];
 
-   if (allowedImageExtentions.includes(fileExtention)) {
-       patentType = "Image";
-   }
-   else if (allowedAudioExtentions.includes(fileExtention)) {
-       patentType = "Audio";
-   }
-   else {
-       res.status(200).json({
-           success: false,
-           message: 'Invalid file format.'
-       })
-   }
+    if (allowedImageExtentions.includes(fileExtention)) {
+        patentType = "Image";
+    }
+    else if (allowedAudioExtentions.includes(fileExtention)) {
+        patentType = "Audio";
+    }
+    else {
+        res.status(200).json({
+            success: false,
+            message: 'Invalid file format.'
+        })
+    }
 
-   let uploadPath = '';
-   let command = '';
+    let uploadPath = '';
+    let command = '';
 
-   if (patentType === "Image") {
-       uploadPath = './uploads/Image/' + uploadFileName;
-       command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
-   }
-   else if (patentType === "Audio") {
-       uploadPath = './uploads/Audio/' + uploadFileName;
-       command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
-   }
+    if (patentType === "Image") {
+        uploadPath = './uploads/Image/' + uploadFileName;
+        command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
+    }
+    else if (patentType === "Audio") {
+        uploadPath = './uploads/Audio/' + uploadFileName;
+        command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
+    }
 
 
-   uploadFile.mv(uploadPath, (err) => {
-       if (err) console.log('error' + err);
-       exec(command, (err, stdout, stderr) => {
-           console.log(stderr);
-           console.log(err);
-           console.log(stdout);
-           let result = stdout.replace(/\'/g, '"');
-           if (result[0] !== 'N') {
-               result = JSON.parse(result);
-               console.log(result);
-               if (parseInt(result.confidence) > 100) {
-                   res.status(200).json({
-                       success: true,
-                       message: uploadFileName,
-                       similarPatentFound: true,
-                       similarPatent: result
-                   })
-               }
-               else {
-                   res.status(201).json({
-                       success: true,
-                       message: uploadFileName,
-                       similarPatentFound: false
-                   })
-               }
-           }
-           else {
-               res.status(201).json({
-                   success: true,
-                   message: uploadFileName,
-                   similarPatentFound: false
-               })
-           }
-       })
-   })
+    uploadFile.mv(uploadPath, (err) => {
+        if (err) console.log('error' + err);
+        exec(command, (err, stdout, stderr) => {
+            console.log(stderr);
+            console.log(err);
+            console.log(stdout);
+            let result = stdout.replace(/\'/g, '"');
+            if (result[0] !== 'N') {
+                result = JSON.parse(result);
+                console.log(result);
+                if (parseInt(result.confidence) > 100) {
+                    res.status(200).json({
+                        success: true,
+                        message: uploadFileName,
+                        similarPatentFound: true,
+                        similarPatent: result
+                    })
+                }
+                else {
+                    res.status(201).json({
+                        success: true,
+                        message: uploadFileName,
+                        similarPatentFound: false
+                    })
+                }
+            }
+            else {
+                res.status(201).json({
+                    success: true,
+                    message: uploadFileName,
+                    similarPatentFound: false
+                })
+            }
+        })
+    })
 })
 
 
@@ -268,13 +271,13 @@ router.post('/search', async function (req, res) {
                 message = "SERVER ERROR";
             }
         )
-        res.status(200).json({
-                success: true,
-                message: {
-                    patents : patents,
-                    users : users
-                }
-            })
+    res.status(200).json({
+        success: true,
+        message: {
+            patents: patents,
+            users: users
+        }
+    })
 });
 
 module.exports = router;

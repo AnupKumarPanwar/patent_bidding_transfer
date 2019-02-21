@@ -5,11 +5,8 @@ export default {
 
     register: async function (data) {
         try {
-            await axios.post(controller.register, { data }).then(res => {
-                return res;
-            }).catch(err => {
-                console.log(err);
-            })
+            const res = await axios.post(controller.register, { data });
+            return (res.data);
         } catch (err) {
             console.log(err);
         }

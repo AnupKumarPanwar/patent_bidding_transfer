@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { TextField, Divider } from "react-md";
+import { TextField, Divider, DialogContainer, Snackbar } from "react-md";
 import "../css/RegistrationPage.scss";
 import { MdRemoveRedEye } from 'react-icons/md';
 
 import service from "../../services/userService";
-// impor
+import { loginAction } from "../../store/actions/login/LoginAction";
+import { connect } from 'react-redux';
+
 class Registration extends Component {
 
   state = {
@@ -14,8 +16,26 @@ class Registration extends Component {
     mobile: '',
     password: '',
     nationality: '',
-    address: ''
+    address: '',
+    visible: false,
+    autohide: true,
+    toasts: []
   }
+
+  addToast = (text, action, autohide = true) => {
+    this.setState((state) => {
+      const toasts = state.toasts.slice();
+      toasts.push({ text, action });
+      return { toasts, autohide };
+    })
+    console.log(this.state);
+    this.props.resetAuthAfterToast();
+  };
+
+  dismissToast = () => {
+    const [, ...toasts] = this.state.toasts;
+    this.setState({ toasts });
+  };
 
   handleInputChange = (value, event) => {
     this.setState({
@@ -23,17 +43,62 @@ class Registration extends Component {
     })
   }
 
+  show = () => {
+    this.setState({ visible: true });
+  };
+
+  hide = () => {
+    this.setState({ visible: false });
+    if (!this.props.auth) {
+      this.props.history.push("/");
+    }
+  };
+
   registerUser = () => {
     console.log("starting the post call")
     const data = this.state;
-    service.register(data).then(response => {
+    service.register(data).then((response) => {
       console.log(response);
+      console.log(this.props.auth);
+      if (response.success) {
+        response.success = '';
+        this.props.loginAction(response);
+        this.show();
+      }
+      else {
+        this.addToast(response.message);
+      }
     })
   }
 
   render() {
+
+
+
+    const { visible } = this.state;
+    const actions = [{
+      onClick: this.hide,
+      primary: true,
+      children: 'Okay',
+    }];
+
     return (
       <div className="main-content-container-div">
+
+        <DialogContainer
+          id="speed-boost"
+          visible={visible}
+          title="Registration Successful"
+          onHide={this.hide}
+          aria-describedby="speed-boost-description"
+          modal
+          actions={actions}
+        >
+          <p id="speed-boost-description" className="md-color--secondary-text">
+            You will be redirected to the Login Page.
+          </p>
+        </DialogContainer>
+
         <div className="registration-div">
           <h3>Registration</h3>
           <Divider style={{ background: "black" }} />
@@ -114,10 +179,29 @@ class Registration extends Component {
 
           <button onClick={this.registerUser} className="btn btn-primary registration-btn">Register</button>
         </div>
+        <Snackbar
+          id="example-snackbar"
+          toasts={this.state.toasts}
+          autohide={true}
+          onDismiss={this.dismissToast}
+        />
       </div>
 
     );
   }
 }
 
-export default Registration;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.login.auth
+  };
+};
+
+const mapDispatchToProps = {
+  loginAction,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Registration);
