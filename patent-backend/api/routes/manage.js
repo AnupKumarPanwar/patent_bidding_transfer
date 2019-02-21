@@ -57,7 +57,6 @@ router.post("/auction", function (req, res, next) {
 
 router.post('/registerPatent', async function (req, res) {
 
-    var count = 0;
     const patent_data = req.body.data;
     // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
@@ -91,10 +90,6 @@ router.post('/registerPatent', async function (req, res) {
 
             if (patentType === "Audio") {
                 console.log("Audio");
-                console.log(count++);
-                if (count > 1) {
-                    return;
-                }
                 exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
                     // console.log(err);
                     // console.log(stdout);
@@ -120,10 +115,7 @@ router.post('/registerPatent', async function (req, res) {
             }
             else if (patentType === "Image") {
                 console.log("Image");
-                console.log(count++);
-                if (count > 1) {
-                    return;
-                }
+
                 exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
                     console.log(err);
                     console.log(stdout);
@@ -149,8 +141,6 @@ router.post('/registerPatent', async function (req, res) {
                 })
             }
         })
-
-    res.send(200);
 })
 
 
