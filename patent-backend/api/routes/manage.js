@@ -18,7 +18,7 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-// const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
 
 async function getPatents(ownerAddress) {
@@ -51,33 +51,20 @@ router.post('/getPatents', async function (req, res) {
     res.status(200).send(patentRes)    
 })
 
-router.post("/auction", function (req, res, next) {
-    console.log(req.body.data);
-})
 
 router.post('/registerPatent', async function (req, res) {
 
-    
-
     const patent_data = req.body.data;
-    // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
-    
-
-    console.log(accounts);
 
     let owners = patent_data.owners;
-    let lisenceHolders = patent_data.lisenceHolders;
+    let lisenceHolders = []
     let patentName = patent_data.patentName;
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
     let issueDate = '' + new Date().getTime();
-    console.log(typeof(issueDate));
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
-
-    
-    console.log(patent_data);
 
     auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas:2900000, from: accounts[0] }, async function (error, data) {
 
@@ -95,6 +82,7 @@ router.post('/registerPatent', async function (req, res) {
         }
 
         patent_data.patentId = patentId;
+        patent_data.auctionId = null;
 
         const patent = new Patent(patent_data);
 
@@ -141,7 +129,6 @@ router.post('/registerPatent', async function (req, res) {
         }
     })
 
-    res.send(200);
 })
 
 
@@ -157,74 +144,74 @@ router.post('/getPatent', async function (req, res) {
 })
 
 router.post('/checkSignature', function (req, res) {
-    let uploadFile = req.files.file;
-    let uploadFileName = 'u' + Date.now() + req.files.file.name;
-    let fileExtention = path.extname(uploadFileName);
-    let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
-    let allowedAudioExtentions = ['.mp3', '.wav'];
- 
-    if (allowedImageExtentions.includes(fileExtention)) {
-        patentType = "Image";
-    }
-    else if (allowedAudioExtentions.includes(fileExtention)) {
-        patentType = "Audio";
-    }
-    else {
-        res.status(200).json({
-            success: false,
-            message: 'Invalid file format.'
-        })
-    }
- 
-    let uploadPath = '';
-    let command = '';
- 
-    if (patentType === "Image") {
-        uploadPath = './uploads/Image/' + uploadFileName;
-        command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
-    }
-    else if (patentType === "Audio") {
-        uploadPath = './uploads/Audio/' + uploadFileName;
-        command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
-    }
- 
- 
-    uploadFile.mv(uploadPath, (err) => {
-        if (err) console.log('error' + err);
-        exec(command, (err, stdout, stderr) => {
-            console.log(stderr);
-            console.log(err);
-            console.log(stdout);
-            let result = stdout.replace(/\'/g, '"');
-            if (result[0] !== 'N') {
-                result = JSON.parse(result);
-                console.log(result);
-                if (parseInt(result.confidence) > 100) {
-                    res.status(200).json({
-                        success: true,
-                        message: uploadFileName,
-                        similarPatentFound: true,
-                        similarPatent: result
-                    })
-                }
-                else {
-                    res.status(201).json({
-                        success: true,
-                        message: uploadFileName,
-                        similarPatentFound: false
-                    })
-                }
-            }
-            else {
-                res.status(201).json({
-                    success: true,
-                    message: uploadFileName,
-                    similarPatentFound: false
-                })
-            }
-        })
-    })
- })
+   let uploadFile = req.files.file;
+   let uploadFileName = 'u' + Date.now() + req.files.file.name;
+   let fileExtention = path.extname(uploadFileName);
+   let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
+   let allowedAudioExtentions = ['.mp3', '.wav'];
+
+   if (allowedImageExtentions.includes(fileExtention)) {
+       patentType = "Image";
+   }
+   else if (allowedAudioExtentions.includes(fileExtention)) {
+       patentType = "Audio";
+   }
+   else {
+       res.status(200).json({
+           success: false,
+           message: 'Invalid file format.'
+       })
+   }
+
+   let uploadPath = '';
+   let command = '';
+
+   if (patentType === "Image") {
+       uploadPath = './uploads/Image/' + uploadFileName;
+       command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
+   }
+   else if (patentType === "Audio") {
+       uploadPath = './uploads/Audio/' + uploadFileName;
+       command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
+   }
+
+
+   uploadFile.mv(uploadPath, (err) => {
+       if (err) console.log('error' + err);
+       exec(command, (err, stdout, stderr) => {
+           console.log(stderr);
+           console.log(err);
+           console.log(stdout);
+           let result = stdout.replace(/\'/g, '"');
+           if (result[0] !== 'N') {
+               result = JSON.parse(result);
+               console.log(result);
+               if (parseInt(result.confidence) > 100) {
+                   res.status(200).json({
+                       success: true,
+                       message: uploadFileName,
+                       similarPatentFound: true,
+                       similarPatent: result
+                   })
+               }
+               else {
+                   res.status(201).json({
+                       success: true,
+                       message: uploadFileName,
+                       similarPatentFound: false
+                   })
+               }
+           }
+           else {
+               res.status(201).json({
+                   success: true,
+                   message: uploadFileName,
+                   similarPatentFound: false
+               })
+           }
+       })
+   })
+})
 
 
 router.post("/bidPatent", async function (req, res) {
