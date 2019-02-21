@@ -5,13 +5,15 @@ import { MdRemoveRedEye } from 'react-icons/md';
 
 import { connect } from 'react-redux';
 import { loginThunk } from "../../store/thunk/loginThunk";
+import { resetAuthAfterToast } from "../../store/actions/login/LoginAction";
 
 class Login extends Component {
   state = {
     username: '',
     password: '',
     modal_visible: false,
-    autohide: true
+    autohide: true,
+    toasts: []
   };
 
   addToast = (text, action, autohide = true) => {
@@ -20,6 +22,8 @@ class Login extends Component {
       toasts.push({ text, action });
       return { toasts, autohide };
     })
+    console.log(this.state);
+    this.props.resetAuthAfterToast();
   };
 
   dismissToast = () => {
@@ -34,9 +38,15 @@ class Login extends Component {
     })
   }
 
-  verifyUser = () => {
+  verifyUser = async () => {
+    console.log(this.props.auth);
     const { username, password } = this.state;
-    this.props.loginThunk({ username: username, password: password });
+    await this.props.loginThunk({ username: username, password: password });
+    setTimeout(() => {
+      if (!this.props.auth) {
+        this.addToast("Invalid username / password");
+      }
+    }, 500);
   }
 
   render() {
@@ -110,7 +120,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  loginThunk
+  loginThunk,
+  resetAuthAfterToast
 };
 
 export default connect(
