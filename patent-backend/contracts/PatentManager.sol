@@ -21,6 +21,8 @@ contract PatentManager {
 
     mapping(address => Patent[]) public ownerPatentsMap;
 
+    event printIntValue(uint value);
+
     function registerPatent(address payable[] memory owners, address payable[] memory lisenceHolders, string memory patentName, string memory issueDate, string memory patentType, string memory patentSubType) public returns (uint) {
         uint patentId = patents.length;
         patents.push(Patent(owners, lisenceHolders, patentName, patentType, patentSubType, issueDate, patentId));
@@ -29,6 +31,7 @@ contract PatentManager {
         for (uint i = 0; i < owners.length; i++) {
             ownerPatentsMap[owners[i]].push(patents[patentId]);
         }
+        emit printIntValue(patentId);
         return patentId;
     }
 

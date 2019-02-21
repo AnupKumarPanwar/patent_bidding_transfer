@@ -55,16 +55,7 @@ router.post("/auction", function (req, res, next) {
     console.log(req.body.data);
 })
 
-var count = 0;
-
 router.post('/registerPatent', async function (req, res) {
-    console.log('Request Method ' + req.method)
-    if (req.method === 'OPTIONS') {
-        console.log('OPTIONS')
-        return;
-    }
-
-
 
     const patent_data = req.body.data;
     // let auctionInstance = await contract.deployed();
@@ -86,86 +77,70 @@ router.post('/registerPatent', async function (req, res) {
 
     // console.log(patent_data);
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] }, async function (error, data) {
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] })
+        .on('receipt', async function (data) {
 
-        // console.log(data);
-        // console.log(error);
+            console.log(data);
+            console.log(data['events'].printIntValue.raw.data);
+            let patentId = data['events'].printIntValue.raw.data;
 
-        let patentId = 0;
+            patent_data.patentId = parseInt(patentId);
 
-        let patentRes = await getPatents(owners[0]);
+            const patent = new Patent(patent_data);
 
-        for (let i = 0; i < patentRes.length; i++) {
-            if (patentRes[i].patentId >= patentId) {
-                patentId = patentRes[i].patentId;
+            if (patentType === "Audio") {
+                console.log("Audio");
+                exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                    // console.log(err);
+                    // console.log(stdout);
+                    // console.log(stderr);
+                    patent
+                        .save()
+                        .then(msg => {
+                            console.log("saved")
+                            res.status(201).json({
+                                success: true,
+                                message: 'Patent registered successfully',
+                                data: data
+                            })
+                        })
+                        .catch(err => {
+                            res.status(200).json({
+                                success: false,
+                                message: 'Patent registration failed.',
+                                data: err
+                            })
+                        })
+                })
             }
-        }
+            else if (patentType === "Image") {
+                console.log("Image");
 
-        patent_data.patentId = patentId;
-
-        const patent = await new Patent(patent_data);
-
-        if (patentType === "Audio") {
-            console.log("Audio");
-            console.log(count++);
-            if (count === 1) {
-                return;
+                exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                    console.log(err);
+                    console.log(stdout);
+                    console.log(stderr);
+                    patent
+                        .save()
+                        .then(msg => {
+                            console.log(msg)
+                            res.status(201).json({
+                                success: true,
+                                message: 'Patent registered successfully',
+                                data: data
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(200).json({
+                                success: false,
+                                message: 'Patent registration failed.',
+                                data: err
+                            })
+                        })
+                })
             }
-            exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-                // console.log(err);
-                // console.log(stdout);
-                // console.log(stderr);
-                patent
-                    .save()
-                    .then(msg => {
-                        console.log("saved")
-                        res.status(201).json({
-                            success: true,
-                            message: 'Patent registered successfully',
-                            data: data
-                        })
-                    })
-                    .catch(err => {
-                        res.status(200).json({
-                            success: false,
-                            message: 'Patent registration failed.',
-                            data: err
-                        })
-                    })
-            })
-        }
-        else if (patentType === "Image") {
-            console.log("Image");
-            console.log(count++);
-            if (count === 1) {
-                return;
-            }
-            exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
-                // console.log(err);
-                // console.log(stdout);
-                // console.log(stderr);
-                patent
-                    .save()
-                    .then(msg => {
-                        console.log("saved")
-                        res.status(201).json({
-                            success: true,
-                            message: 'Patent registered successfully',
-                            data: data
-                        })
-                    })
-                    .catch(err => {
-                        res.status(200).json({
-                            success: false,
-                            message: 'Patent registration failed.',
-                            data: err
-                        })
-                    })
-            })
-        }
-    })
-
-    res.send(200);
+        })
 })
 
 
