@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Card, CardTitle, DataTable } from 'react-md';
 import ActiveAuctionTable from "./auctionCommon/activeAuctionTable";
 import ActiveAuctionDetails from "./auctionCommon/activeAuctionDetails";
-
 import {activeAuctionThunk} from "../../store/thunk/auctionThunk";
+
 
 import {connect} from "react-redux";
 
