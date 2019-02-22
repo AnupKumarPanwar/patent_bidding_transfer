@@ -18,10 +18,11 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+
 
 
 async function getPatents(ownerAddress) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     let patentRes = [];
     const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
 
@@ -57,6 +58,8 @@ router.post('/registerPatent', async function (req, res) {
     const patent_data = req.body.data;
     let accounts = await web3.eth.getAccounts();
 
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+
     let owners = patent_data.owners;
     let lisenceHolders = []
     let patentName = patent_data.patentName;
@@ -66,12 +69,13 @@ router.post('/registerPatent', async function (req, res) {
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] })
-        .on('receipt', async function (data) {
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas : 3000000 })
+        .on('receipt', function (data) {
+        
+            
+        
 
-            console.log(data);
-            console.log(data['events'].printIntValue.raw.data);
-            let patentId = data['events'].printIntValue.raw.data;
+            let patentId = data['events'].printIntValue.returnValues.value;
 
             patent_data.patentId = parseInt(patentId);
             patent_data.auctionId = null;
@@ -81,9 +85,7 @@ router.post('/registerPatent', async function (req, res) {
             if (patentType === "Audio") {
                 console.log("Audio");
                 exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-                    // console.log(err);
-                    // console.log(stdout);
-                    // console.log(stderr);
+        
                     patent
                         .save()
                         .then(msg => {
@@ -135,6 +137,7 @@ router.post('/registerPatent', async function (req, res) {
 
 
 router.post('/getPatent', async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     const patent_data = req.body.data;
     let patent = await auctionInstance.methods.getPatent(patent_data.id).call();
     console.log(patent);
@@ -218,6 +221,7 @@ router.post('/checkSignature', function (req, res) {
 
 
 router.post("/bidPatent", async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
     // create contract auctionInstance
     const bid = req.body;
