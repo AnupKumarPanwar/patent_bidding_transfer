@@ -146,7 +146,7 @@ router.post('/getPatent', async function (req, res) {
 })
 
 router.post('/checkSignature', function (req, res) {
-  
+
     let uploadFile = req.files.file;
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
     let fileExtention = path.extname(uploadFileName);
@@ -235,17 +235,43 @@ router.post('/search', async function (req, res) {
     let query = new RegExp(req.body.data.query, "i");
     console.log(query);
     let message = '';
-    let patents = [];
+    let imagePatents = [];
+    let audioPatents = [];
     let users = [];
     await Patent.find({
-        $or: [
-            { 'patentName': query },
-            { 'patentType': query },
-            { 'patentSubType': query }
+        $and: [
+            { 'patentType': 'Image' },
+            {
+                $or: [
+                    { 'patentName': query },
+                    { 'patentSubType': query }
+                ]
+            }
         ]
     })
         .then((res_patents) => {
-            patents = res_patents;
+            imagePatents = res_patents;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+
+    await Patent.find({
+        $and: [
+            { 'patentType': 'Audio' },
+            {
+                $or: [
+                    { 'patentName': query },
+                    { 'patentSubType': query }
+                ]
+            }
+        ]
+    })
+        .then((res_patents) => {
+            audioPatents = res_patents;
         })
         .catch(
             err => {
@@ -274,7 +300,8 @@ router.post('/search', async function (req, res) {
     res.status(200).json({
         success: true,
         message: {
-            patents: patents,
+            imagePatents: imagePatents,
+            audioPatents: audioPatents,
             users: users
         }
     })

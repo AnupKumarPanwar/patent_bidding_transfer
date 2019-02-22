@@ -38,6 +38,7 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/static', express.static(path.join(__dirname, 'uploads')));
 app.use('/auction', auctionRouter)
 app.use('/manage', manageRouter);
 app.use('/users', usersRouter);
