@@ -1,6 +1,6 @@
 # Pider
 ## Patent management over Blockchain
 
-Command to run the project
+1. Command to run the project
 
 ```sudo ./start.sh```
