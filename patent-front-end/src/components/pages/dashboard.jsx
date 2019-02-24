@@ -7,9 +7,8 @@ import { Route, Switch } from 'react-router-dom';
 import {logoutAction} from "../../store/actions/login/LoginAction";
 import {connect} from "react-redux";
 
-import PatentBid from "../patent_bid/listOfAuctions";
+import BiddingPage from "../bidding/biddingPage";
 import ManagePatents from "../manage/managePatents";
-// import AuctionPage from "../manage/auctionPage";
 import ActiveAuciton from '../manage/activeAuction';
 import SearchPage from "../manage/searchPage";
 import PatentPage from "../manage/patentPage";
@@ -98,7 +97,7 @@ class DashBoard extends Component {
                         <Switch>
 
                             <Route path={navItems[0].to} exact component={HomePatent} />
-                            <Route path={navItems[1].to} component={PatentBid} />
+                            <Route path={navItems[1].to} component={BiddingPage} />
                             <Route path={navItems[2].to} component={ManagePatents} />
                             <Route path={navItems[3].to} render = {()=><ActiveAuciton/>}/>
                             <Route path={navItems[4].to} component={SearchPage} />
