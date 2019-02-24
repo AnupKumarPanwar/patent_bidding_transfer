@@ -7,19 +7,9 @@ const ActiveAuctionDetails = (props) => {
   return (
     <div style={{ display: "fixed", height: "85vh" }}>
       <CardTitle>
-        <div>
           <h3>
             <b>Auction details</b>
           </h3>
-          <h5
-            style={{
-              color: "blue"
-            }}
-          >
-            Status
-        </h5>
-        </div>
-
       </CardTitle>
       <Divider />
 
