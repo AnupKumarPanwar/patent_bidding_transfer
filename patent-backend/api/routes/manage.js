@@ -69,11 +69,11 @@ router.post('/registerPatent', async function (req, res) {
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas : 3000000 })
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 })
         .on('receipt', function (data) {
-        
-            
-        
+
+
+
 
             let patentId = data['events'].printIntValue.returnValues.value;
 
@@ -85,7 +85,7 @@ router.post('/registerPatent', async function (req, res) {
             if (patentType === "Audio") {
                 console.log("Audio");
                 exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-        
+
                     patent
                         .save()
                         .then(msg => {
@@ -146,6 +146,53 @@ router.post('/getPatent', async function (req, res) {
         message: JSON.stringify(patent)
     })
 
+})
+
+
+router.post('/transferPatent', async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const obj = req.body.data;
+    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver).send({ from: accounts[0], gas: 3000000 })
+        .on('receipt', function (data) {
+            console.log(data);
+            Patent.findOne({
+                $and: [
+                    { patentId: obj.patentId }
+                ]
+            }).then((result, err) => {
+                if (result) {
+                    console.log(result)
+                    let owners = result.owners
+                    let index = owners.indexOf(obj.sender)
+                    if (index !== -1) {
+                        owners[index] = obj.receiver
+                    }
+                    Patent.updateOne(
+                        {
+                            $and: [
+                                { patentId: obj.patentId }
+                            ]
+                        },
+                        {
+                            owners: owners
+                        }
+                    ).then((data, err) => {
+                        if (!err) {
+                            console.log("Sending Auction id !!")
+                            res.status(200).json({
+                                success: true,
+                                message: "Patent transferred successfully"
+                            })
+                        }
+                    })
+                } else {
+                    res.status(200).json({
+                        success: false,
+                        message: "Something does not seems right"
+                    })
+                }
+            })
+        });
 })
 
 router.post('/checkSignature', function (req, res) {

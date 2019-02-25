@@ -13,63 +13,63 @@ const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
 
 
-router.post("/setAuction",async function (req, res){
-  
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
-  
-    let obj = req.body.data;
-    let accounts = await web3.eth.getAccounts();
-    auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), parseInt(obj.numberOfDays), obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
-    on('receipt', (receipt)=>{
+router.post("/setAuction", async function (req, res) {
+
+  const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+
+  let obj = req.body.data;
+  let accounts = await web3.eth.getAccounts();
+  auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), parseInt(obj.numberOfDays), obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
+    on('receipt', (receipt) => {
       const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
-      
-      if(typeof(auctionId)!=="number"){
+
+      if (typeof (auctionId) !== "number") {
 
         Patent.find({
-          $and : [
-            {patentId : obj.patentId},
-            {owners : obj.publicAddress},
-            {status : false}
+          $and: [
+            { patentId: obj.patentId },
+            { owners: obj.publicAddress },
+            { status: false }
           ]
         }).then((result, err) => {
-          if(result){
+          if (result) {
             console.log(result)
             Patent.updateOne(
               {
-                $and : [
-                  {patentId:obj.patentId},
-                  {owners:obj.publicAddress}
+                $and: [
+                  { patentId: obj.patentId },
+                  { owners: obj.publicAddress }
                 ]
               },
               {
-                status : true ,
-                auctionId : auctionId
+                status: true,
+                auctionId: auctionId
               }
-            ).then((data, err)=>{
-              if(!err){
+            ).then((data, err) => {
+              if (!err) {
                 console.log("Sending Auction id !!")
                 res.status(200).json({
-                  success : true,
-                  message : "IP set for Auction",
-                  auctionId : auctionId
+                  success: true,
+                  message: "IP set for Auction",
+                  auctionId: auctionId
                 })
               }
             })
-          }else{
+          } else {
             res.status(200).json({
-              success : false,
-              message : "Something does not Seems right",
-              auctionId : null
+              success: false,
+              message: "Something does not Seems right",
+              auctionId: null
             })
           }
         })
 
 
-      }else{
+      } else {
         res.status(200).json({
-          success : false,
-          message : "IP not set for Auction",
-          auctionId : null
+          success: false,
+          message: "IP not set for Auction",
+          auctionId: null
         })
       }
     });
@@ -78,12 +78,12 @@ router.post("/setAuction",async function (req, res){
 // this route will basically return all the patents that are up for the auction 
 router.get("/getActiveAuctions", (req, res) => {
   Patent.find(
-    {status : true}
-  ).then((data, err)=>{
-    if(!err){
+    { status: true }
+  ).then((data, err) => {
+    if (!err) {
       res.status(200).json({
-        success : true,
-        message : "Success",
+        success: true,
+        message: "Success",
         data
       })
     }
@@ -91,20 +91,20 @@ router.get("/getActiveAuctions", (req, res) => {
 });
 
 // this route will return all the patents that are up 
-router.post("/getUserActiveAuctions", (req, res)=>{
+router.post("/getUserActiveAuctions", (req, res) => {
   const user = req.body.data;
   Patent.find(
     {
-      $and : [
-        { status : true },
-        { owners : user.publicAddress } 
+      $and: [
+        { status: true },
+        { owners: user.publicAddress }
       ]
     }
   ).then((data, err) => {
-    if(!err){
+    if (!err) {
       res.status(200).json({
-        success : true,
-        message : "Success",
+        success: true,
+        message: "Success",
         data
       })
     }

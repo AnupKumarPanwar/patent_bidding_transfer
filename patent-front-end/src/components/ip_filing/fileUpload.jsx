@@ -45,7 +45,7 @@ class ManageFile extends Component {
 
     }
 
-    handleSubmit = () => {
+    handleSubmit = async () => {
         let data = {
             uploadFileName: this.props.uploadFileName,
             owners: [...this.props.owners],
@@ -55,9 +55,8 @@ class ManageFile extends Component {
         };
 
         data.owners.push(this.props.user.publicAddress)
-        service.registerPatent(data);
-
-        alert("Patent registered successfully.");
+        var response = await service.registerPatent(data);
+        alert(response.data.message);
     }
 
     render() {
@@ -81,7 +80,7 @@ class ManageFile extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user : state.login.userInfo,
+        user: state.login.userInfo,
         uploadFileName: state.patent.uploadFileName,
         owners: state.patent.owners,
         patentName: state.patent.patentName,
