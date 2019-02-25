@@ -6,7 +6,9 @@ import { changeBidAmount, changeBidFormState } from "../../store/actions/bidding
 import { submitBid } from "../../store/thunk/biddingThunk";
 
 const IpDetails = props => {
-
+  const imgStyle = { width: '100%', height: 220 };
+  const audioThumbStyle = { width: '180', height: 180 };
+  const audioStyle = { width: "100%" };
   return (
     <Paper
       className="md-grid"
@@ -16,53 +18,66 @@ const IpDetails = props => {
 
       <section id="IpContainerText" className="    md-cell md-cell--6  d-flex flex-column" >
 
-        <DataTable plain={true}>
+        {
+
 
           {
-            props.auctions.length > 0
+            
 
-              ?
+          props.auctions.length > 0
 
-              Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
-                <TableRow>
-                  <TableColumn>
-                    <b>{key} : </b>
-                  </TableColumn>
-                  <TableColumn>
-                    {props.auctions[props.auctionSelectedIndex][key]}
-                  </TableColumn>
-                </TableRow>
-              ))
+            ?
 
 
-              : <TableRow>
-                <TableColumn>
-                  <h3 className="m-2" style={{ color: "red" }}>
-                    No Details Available
+            <React.Fragment>
+              <DataTable plain={true}>
+
+
+                {Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
+                  <TableRow>
+                    <TableColumn>
+                      <b>{key} : </b>
+                    </TableColumn>
+                    <TableColumn>
+                      {props.auctions[props.auctionSelectedIndex][key]}
+                    </TableColumn>
+                  </TableRow>
+                ))}
+
+
+              </DataTable>
+
+              <Divider className="m-2" />
+
+              <Button
+                primary={!props.bidFormState}
+                raised
+                className="m-4"
+                style={{
+                  alignSelf: "center"
+                }}
+                onClick={() => {
+                  props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
+                }
+                }
+              >
+                {props.bidFormState ? "Cancel" : "Bid"}
+              </Button>
+
+
+            </React.Fragment>
+
+
+            : <TableRow>
+              <TableColumn>
+                <h3 className="m-2" style={{ color: "red" }}>
+                  No Active Auctions
                   </h3>
-                </TableColumn>
-              </TableRow>
+              </TableColumn>
+            </TableRow>
 
-          }
+        }
 
-        </DataTable>
-
-        <Divider className="m-2" />
-
-        <Button
-          primary={!props.bidFormState}
-          raised
-          className="m-4"
-          style={{
-            alignSelf: "center"
-          }}
-          onClick={() => {
-            props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
-          }
-          }
-        >
-          {props.bidFormState ? "Cancel" : "Bid"}
-        </Button>
 
         {
           props.bidFormState
@@ -86,8 +101,8 @@ const IpDetails = props => {
                   raised
                   onClick={() => {
                     props.submitBid({
-                      publicAddress : props.userInfo.publicAddress,
-                      auctionId : props.auctions[props.auctionSelectedIndex].auctionId,
+                      publicAddress: props.userInfo.publicAddress,
+                      auctionId: props.auctions[props.auctionSelectedIndex].auctionId,
                       bidAmount: props.bidAmount
                     })
                   }}
@@ -107,11 +122,43 @@ const IpDetails = props => {
           display: "flex",
           justifyContent: "center",
         }}>
-          <img className="responsive" src="https://www.gettyimages.com/gi-resources/images/CreativeLandingPage/HP_Sept_24_2018/CR3_GettyImages-159018836.jpg" style={{
-            width: "100%",
-            height: "100%",
-            maxWidth: 300,
-          }} alt="Something from unsplash it" />
+          {
+            props.auctions.length > 0
+              ?
+              // console.log(props.auctions[props.auctionSelectedIndex]["uploadFileName"])
+
+
+              <div>
+                {
+                  props.auctions[props.auctionSelectedIndex]["patentType"] === "Image"
+                    ?
+                    <img className="responsive" src={"http://localhost:4000/static/Image/" + props.auctions[props.auctionSelectedIndex]["uploadFileName"]} style={{
+                      width: "100%",
+                      height: "100%",
+                      maxWidth: 300,
+                    }} alt="Something from unsplash it" />
+                    :
+                    <div className = "">
+
+                      <img
+                        src={'http://localhost:3000/assets/music.webp'}
+                        style={audioThumbStyle}
+                        alt=''
+                      />
+
+                      <audio controls className="m-2" style={audioStyle}>
+                        <source src={'http://localhost:4000/static/Audio/' + props.auctions[props.auctionSelectedIndex]["uploadFileName"]} />
+                      </audio>
+
+                    </div>
+                }
+
+              </div>
+
+              :
+              <React.Fragment></React.Fragment>
+          }
+
         </section>
       </section>
 
@@ -127,7 +174,7 @@ const mapStateToProps = state => {
     bidAmount: state.bidding.bidAmount,
     auctions: state.bidding.auctions,
     auctionSelectedIndex: state.bidding.auctionSelectedIndex,
-    userInfo : state.login.userInfo
+    userInfo: state.login.userInfo
   }
 }
 

@@ -24,13 +24,6 @@ export const showAuctionAction = (visibleAuction, transferAuction) => {
   }
 }
 
-export const patentAuctionAction = (serverResponse) => {
-  return {
-    type : PATENT_AUCTION,
-    auctionResponse : serverResponse.status
-  }
-}
-
 
 export const changePatentType = (patentType) => {
   return {

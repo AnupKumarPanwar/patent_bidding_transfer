@@ -55,11 +55,9 @@ class Registration extends Component {
   };
 
   registerUser = () => {
-    console.log("starting the post call")
+  
     const data = this.state;
     service.register(data).then((response) => {
-      console.log(response);
-      console.log(this.props.auth);
       if (response.success) {
         response.success = '';
         this.props.loginAction(response);

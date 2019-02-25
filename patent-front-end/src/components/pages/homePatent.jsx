@@ -19,13 +19,9 @@ const OBJECT_ITEMS = [{
 
 class FilePatent extends Component {
 
-    // state = {
-    //     type_value: '',
-    // }
 
     onTypeChange = (value, event) => {
         console.log(value);
-        // this.setState({ type_value: value });
         this.props.changePatentType(value);
     }
 

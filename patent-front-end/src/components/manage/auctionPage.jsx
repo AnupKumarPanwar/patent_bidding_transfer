@@ -1,33 +1,29 @@
 import React, { Component } from 'react';
-import { TextField, Button } from 'react-md';
+import { TextField, Button , DialogContainer} from 'react-md';
 import axios from "axios";
 import controller from '../../controller';
-import {patentForAuctionThunk} from "../../store/thunk/managePatentThunk";
-import {connect} from "react-redux"
-
+import { patentForAuctionThunk } from "../../store/thunk/managePatentThunk";
+import { connect } from "react-redux"
+import service from "../../services/patentService";
 class AuctionForm extends Component {
+
     state = {
         minimumBid: '',
-        numberOfDays : ''
+        numberOfDays: ''
     }
 
     handleFieldChange = (value, event) => {
         this.setState({ [event.target.id]: value })
     }
 
-    componentDidMount() {
-        console.log("Auction Form Mounted !");
-    }
-
-    componentWillUnmount(){
-        console.log("Auction Form Unmounted !")
-    }
-
     render() {
 
         const patentData = this.props.patents[this.props.patentIndex];
         return (
+
+
             <div className="md-grid">
+
                 <TextField
                     id="minimumBid"
                     value={this.state.minimumBid}
@@ -49,16 +45,21 @@ class AuctionForm extends Component {
                     primary
                     children="Submit"
                     className="md-cell m-2"
-                    onClick={()=>{
+                    onClick={() => {
                         const obj = {
-                            username : this.props.user.username,
-                            publicAddress : this.props.user.publicAddress, 
-                            patentId : patentData.patentId,
-                            minimumBid : this.state.minimumBid,
-                            numberOfDays : this.state.numberOfDays
+                            username: this.props.user.username,
+                            publicAddress: this.props.user.publicAddress,
+                            patentId: patentData.patentId,
+                            minimumBid: this.state.minimumBid,
+                            numberOfDays: this.state.numberOfDays
                         }
-                        // console.log(obj)
-                        this.props.patentForAuctionThunk(obj)
+                        service.auctionMyPatent(obj)
+                        .then( (res)=>{
+                            alert(res.message);
+                            if(res.success){
+                                this.props.history.replace("/dashboard/auction")
+                            }
+                        })
                     }}
                 />
             </div>
@@ -67,14 +68,10 @@ class AuctionForm extends Component {
 }
 
 const mapsStateToProps = state => {
-    return({
-        patents : state.patent.patents,
-        user : state.login.userInfo
-    })    
+    return ({
+        patents: state.patent.patents,
+        user: state.login.userInfo,
+    })
 }
 
-const mapDispatchToState = {
-    patentForAuctionThunk
-}
-
-export default connect(mapsStateToProps,mapDispatchToState)(AuctionForm);
+export default connect(mapsStateToProps)(AuctionForm);
