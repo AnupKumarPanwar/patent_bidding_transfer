@@ -10,7 +10,7 @@ export const loginAction = (server_response) => ({
 
 export const logoutAction = () => ({
     type : LOGOUT, 
-    auth : false
+    auth : ''
 })
 
 export const resetAuthAfterToast = () => ({

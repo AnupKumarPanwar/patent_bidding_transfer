@@ -28,7 +28,7 @@ const navItems = [{
     label: "Register Patent",
     to: TO_PREFIX,
     exact: true,
-},{
+}, {
     label: "Bid for Patents",
     to: `${TO_PREFIX}/bid`,
     exact: true
@@ -44,6 +44,11 @@ const navItems = [{
     label: "Search",
     to: `${TO_PREFIX}/search`,
     exact: true,
+},
+{
+    label: "Logout",
+    to: `/`,
+    exact: true,
 }];
 
 class DashBoard extends Component {
@@ -57,8 +62,10 @@ class DashBoard extends Component {
     }
 
     componentWillUnmount() {
-        // this.props.logout();
-        // this.props.history.push("/")
+        this.props.logout();
+        localStorage.setItem('auth', '');
+        localStorage.setItem('userInfo', '');
+        this.props.history.push("/")
     }
 
     showDrawer = () => {
