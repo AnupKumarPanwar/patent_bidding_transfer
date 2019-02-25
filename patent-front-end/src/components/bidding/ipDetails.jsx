@@ -19,7 +19,6 @@ const IpDetails = props => {
         <DataTable plain={true}>
 
           {
-
             props.auctions.length > 0
 
               ?

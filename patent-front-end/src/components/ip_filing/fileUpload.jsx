@@ -53,9 +53,11 @@ class ManageFile extends Component {
             patentType: this.props.patentType,
             patentSubType: this.props.patentSubType
         };
+        console.log(this.props.user);
 
         data.owners.push(this.props.user.publicAddress)
         var response = await service.registerPatent(data);
+        console.log(response);
         alert(response.message);
     }
 
