@@ -41,7 +41,7 @@ class ProfilePage extends Component {
                             </div>
                         </Card>
                     </div>
-                    <div className="md-cell md-cell--9">
+                <div className="md-cell md-cell--9">
                         <div style={{ display: "fixed", height: "85vh" }}>
                             <CardTitle>
                                 <h3>
