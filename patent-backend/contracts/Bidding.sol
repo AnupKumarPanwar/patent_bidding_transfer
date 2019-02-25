@@ -15,10 +15,10 @@ contract Bidding{
     mapping(address => BidPrice[]) public userBidMap;
     mapping(uint => AddressPrice[]) public auctionToBidersMap;
 
-    function addBid(uint auctionId, uint bidAmount) public {
+    function addBid(uint auctionId, uint bidAmount, address sender) public {
 
-        userBidMap[msg.sender].push(BidPrice(auctionId, bidAmount));
-        auctionToBidersMap[auctionId].push(AddressPrice(msg.sender, bidAmount));
+        userBidMap[sender].push(BidPrice(auctionId, bidAmount));
+        auctionToBidersMap[auctionId].push(AddressPrice(sender, bidAmount));
     }
 
     function allBids(uint auctionId) public view returns (AddressPrice[] memory){
@@ -26,7 +26,7 @@ contract Bidding{
     }
 
     // By a person who is biding for multiple IPs
-    function getMyBids() public view returns (BidPrice[] memory){
-        return userBidMap[msg.sender];
+    function getMyBids(address sender) public view returns (BidPrice[] memory){
+        return userBidMap[sender];
     }   
 }

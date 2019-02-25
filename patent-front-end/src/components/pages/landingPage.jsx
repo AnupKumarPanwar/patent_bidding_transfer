@@ -22,10 +22,6 @@ class LandingPage extends Component {
             <Login changeAuth = {this.props.changeAuth} routes={this.props.history} />
           </div>
         </div>
-
-        <div id="features" className="features">
-          <h1>aslkdfjaskdf</h1>
-        </div>
       </div>
     );
   }

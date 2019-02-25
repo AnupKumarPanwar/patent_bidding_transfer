@@ -1,7 +1,7 @@
 import { SORT_PATENTS, GET_PATENTS,SHOW_AUCTION, PATENT_AUCTION, CHANGE_PATENT_TYPE, CHANGE_PATENT_NAME, CHANGE_PATENT_SUB_TYPE, CHANGE_COLLABORATORS, CHANGE_FILE_NAME } from "./PatentActionTypes";
 
 export const getPatentAction = (patents) => {
-  console.log("Patents " + patents)
+  console.log(patents)
   return {
     type: GET_PATENTS,
     patents: patents
