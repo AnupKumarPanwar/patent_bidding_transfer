@@ -7,6 +7,7 @@ const indexRouter = require('./api/routes/index');
 const usersRouter = require('./api/routes/users');
 const manageRouter = require('./api/routes/manage');
 const auctionRouter = require('./api/routes/auction');
+const biddingRouter = require('./api/routes/bidding');
 const fileUpload = require('express-fileupload');
 const app = express();
 
@@ -16,12 +17,12 @@ mongoose.connect(url, { useNewUrlParser: true });
 
 // multer
 app.use(fileUpload({
-  useTempFiles : false
+  useTempFiles: false
 }));
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use( bodyParser.json({limit: "15360mb", type:'application/json'}) ); 
+app.use(bodyParser.json({ limit: "15360mb", type: 'application/json' }));
 // app.use( bodyParser.urlencoded({limit: "15360mb", type:'application/json'}) );    
 
 // Prevent CORS error !!!!!!! that are enforced by the browser !
@@ -39,7 +40,8 @@ app.use((req, res, next) => {
 })
 
 app.use('/static', express.static(path.join(__dirname, 'uploads')));
-app.use('/auction', auctionRouter)
+app.use('/auction', auctionRouter);
+app.use('/bidding', biddingRouter);
 app.use('/manage', manageRouter);
 app.use('/users', usersRouter);
 app.use('/', indexRouter);

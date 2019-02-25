@@ -9,5 +9,5 @@ module.exports = {
     search : ipAddress + "/manage/search",
     getActiveAuctions : ipAddress + "/auction/getActiveAuctions",
     getUserActiveAuctions : ipAddress + "/auction/getUserActiveAuctions",
-    submitBid : ipAddress + "/bidding/"
+    submitBid : ipAddress + "/bidding/bidForPatent"
 }

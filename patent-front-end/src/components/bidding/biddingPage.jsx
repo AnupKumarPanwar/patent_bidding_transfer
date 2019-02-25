@@ -1,9 +1,16 @@
 import React, { Component } from "react";
+import {connect} from "react-redux";
 
 import IpList from "./ipList";
 import IpDetails from "./ipDetails"
 
+import {getAuctions} from "../../store/thunk/biddingThunk";
+
 class BiddingPage extends Component {
+
+  componentWillMount(){
+    this.props.getAuctions()
+  }
 
   render() {
     return (
@@ -30,7 +37,16 @@ class BiddingPage extends Component {
       </div>
     );
   }
-
 }
 
-export default BiddingPage;
+const mapStateToProps = (state) =>{
+  return {
+    auctions : state.bidding.auctions
+  }
+}
+
+const mapDispatchToProps = {
+  getAuctions
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BiddingPage);
