@@ -87,6 +87,13 @@ router.get("/getActiveAuctions", (req, res) => {
         message: "Success",
         data
       })
+    }else{
+      res.status(200).json({
+        success: false,
+        message: "Not Success",
+        data : [],
+        log : err
+      })
     }
   })
 });
