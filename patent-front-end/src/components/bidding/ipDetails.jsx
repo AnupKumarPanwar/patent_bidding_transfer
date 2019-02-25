@@ -14,7 +14,7 @@ const IpDetails = props => {
         height: "100%"
       }}>
 
-      <section id="IpContainerText" className=" m-2 md-cell md-cell--6  d-flex flex-column" >
+      <section id="IpContainerText" className="    md-cell md-cell--6  d-flex flex-column" >
 
         <DataTable plain={true}>
 
