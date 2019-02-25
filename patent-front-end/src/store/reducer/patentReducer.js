@@ -25,11 +25,6 @@ export const patentReducer = (state = initialState, action) => {
       })
     case SHOW_AUCTION:
       return ({ ...state, visibleAuction: action.visibleAuction, visibleTransfer: action.visibleTransfer })
-    case PATENT_AUCTION:
-      return ({
-        ...state,
-        auctionResponse: action.auctionResponse
-      })
     case CHANGE_PATENT_TYPE:
       return ({ ...state, patentType: action.patentType })
     case CHANGE_PATENT_SUB_TYPE:

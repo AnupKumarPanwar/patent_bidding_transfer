@@ -81,6 +81,7 @@ router.get("/getActiveAuctions", (req, res) => {
   Patent.find(
     { status: true }
   ).then((data, err) => {
+    console.log(data)
     if (!err) {
       res.status(200).json({
         success: true,
@@ -101,19 +102,28 @@ router.get("/getActiveAuctions", (req, res) => {
 // this route will return all the patents that are up 
 router.post("/getUserActiveAuctions", (req, res) => {
   const user = req.body.data;
+  // console.log(us
+  
   Patent.find(
     {
-      $and: [
-        { status: true },
-        { owners: user.publicAddress }
+      $and : [
+        {"status":"true"},
+        {"owners" : user.publicAddress}
       ]
     }
   ).then((data, err) => {
+    // console.log(data)
     if (!err) {
       res.status(200).json({
         success: true,
         message: "Success",
         data
+      })
+    }else{
+      res.status(200).json({
+        success: false,
+        message: "Failure",
+        data : []
       })
     }
   })
