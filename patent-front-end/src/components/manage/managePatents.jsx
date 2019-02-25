@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 
 import { getPatentThunk } from "../../store/thunk/managePatentThunk";
 import { sortPatentAction } from "../../store/actions/patent/PatentAction";
+import PatentsTable from './manageCommon/patentsTable';
 
 
 const TO_PREFIX = "/dashboard";
@@ -39,26 +40,9 @@ class ManagePatents extends Component {
         ));
 
         return (
-            <div className="md-cell md-cell--12 md-text-container" style = {{height:"85vh"}}>
+            <div className="md-cell md-cell--12 md-text-container" style={{ height: "85vh" }}>
                 <CardTitle><h3>Manage patents</h3></CardTitle>
-                <DataTable plain={true} responsive >
-                    <TableHeader>
-                        <TableRow>
-                            <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
-                                Patent Id
-                            </TableColumn>
-                            <TableColumn>
-                                Patent Name
-                            </TableColumn>
-                            <TableColumn>
-                                Patent Type
-                            </TableColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {rows}
-                    </TableBody>
-                </DataTable>
+                <PatentsTable/>
             </div>);
     };
 };

@@ -52,7 +52,7 @@ class Login extends Component {
   render() {
 
     if (this.props.auth) {
-      this.props.routes.push("/dashboard");
+      this.props.routes.push("/dashboard/profile");
     }
 
     return (
