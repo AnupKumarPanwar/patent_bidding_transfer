@@ -16,6 +16,7 @@ const ethConfig = require("../../blockchainConfig");
 const provider = new Web3.providers.HttpProvider(
     ethConfig.networkAddress
 );
+const contractAddress = AuctionProcess.networks.address;
 
 router.post('/register', async function (req, res) {
     const user_data = req.body.data;
@@ -40,7 +41,7 @@ router.post('/register', async function (req, res) {
         } else {
             const web3 = new Web3(provider);
             const contractABI = AuctionProcess.abi;
-            const instance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+            const instance = new web3.eth.Contract(contractABI, contractAddress);
             // the below line with create a new account and return a public key !
             // these accounts are created with 0 eth balance !
             let publicAddress = await web3.eth.personal.newAccount(user_data.password);

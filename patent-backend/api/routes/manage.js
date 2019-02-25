@@ -18,11 +18,12 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
+const contractAddress = AuctionProcess.networks.address;
 
 
 
 async function getPatents(ownerAddress) {
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
     let patentRes = [];
     const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
 
@@ -58,7 +59,7 @@ router.post('/registerPatent', async function (req, res) {
     const patent_data = req.body.data;
     let accounts = await web3.eth.getAccounts();
 
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
     let owners = patent_data.owners;
     let lisenceHolders = []
@@ -71,9 +72,6 @@ router.post('/registerPatent', async function (req, res) {
 
     auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 })
         .on('receipt', function (data) {
-
-
-
 
             let patentId = data['events'].printIntValue.returnValues.value;
 
@@ -137,7 +135,7 @@ router.post('/registerPatent', async function (req, res) {
 
 
 router.post('/getPatent', async function (req, res) {
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
     const patent_data = req.body.data;
     let patent = await auctionInstance.methods.getPatent(patent_data.id).call();
     console.log(patent);
@@ -150,7 +148,7 @@ router.post('/getPatent', async function (req, res) {
 
 
 router.post('/transferPatent', async function (req, res) {
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
     const obj = req.body.data;
     let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver).send({ from: accounts[0], gas: 3000000 })
         .on('receipt', function (data) {
@@ -268,7 +266,7 @@ router.post('/checkSignature', function (req, res) {
 
 
 router.post("/bidPatent", async function (req, res) {
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
     // create contract auctionInstance
     const bid = req.body;
