@@ -6,6 +6,7 @@ import sys
 import json
 option = sys.argv[1]
 
+# db = MySQLdb.connect("host", "username", "password", "dbname")
 db = MySQLdb.connect("localhost", "root", "biappanwar", "dejavu")
 cursor = db.cursor()
 hash = imagehash.dhash(Image.open(sys.argv[2]))
