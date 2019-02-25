@@ -43,11 +43,11 @@ router.post('/register', async function (req, res) {
             const instance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
             // the below line with create a new account and return a public key !
             // these accounts are created with 0 eth balance !
-            let publicKey = await web3.eth.personal.newAccount(user_data.password);
-            console.log("Address generated : " + publicKey);
+            let publicAddress = await web3.eth.personal.newAccount(user_data.password);
+            console.log("Address generated : " + publicAddress);
 
             user_data.password = bcrypt.hashSync(user_data.password);
-            user_data.publicKey = publicKey;
+            user_data.publicAddress = publicAddress;
 
             const user = new User(user_data);
 
@@ -60,7 +60,7 @@ router.post('/register', async function (req, res) {
 
                     userInfo.name = user_data.name;
                     userInfo.username = user_data.username;
-                    userInfo.publicAddress = user_data.publicKey;
+                    userInfo.publicAddress = user_data.publicAddress;
 
                     res.status(201).json({
                         success: true,
@@ -93,7 +93,7 @@ router.post('/login', function (req, res) {
                         message = true;
                         userInfo.name = res_user.name;
                         userInfo.username = res_user.username;
-                        userInfo.publicAddress = res_user.publicKey;
+                        userInfo.publicAddress = res_user.publicAddress;
                         res.status(200).json({
                             success: true,
                             message: "User logged in successfully.",
