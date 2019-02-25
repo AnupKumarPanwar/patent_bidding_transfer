@@ -11,7 +11,7 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-const contractAddress = AuctionProcess.networks.address;
+const contractAddress = ethConfig.auctionContractAddress;
 
 
 router.post("/setAuction", async function (req, res) {

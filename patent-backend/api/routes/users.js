@@ -16,7 +16,7 @@ const ethConfig = require("../../blockchainConfig");
 const provider = new Web3.providers.HttpProvider(
     ethConfig.networkAddress
 );
-const contractAddress = AuctionProcess.networks.address;
+const contractAddress = ethConfig.auctionContractAddress;
 
 router.post('/register', async function (req, res) {
     const user_data = req.body.data;

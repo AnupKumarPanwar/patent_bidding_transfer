@@ -32,53 +32,30 @@ class ManagePatents extends Component {
 
         let rows = <TableRow></TableRow>
         if (this.props.patents.length > 0) {
-        const rows = this.props.patents.map(({ patentId, patentName, patentType }, index) => (
-            <TableRow key={patentId} >
-                <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
-                <TableColumn>{patentName}</TableColumn>
-                <TableColumn>{patentType}</TableColumn>
-            </TableRow>
-        ));
+            const rows = this.props.patents.map(({ patentId, patentName, patentType }, index) => (
+                <TableRow key={patentId} >
+                    <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
+                    <TableColumn>{patentName}</TableColumn>
+                    <TableColumn>{patentType}</TableColumn>
+                </TableRow>
+            ));
         }
 
         return (
             <div className="md-cell md-cell--12 md-text-container" style={{ height: "85vh" }}>
-
-                <CardTitle><h3>Manage patents</h3></CardTitle>
-                <PatentsTable/>
-
-
                 {
                     this.props.patents.length > 0
                         ?
-
-                        <DataTable plain={true} responsive >
+                        <React.Fragment>
                             <CardTitle><h3>Manage patents</h3></CardTitle>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
-                                        Patent Id
-                                        </TableColumn>
-                                    <TableColumn>
-                                        Patent Name
-                                        </TableColumn>
-                                    <TableColumn>
-                                        Patent Type
-                                        </TableColumn>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {rows}
-
-                            </TableBody>
-                        </DataTable>
+                            <PatentsTable />
+                        </React.Fragment>
                         :
 
                         <div className="d-flex justify-content-center">
                             <h1 className="m-3"><b>No Patents Registered Yet</b></h1>
                         </div>
                 }
-
             </div>);
     };
 };
