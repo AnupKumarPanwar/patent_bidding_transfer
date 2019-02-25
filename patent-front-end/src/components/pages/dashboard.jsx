@@ -84,8 +84,8 @@ class DashBoard extends Component {
 
         const { visible } = this.state;
 
-        // if (this.props.auth) {
-        if (1) {
+        
+        if (this.props.auth) {
             return (
                 <div className="dashboard">
 

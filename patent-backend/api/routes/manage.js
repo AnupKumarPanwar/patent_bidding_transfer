@@ -18,7 +18,7 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-const contractAddress = AuctionProcess.networks.address;
+const contractAddress = ethConfig.auctionContractAddress;
 
 async function getPatents(ownerAddress) {
     const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
