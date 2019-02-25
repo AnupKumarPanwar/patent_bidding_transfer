@@ -1,5 +1,5 @@
-const ipAddress = "http://localhost:4000";
-module.exports = {
+export const ipAddress = "http://localhost:4000";
+export const controller = {
     register: ipAddress + "/users/register",
     login: ipAddress + "/users/login",
     auctionPatent : ipAddress + "/auction/setAuction",
@@ -9,5 +9,6 @@ module.exports = {
     search : ipAddress + "/manage/search",
     getActiveAuctions : ipAddress + "/auction/getActiveAuctions",
     getUserActiveAuctions : ipAddress + "/auction/getUserActiveAuctions",
-    submitBid : ipAddress + "/bidding/bidForPatent"
+    submitBid : ipAddress + "/bidding/bidForPatent",
+    userProfile : ipAddress + "/users/userProfile"
 }

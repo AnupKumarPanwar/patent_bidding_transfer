@@ -9,15 +9,42 @@ import { Link } from "react-router-dom";
 
 import { getPatentThunk } from "../../store/thunk/managePatentThunk";
 import { sortPatentAction } from "../../store/actions/patent/PatentAction";
+import service from '../../services/patentService';
 
 class ProfilePage extends Component {
 
-    componentWillMount() {
+    state = {
+        user: {}
+    }
+
+    componentDidMount() {
+        let username = this.props.match.params.username;
+
+        if (username === undefined || username === null) {
+            username = this.props.user.username;
+        }
+
+        console.log(username);
+
+        service.getUserProfile({ username: username })
+            .then((res) => {
+                var user = res.data;
+                this.setState({ user });
+                console.log(this.state.user);
+
+                this.props.getPatentThunk({
+                    username: this.state.user.username,
+                    publicAddress: this.state.user.publicAddress
+                });
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
         console.log(this.props.patents)
-        this.props.getPatentThunk({
-            username: this.props.user.username,
-            publicAddress: this.props.user.publicAddress
-        });
+
+
     }
 
     render() {
@@ -28,20 +55,20 @@ class ProfilePage extends Component {
                         <Card style={{ display: "fixed", height: "85vh" }}>
                             <CardTitle>
                                 <h3>
-                                    Anup Kumar Panwar
+                                    {this.state.user.name}
                                 </h3>
                             </CardTitle>
                             <Divider />
-                            <div style={{padding : 15}}>
-                            <b>Email</b> : 1anuppanwar@gmail.com <br/>
-                            <b>Mobile</b> : +91-8968894728 <br/>
-                            <b>Address</b> : Block8, IT Park, Chandigarh <br/>
-                            <b>Nationality</b> : India <br/>
-                            <b>Public Key</b> : 0x12345678900987654321
+                            <div style={{ padding: 15 }}>
+                                <b>Email</b> : {this.state.user.email} <br />
+                                <b>Mobile</b> : {this.state.user.mobile} <br />
+                                <b>Address</b> : {this.state.user.address} <br />
+                                <b>Nationality</b> : {this.state.user.nationality} <br />
+                                <b>Public Key</b> : {this.state.user.publicAddress}
                             </div>
                         </Card>
                     </div>
-                <div className="md-cell md-cell--9">
+                    <div className="md-cell md-cell--9">
                         <div style={{ display: "fixed", height: "85vh" }}>
                             <CardTitle>
                                 <h3>
@@ -49,10 +76,10 @@ class ProfilePage extends Component {
                                 </h3>
                             </CardTitle>
                             <Divider />
-                            <PatentsTable/>
+                            <PatentsTable />
                             <div className="md-grid">
                                 <div className="md-cell--12">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -73,7 +100,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     getPatentThunk,
-    sortPatentAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

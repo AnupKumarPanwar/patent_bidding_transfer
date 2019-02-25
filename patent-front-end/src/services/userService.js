@@ -1,5 +1,5 @@
 import axios from "axios";
-import controller from '../controller';
+import { controller } from '../controller';
 
 export default {
 
