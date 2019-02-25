@@ -11,11 +11,12 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
+const contractAddress = AuctionProcess.networks.address;
 
 
 router.post("/setAuction", async function (req, res) {
 
-  const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+  const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();

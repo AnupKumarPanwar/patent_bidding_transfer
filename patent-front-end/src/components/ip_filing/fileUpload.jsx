@@ -56,7 +56,7 @@ class ManageFile extends Component {
 
         data.owners.push(this.props.user.publicAddress)
         var response = await service.registerPatent(data);
-        alert(response.data.message);
+        alert(response.message);
     }
 
     render() {

@@ -9,7 +9,7 @@ const UserSchema = mongoose.Schema({
     password: { type: String },
     address: { type: String },
     nationality: { type: String },
-    publicKey: { type: String }
+    publicAddress: { type: String }
 });
 
 module.exports = mongoose.model('Users', UserSchema, 'user_collection');
