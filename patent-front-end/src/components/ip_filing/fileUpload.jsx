@@ -24,12 +24,15 @@ class ManageFile extends Component {
     }
 
     handleUpload = async () => {
+
         this.setState({ checking: true });
-        console.log("Going for it !")
         const data = new FormData()
+
         data.append('file', this.state.selectedFile, this.state.selectedFile.name)
+
         var self = this;
         var response = await service.fileUpload(data);
+
         if (response.data.success) {
             var similarPatentFound = response.data.similarPatentFound;
             var uploadFileName = response.data.message;
@@ -38,26 +41,23 @@ class ManageFile extends Component {
         }
         else {
             self.setState({ similarPatentFound: true, checked: true, checking: false });
-
         }
 
     }
 
     handleSubmit = async () => {
-        var data = {
+        let data = {
             uploadFileName: this.props.uploadFileName,
-            owners: this.props.owners,
-            lisenceHolders: this.props.lisenceHolders,
+            owners: [...this.props.owners],
             patentName: this.props.patentName,
             patentType: this.props.patentType,
             patentSubType: this.props.patentSubType
         };
+
+        data.owners.push(this.props.user.publicAddress)
         var response = await service.registerPatent(data);
-        console.log(response);
-        alert("Patent registered successfully.");
+        alert(response.data.message);
     }
-
-
 
     render() {
 
@@ -80,9 +80,9 @@ class ManageFile extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        user: state.login.userInfo,
         uploadFileName: state.patent.uploadFileName,
         owners: state.patent.owners,
-        lisenceHolders: state.patent.lisenceHolders,
         patentName: state.patent.patentName,
         patentType: state.patent.patentType,
         patentSubType: state.patent.patentSubType

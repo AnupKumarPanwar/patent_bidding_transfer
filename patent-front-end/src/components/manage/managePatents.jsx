@@ -10,13 +10,11 @@ import {
 } from 'react-md';
 
 import { MdArrowDownward } from 'react-icons/md';
-import { sortBy } from 'lodash/collection';
-
-import { movies } from '../constants/sampleData';
 import { Link } from "react-router-dom";
 
 import { getPatentThunk } from "../../store/thunk/managePatentThunk";
 import { sortPatentAction } from "../../store/actions/patent/PatentAction";
+import PatentsTable from './manageCommon/patentsTable';
 
 
 const TO_PREFIX = "/dashboard";
@@ -36,33 +34,16 @@ class ManagePatents extends Component {
         const rows = this.props.patents.map(({ patentId, patentName, patentType }, index) => (
             <TableRow key={patentId} >
                 <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
-                <TableColumn numeric>{patentName}</TableColumn>
+                <TableColumn>{patentName}</TableColumn>
                 <TableColumn>{patentType}</TableColumn>
             </TableRow>
         ));
 
         return (
-            <Card className="md-cell md-cell--12 md-text-container">
+            <div className="md-cell md-cell--12 md-text-container" style={{ height: "85vh" }}>
                 <CardTitle><h3>Manage patents</h3></CardTitle>
-                <DataTable baseId="patent" plain={true} responsive >
-                    <TableHeader>
-                        <TableRow>
-                            <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
-                                Patent Id
-                            </TableColumn>
-                            <TableColumn numeric>
-                                Patent Name
-                            </TableColumn>
-                            <TableColumn>
-                                Patent Type
-                            </TableColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {rows}
-                    </TableBody>
-                </DataTable>
-            </Card>);
+                <PatentsTable/>
+            </div>);
     };
 };
 

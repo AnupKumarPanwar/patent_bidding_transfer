@@ -22,6 +22,7 @@ router.post('/register', async function (req, res) {
     console.log(user_data);
     let message = "";
     let account_created = false;
+    let userInfo = {};
 
     User.findOne({
         $or: [
@@ -56,10 +57,15 @@ router.post('/register', async function (req, res) {
                     console.log(msg);
                     message = "Account Created.";
                     account_created = true;
+
+                    userInfo.name = user_data.name;
+                    userInfo.username = user_data.username;
+                    userInfo.publicAddress = user_data.publicKey;
+
                     res.status(201).json({
                         success: true,
                         message: message,
-                        data: account_created
+                        data: userInfo
                     })
                 })
                 .catch(err => {

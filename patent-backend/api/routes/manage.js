@@ -18,10 +18,11 @@ const provider = new Web3.providers.HttpProvider(
 
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
-const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+
 
 
 async function getPatents(ownerAddress) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     let patentRes = [];
     const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
 
@@ -51,49 +52,40 @@ router.post('/getPatents', async function (req, res) {
     res.status(200).send(patentRes)
 })
 
-router.post("/auction", function (req, res, next) {
-    console.log(req.body.data);
-})
 
 router.post('/registerPatent', async function (req, res) {
 
     const patent_data = req.body.data;
-    // let auctionInstance = await contract.deployed();
     let accounts = await web3.eth.getAccounts();
 
-
-    // console.log(accounts);
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
     let owners = patent_data.owners;
-    let lisenceHolders = patent_data.lisenceHolders;
+    let lisenceHolders = []
     let patentName = patent_data.patentName;
     let patentType = patent_data.patentType;
     let patentSubType = patent_data.patentSubType;
     let issueDate = '' + new Date().getTime();
-    console.log(typeof (issueDate));
     let uploadFileName = patent_data.uploadFileName;
     patent_data.status = 'false';
 
+    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 })
+        .on('receipt', function (data) {
 
-    // console.log(patent_data);
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ gas: 2900000, from: accounts[0] })
-        .on('receipt', async function (data) {
 
-            console.log(data);
-            console.log(data['events'].printIntValue.raw.data);
-            let patentId = data['events'].printIntValue.raw.data;
+
+            let patentId = data['events'].printIntValue.returnValues.value;
 
             patent_data.patentId = parseInt(patentId);
+            patent_data.auctionId = null;
 
             const patent = new Patent(patent_data);
 
             if (patentType === "Audio") {
                 console.log("Audio");
                 exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
-                    // console.log(err);
-                    // console.log(stdout);
-                    // console.log(stderr);
+
                     patent
                         .save()
                         .then(msg => {
@@ -145,6 +137,7 @@ router.post('/registerPatent', async function (req, res) {
 
 
 router.post('/getPatent', async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     const patent_data = req.body.data;
     let patent = await auctionInstance.methods.getPatent(patent_data.id).call();
     console.log(patent);
@@ -155,7 +148,55 @@ router.post('/getPatent', async function (req, res) {
 
 })
 
+
+router.post('/transferPatent', async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
+    const obj = req.body.data;
+    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver).send({ from: accounts[0], gas: 3000000 })
+        .on('receipt', function (data) {
+            console.log(data);
+            Patent.findOne({
+                $and: [
+                    { patentId: obj.patentId }
+                ]
+            }).then((result, err) => {
+                if (result) {
+                    console.log(result)
+                    let owners = result.owners
+                    let index = owners.indexOf(obj.sender)
+                    if (index !== -1) {
+                        owners[index] = obj.receiver
+                    }
+                    Patent.updateOne(
+                        {
+                            $and: [
+                                { patentId: obj.patentId }
+                            ]
+                        },
+                        {
+                            owners: owners
+                        }
+                    ).then((data, err) => {
+                        if (!err) {
+                            console.log("Sending Auction id !!")
+                            res.status(200).json({
+                                success: true,
+                                message: "Patent transferred successfully"
+                            })
+                        }
+                    })
+                } else {
+                    res.status(200).json({
+                        success: false,
+                        message: "Something does not seems right"
+                    })
+                }
+            })
+        });
+})
+
 router.post('/checkSignature', function (req, res) {
+
     let uploadFile = req.files.file;
     let uploadFileName = 'u' + Date.now() + req.files.file.name;
     let fileExtention = path.extname(uploadFileName);
@@ -227,6 +268,7 @@ router.post('/checkSignature', function (req, res) {
 
 
 router.post("/bidPatent", async function (req, res) {
+    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
 
     // create contract auctionInstance
     const bid = req.body;
@@ -244,17 +286,43 @@ router.post('/search', async function (req, res) {
     let query = new RegExp(req.body.data.query, "i");
     console.log(query);
     let message = '';
-    let patents = [];
+    let imagePatents = [];
+    let audioPatents = [];
     let users = [];
     await Patent.find({
-        $or: [
-            { 'patentName': query },
-            { 'patentType': query },
-            { 'patentSubType': query }
+        $and: [
+            { 'patentType': 'Image' },
+            {
+                $or: [
+                    { 'patentName': query },
+                    { 'patentSubType': query }
+                ]
+            }
         ]
     })
         .then((res_patents) => {
-            patents = res_patents;
+            imagePatents = res_patents;
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                message = "SERVER ERROR";
+            }
+        )
+
+    await Patent.find({
+        $and: [
+            { 'patentType': 'Audio' },
+            {
+                $or: [
+                    { 'patentName': query },
+                    { 'patentSubType': query }
+                ]
+            }
+        ]
+    })
+        .then((res_patents) => {
+            audioPatents = res_patents;
         })
         .catch(
             err => {
@@ -283,7 +351,8 @@ router.post('/search', async function (req, res) {
     res.status(200).json({
         success: true,
         message: {
-            patents: patents,
+            imagePatents: imagePatents,
+            audioPatents: audioPatents,
             users: users
         }
     })

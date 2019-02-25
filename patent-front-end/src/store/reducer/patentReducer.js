@@ -4,7 +4,6 @@ export const initialState = {
   patents: [],
   ascending: false,
   owners: [],
-  lisenceHolders: [],
   patentName: '',
   patentType: '',
   patentSubType: '',

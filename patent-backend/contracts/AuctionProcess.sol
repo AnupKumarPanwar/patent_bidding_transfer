@@ -29,6 +29,8 @@ contract AuctionProcess is PatentManager, Bidding{
         // Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId));
         auctioneerAuctionMap[publicAddress].push(Auction(auctionId, patentId, endTime, minimumBid, getPatentType(patentId), getOwnerList(patentId)));
         auctionToPriceMap[auctionId] = minimumBid;
+
+        emit AuctionIdReturn(auctionId);
     
         return (auctionId);
     }
@@ -55,4 +57,6 @@ contract AuctionProcess is PatentManager, Bidding{
         // Auction[] memory auction = auctioneerAuctionMap[owner]; 
         return auctioneerAuctionMap[owner];
     }
+
+    
 }

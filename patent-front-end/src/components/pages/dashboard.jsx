@@ -4,15 +4,16 @@ import { MdMenu } from 'react-icons/md';
 import CSSTransitionGroup from 'react-transition-group/CSSTransition';
 import { Route, Switch } from 'react-router-dom';
 
-import {logoutAction} from "../../store/actions/login/LoginAction";
-import {connect} from "react-redux";
+import { logoutAction } from "../../store/actions/login/LoginAction";
+import { connect } from "react-redux";
 
-import PatentBid from "../patent_bid/listOfAuctions";
+import BiddingPage from "../bidding/biddingPage";
 import ManagePatents from "../manage/managePatents";
-import AuctionPage from "../manage/auctionPage";
+import ActiveAuciton from '../manage/activeAuction';
 import SearchPage from "../manage/searchPage";
 import PatentPage from "../manage/patentPage";
 import HomePatent from './homePatent';
+import ProfilePage from '../manage/profilePage';
 import NavLinkItem from "../common/navItemLink";
 
 import "../css/dashboard.scss";
@@ -20,10 +21,14 @@ import "../css/dashboard.scss";
 const TO_PREFIX = "/dashboard";
 
 const navItems = [{
-    label: "Home",
-    to: TO_PREFIX,
+    label: "Profile",
+    to: `${TO_PREFIX}/profile`,
     exact: true,
 }, {
+    label: "Register Patent",
+    to: TO_PREFIX,
+    exact: true,
+},{
     label: "Bid for Patents",
     to: `${TO_PREFIX}/bid`,
     exact: true
@@ -42,12 +47,12 @@ const navItems = [{
 }];
 
 class DashBoard extends Component {
-    
+
     state = {
         visible: false
     };
 
-    componentDidMount() {     
+    componentDidMount() {
         this.dialog = document.getElementById('drawer-routering-example-dialog');
     }
 
@@ -73,14 +78,14 @@ class DashBoard extends Component {
         const { visible } = this.state;
 
         // if (this.props.auth) {
-            if (1) {
+        if (1) {
             return (
                 <div className="dashboard">
 
                     <Toolbar
                         colored
                         fixed
-                        title={"Pider, Welcome "+this.props.user.name}
+                        title={"Pider, Welcome " + this.props.user.name}
                         nav={
                             <Button icon onClick={this.showDrawer}><MdMenu></MdMenu></Button>
                         }
@@ -96,13 +101,14 @@ class DashBoard extends Component {
 
                         <Switch>
 
-                            <Route path={navItems[0].to} exact component={HomePatent} />
-                            <Route path={navItems[1].to} component={PatentBid} />
-                            <Route path={navItems[2].to} component={ManagePatents} />
-                            <Route path={navItems[3].to} component={AuctionPage} />
-                            <Route path={navItems[4].to} component={SearchPage} />
-                            
-                        {/* Route of a particular patent */}
+                            <Route path={navItems[0].to} exact component={ProfilePage} />
+                            <Route path={navItems[1].to} exact component={HomePatent} />
+                            <Route path={navItems[2].to} component={BiddingPage} />
+                            <Route path={navItems[3].to} component={ManagePatents} />
+                            <Route path={navItems[4].to} render={() => <ActiveAuciton />} />
+                            <Route path={navItems[5].to} component={SearchPage} />
+
+                            {/* Route of a particular patent */}
                             <Route path={`${TO_PREFIX}/patent/:id`} component={PatentPage} />
 
                         </Switch>
@@ -123,7 +129,7 @@ class DashBoard extends Component {
                     />
                 </div>
             );
-        }else{
+        } else {
             return (
                 <div>
                     <h1>Not Authorized !</h1>
@@ -135,17 +141,17 @@ class DashBoard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        auth : state.login.auth,
-        user : state.login.userInfo
+        auth: state.login.auth,
+        user: state.login.userInfo
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return({
-        logout : () => {
+    return ({
+        logout: () => {
             dispatch(logoutAction());
         }
     })
 }
 
-export default connect( mapStateToProps , mapDispatchToProps)(DashBoard);
+export default connect(mapStateToProps, mapDispatchToProps)(DashBoard);
