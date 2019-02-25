@@ -19,8 +19,6 @@ const provider = new Web3.providers.HttpProvider(
 const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
 
-
-
 async function getPatents(ownerAddress) {
     const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     let patentRes = [];
@@ -41,17 +39,19 @@ async function getPatents(ownerAddress) {
         })
         return patentRes;
     } catch (err) {
-        return err;
+        // here we are passing a null array because at the front end 
+        // if any scenario we dont get a empty array the code collapses
+        return [];
     }
 }
 
 router.post('/getPatents', async function (req, res) {
     const ownerAddress = req.body.data.publicAddress;
     let patentRes = await getPatents(ownerAddress);
+
     console.log(patentRes)
     res.status(200).send(patentRes)
 })
-
 
 router.post('/registerPatent', async function (req, res) {
 
@@ -71,8 +71,6 @@ router.post('/registerPatent', async function (req, res) {
 
     auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({ from: accounts[0], gas: 3000000 })
         .on('receipt', function (data) {
-
-
 
 
             let patentId = data['events'].printIntValue.returnValues.value;
@@ -135,7 +133,6 @@ router.post('/registerPatent', async function (req, res) {
         })
 })
 
-
 router.post('/getPatent', async function (req, res) {
     const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
     const patent_data = req.body.data;
@@ -147,7 +144,6 @@ router.post('/getPatent', async function (req, res) {
     })
 
 })
-
 
 router.post('/transferPatent', async function (req, res) {
     const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
@@ -265,22 +261,6 @@ router.post('/checkSignature', function (req, res) {
         })
     })
 })
-
-
-router.post("/bidPatent", async function (req, res) {
-    const auctionInstance = new web3.eth.Contract(contractABI, ethConfig.auctionContractAddress);
-
-    // create contract auctionInstance
-    const bid = req.body;
-    console.log(bid);
-    const response = await auctionInstance.methods.addBid(parseInt(bid.patentId), parseInt(bid.minimum_bid))
-        .send({
-            from: "0xfe4e2178395430069d9590e4a4c61820f03f57c5", gas: 2000000
-        }).catch(err => {
-            console.log(err);
-        });
-})
-
 
 router.post('/search', async function (req, res) {
     let query = new RegExp(req.body.data.query, "i");

@@ -21,7 +21,6 @@ const TO_PREFIX = "/dashboard";
 class ManagePatents extends Component {
 
     componentDidMount() {
-        console.log(this.props.patents)
         this.props.getPatentThunk({
             username: this.props.user.username,
             publicAddress: this.props.user.publicAddress
@@ -39,26 +38,38 @@ class ManagePatents extends Component {
         ));
 
         return (
-            <div className="md-cell md-cell--12 md-text-container" style = {{height:"85vh"}}>
-                <CardTitle><h3>Manage patents</h3></CardTitle>
-                <DataTable plain={true} responsive >
-                    <TableHeader>
-                        <TableRow>
-                            <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
-                                Patent Id
-                            </TableColumn>
-                            <TableColumn>
-                                Patent Name
-                            </TableColumn>
-                            <TableColumn>
-                                Patent Type
-                            </TableColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {rows}
-                    </TableBody>
-                </DataTable>
+            <div className="md-cell md-cell--12 md-text-container" style={{ height: "85vh" }}>
+
+                {
+                    this.props.patents.length > 0
+                        ?
+
+                        <DataTable plain={true} responsive >
+                            <CardTitle><h3>Manage patents</h3></CardTitle>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableColumn grow={false} sorted={this.props.ascending} onClick={() => { this.props.sortPatentAction(this.props.ascending, this.props.patents) }} sortIcon={<MdArrowDownward />}>
+                                        Patent Id
+                                        </TableColumn>
+                                    <TableColumn>
+                                        Patent Name
+                                        </TableColumn>
+                                    <TableColumn>
+                                        Patent Type
+                                        </TableColumn>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {rows}
+
+                            </TableBody>
+                        </DataTable>
+                        :
+
+                        <div className="d-flex justify-content-center">
+                            <h1 className="m-3"><b>No Patents Registered Yet</b></h1>
+                        </div>
+                }
             </div>);
     };
 };
