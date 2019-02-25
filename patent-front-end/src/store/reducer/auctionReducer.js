@@ -2,7 +2,7 @@ import {ACTIVE_AUCTION_ACTION, CHANGE_SEL_AUCTION_INDEX} from "../actions/auctio
 
 const initialState = {
   auctions : [],
-  auctionSelectedIndex : 0
+  auctionSelectedIndex : 0,
 }
 
 export const auctionReducer = (state = initialState, action) => {

@@ -4,6 +4,7 @@ import { MdArrowDropDown } from 'react-icons/md';
 import { connect } from "react-redux";
 import { changeAuctionDetails, changeBidFormState } from "../../store/actions/bidding/BiddingActions";
 const AuctionsList = (props) => {
+  const audioThumbStyle = { width: '100', height: 100 };
   return (
     <div
       style={{
@@ -14,7 +15,6 @@ const AuctionsList = (props) => {
         zIndex: 1,
         left: 0
       }}
-
     >
       {
 
@@ -29,15 +29,37 @@ const AuctionsList = (props) => {
               overflowX: "hidden"
             }}
               onClick={() => {
-                  props.changeAuctionDetails(index)
-                  props.changeBidFormState(true, props.bidFormState ? null : props.bidAmount)
-                }
+                props.changeAuctionDetails(index)
+                props.changeBidFormState(true, props.bidFormState ? null : props.bidAmount)
+              }
               }
             >
               <section className="md-cell md-cell--4">
 
-                <img src="https://www.gettyimages.com/gi-resources/images/CreativeLandingPage/HP_Sept_24_2018/CR3_GettyImages-159018836.jpg" style={{ height: 100, width: 100, borderRadius: "50%" }} alt="" />
 
+                {
+                  props.auctions.length > 0
+                    ?
+
+                    <div>
+                      {
+                        props.auctions[props.auctionSelectedIndex]["patentType"] === "Image"
+                          ?
+                          <img className="responsive" src={"http://localhost:4000/static/Image/" + props.auctions[index]["uploadFileName"]} style={{ height: 100, width: 100, borderRadius: "50%" }}
+                            alt="Something from unsplash it" />
+                          :
+
+                          <img className="responsive"  style={{ height: 100, width: 100, borderRadius: "50%" }}
+                          alt="Something from unsplash it" />
+
+
+
+                      }
+
+                    </div>
+                    :
+                    <React.Fragment></React.Fragment>
+                }
               </section>
               <section className="md-cell md-cell--8">
                 <ul style={{
