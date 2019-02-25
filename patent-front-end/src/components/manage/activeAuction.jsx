@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 
 class ActiveAuction extends Component {
 
-  componentDidMount() {
+  componentWillMount() {
     // Here we will make a API call to the server to get the 
     // Users Active Auctions
     // the thunk will update the active auction
