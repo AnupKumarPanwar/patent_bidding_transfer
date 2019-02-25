@@ -31,6 +31,8 @@ class ManagePatents extends Component {
 
     render() {
 
+        let rows = <TableRow></TableRow>
+        if (this.props.patents.length > 0) {
         const rows = this.props.patents.map(({ patentId, patentName, patentType }, index) => (
             <TableRow key={patentId} >
                 <TableColumn><Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link></TableColumn>
@@ -38,6 +40,7 @@ class ManagePatents extends Component {
                 <TableColumn>{patentType}</TableColumn>
             </TableRow>
         ));
+        }
 
         return (
             <div className="md-cell md-cell--12 md-text-container" style={{ height: "85vh" }}>

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import "../css/loginCss.scss";
+import React, { Component } from 'react';
+import '../css/loginCss.scss';
 import { TextField, Button, Divider, Snackbar } from 'react-md';
 import { MdRemoveRedEye } from 'react-icons/md';
 
 import { connect } from 'react-redux';
-import { loginThunk } from "../../store/thunk/loginThunk";
-import { resetAuthAfterToast } from "../../store/actions/login/LoginAction";
+import { loginThunk } from '../../store/thunk/loginThunk';
+import { resetAuthAfterToast } from '../../store/actions/login/LoginAction';
 
 class Login extends Component {
   state = {
@@ -42,48 +42,46 @@ class Login extends Component {
     console.log(this.props.auth);
     const { username, password } = this.state;
     await this.props.loginThunk({ username: username, password: password });
-    setTimeout(() => {
-      if (!this.props.auth) {
-        this.addToast("Invalid username / password");
-      }
-    }, 500);
   }
 
   render() {
 
     if (this.props.auth) {
-      this.props.routes.push("/dashboard/profile");
+      this.props.routes.push('/dashboard/profile');
+    }
+    else if (this.props.auth===false){
+      this.addToast('Invalid username / password');
     }
 
     return (
-      <div className="div-login container">
+      <div className='div-login container'>
         <h3>Login</h3>
         <Divider />
-        <div className=" md-grid">
+        <div className=' md-grid'>
           <TextField
-            id="username"
-            type="text"
-            className="md-cell md-cell--12"
-            placeholder="Username"
+            id='username'
+            type='text'
+            className='md-cell md-cell--12'
+            placeholder='Username'
             value={this.state.username}
             onChange={this.handleInputChange}
           />
           <TextField
-            id="password"
-            type="password"
-            className="md-cell md-cell--12"
-            placeholder="Password"
+            id='password'
+            type='password'
+            className='md-cell md-cell--12'
+            placeholder='Password'
             value={this.state.password}
             onChange={this.handleInputChange}
             passwordIcon={<MdRemoveRedEye />}
           />
 
-          <div className="login-button">
+          <div className='login-button'>
             <Button
               raised
               primary
               onClick={this.verifyUser}
-              className="md-cell md-cell--6"
+              className='md-cell md-cell--6'
             >
 
               Login
@@ -93,7 +91,7 @@ class Login extends Component {
               raised
               primary
               onClick={this.verifyUser}
-              className="md-cell md-cell--6"
+              className='md-cell md-cell--6'
             >
 
               Register
@@ -103,7 +101,7 @@ class Login extends Component {
 
         </div>
         <Snackbar
-          id="example-snackbar"
+          id='example-snackbar'
           toasts={this.state.toasts}
           autohide={true}
           onDismiss={this.dismissToast}
