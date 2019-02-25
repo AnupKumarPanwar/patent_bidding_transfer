@@ -128,6 +128,33 @@ router.post('/login', function (req, res) {
                 })
             }
         )
+})
+
+router.post('/userProfile', function (req, res) {
+    const user = req.body.data;
+    let message = '';
+    let userInfo = {};
+    User.findOne({ username: user.username })
+        .then((res_user) => {
+            let result = res_user;
+            console.log(result);
+            result["password"]="";
+            console.log(result);
+            res.status(200).json({
+                success: true,
+                message: "User profile fetched successfully.",
+                data: result
+            })
+        })
+        .catch(
+            err => {
+                console.error("ERROR : " + err)
+                res.status(500).json({
+                    success: false,
+                    message: "Server Error."
+                })
+            }
+        )
 });
 
 module.exports = router;

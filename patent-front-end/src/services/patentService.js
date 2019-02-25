@@ -59,5 +59,13 @@ export default {
         } catch (err) {
             console.log(err);
         }
+    },
+    getUserProfile: async function (data) {
+        try {
+            const res = await axios.post(controller.userProfile, { data });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

@@ -9,5 +9,6 @@ export const controller = {
     search : ipAddress + "/manage/search",
     getActiveAuctions : ipAddress + "/auction/getActiveAuctions",
     getUserActiveAuctions : ipAddress + "/auction/getUserActiveAuctions",
-    submitBid : ipAddress + "/bidding/bidForPatent"
+    submitBid : ipAddress + "/bidding/bidForPatent",
+    userProfile : ipAddress + "/users/userProfile"
 }
