@@ -1,8 +1,8 @@
 import axios from "axios";
-import controller from "../controller";
+import { controller } from "../controller";
 
 export default {
-  submitBid : async (data) => {
+  submitBid: async (data) => {
     const response = await axios.post(controller.submitBid, data);
     return response;
   }

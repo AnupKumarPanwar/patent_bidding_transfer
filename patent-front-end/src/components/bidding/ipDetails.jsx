@@ -20,9 +20,14 @@ const IpDetails = props => {
 
         {
 
+
+          {
+            
+
           props.auctions.length > 0
 
             ?
+
 
             <React.Fragment>
               <DataTable plain={true}>

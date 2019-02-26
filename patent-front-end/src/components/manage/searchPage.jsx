@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { TextField, Button, TabsContainer, Tabs, Tab, Card, CardTitle, CardText, Slider, Paper, Avatar } from 'react-md';
 import service from '../../services/patentService';
+import {ipAddress} from '../../controller'
 import {
     DataTable,
     TableHeader,
@@ -17,6 +18,10 @@ import axios from 'axios';
 import controller from '../../controller';
 import { patentForAuctionThunk } from '../../store/thunk/managePatentThunk';
 import { connect } from 'react-redux'
+
+const staticImageUrl = ipAddress + '/static/Image/';
+const staticAudioUrl = ipAddress +'/static/Image/';
+const TO_PREFIX = "/dashboard";
 
 class AuctionForm extends Component {
     state = {
@@ -51,16 +56,16 @@ class AuctionForm extends Component {
         const audioThumbStyle = { width: '100%', height: 180 };
         const audioStyle = { width: 320 };
 
-        const imagePatentRows = this.state.imagePatents.map(({ patentName, patentType, patentSubType, uploadFileName }, index) => (
+        const imagePatentRows = this.state.imagePatents.map(({ patentId, patentName, patentType, patentSubType, uploadFileName }, index) => (
                 <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
-                    <a href={'http://localhost:4000/static/Image/' + uploadFileName}>
+                <Link to={`${TO_PREFIX}/patent/${patentId}`}>
                         <img
-                            src={'http://localhost:4000/static/Image/' + uploadFileName}
+                            src={staticImageUrl + uploadFileName}
                             className='img-fluid hoverable'
                             style={imgStyle}
                             alt=''
                         />
-                    </a>
+                    </Link>
                     <p>
                         <div style={{ color: '#70757a' }}>{patentName}</div>
                         <div style={{ color: 'rgba(112, 117, 122, 0.65)' }}>{patentSubType}</div>
@@ -71,17 +76,17 @@ class AuctionForm extends Component {
         const audioPatentRows = this.state.audioPatents.map(({ patentName, patentType, patentSubType, uploadFileName }, index) => (
                 <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
 
-                    <a href={'http://localhost:4000/static/Image/' + uploadFileName}>
+                    <Link to={staticImageUrl + uploadFileName}>
                         <img
                             src={'http://localhost:3000/assets/music.webp'}
                             className='img-fluid hoverable'
                             style={audioThumbStyle}
                             alt=''
                         />
-                    </a>
+                    </Link>
 
                     <audio controls style={audioStyle}>
-                        <source src={'http://localhost:4000/static/Audio/' + uploadFileName} />
+                        <source src={staticAudioUrl + uploadFileName} />
                     </audio>
 
                     <p>

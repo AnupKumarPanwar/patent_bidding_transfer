@@ -1,5 +1,5 @@
 import axios from "axios";
-import controller from "../controller";
+import { controller } from "../controller";
 
 export default {
     auction: async function (data) {
@@ -14,7 +14,7 @@ export default {
     registerPatent: async function (data) {
         try {
             const res = await axios.post(controller.registerPatent, { data });
-            return (res.data.message);
+            return (res.data);
         }
         catch (err) {
             console.log(err);
@@ -43,8 +43,8 @@ export default {
         } catch (err) {
             console.log(err);
         }
-    }, 
-    getActiveAuctions : async function (data) {
+    },
+    getActiveAuctions: async function (data) {
         try {
             const res = await axios.get(controller.getActiveAuctions, { data });
             return res.data;
@@ -52,9 +52,17 @@ export default {
             console.log(err);
         }
     },
-    getUserActiveAuctions : async function(data) {
+    getUserActiveAuctions: async function (data) {
         try {
             const res = await axios.post(controller.getUserActiveAuctions, { data });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    getUserProfile: async function (data) {
+        try {
+            const res = await axios.post(controller.userProfile, { data });
             return res.data;
         } catch (err) {
             console.log(err);

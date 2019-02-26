@@ -1,4 +1,6 @@
 {
+
   "networkAddress" : "http://127.0.0.1:8545",
   "auctionContractAddress" : "0xcf4a604585377e1208c29E2D5523D58675655923"
+
 }

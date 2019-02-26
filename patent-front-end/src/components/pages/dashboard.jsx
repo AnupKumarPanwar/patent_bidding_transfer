@@ -22,7 +22,7 @@ const TO_PREFIX = "/dashboard";
 
 const navItems = [{
     label: "Profile",
-    to: `${TO_PREFIX}/profile`,
+    to: `${TO_PREFIX}/profile/:username?`,
     exact: true,
 }, {
     label: "Register Patent",
