@@ -138,9 +138,22 @@ router.post('/getPatent', async function (req, res) {
     const patent_data = req.body.data;
     let patent = await auctionInstance.methods.getPatent(patent_data.id).call();
     console.log(patent);
+    let patentRes = [];
+    const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
+
+
+
+        obj = {}
+        patent.map((val, index) => {
+            obj[list[index]] = val
+
+        })
+        patentRes = obj
+
+
 
     res.status(201).json({
-        message: JSON.stringify(patent)
+        message: patentRes
     })
 
 })
