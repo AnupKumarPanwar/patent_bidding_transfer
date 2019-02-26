@@ -51,7 +51,7 @@ class ProfilePage extends Component {
         return (
             <div style={{ display: "fixed", height: "90vh", top: "0" }}>
                 <div className="md-grid">
-                    <div className="md-cell md-cell--3">
+                    <div className="md-cell md-cell--4">
                         <Card style={{ display: "fixed", height: "85vh" }}>
                             <CardTitle>
                                 <h3>
@@ -68,7 +68,8 @@ class ProfilePage extends Component {
                             </div>
                         </Card>
                     </div>
-                    <div className="md-cell md-cell--9">
+
+                    <div className="md-cell md-cell--8">
                         <div style={{ display: "fixed", height: "85vh" }}>
                             <CardTitle>
                                 <h3>
