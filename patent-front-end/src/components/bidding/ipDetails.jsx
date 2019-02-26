@@ -19,32 +19,21 @@ const IpDetails = props => {
       <section id="IpContainerText" className="    md-cell md-cell--6  d-flex flex-column" >
 
         {
-
-
-          {
-            
-
           props.auctions.length > 0
 
             ?
-
-
             <React.Fragment>
-              <DataTable plain={true}>
-
-
+              <DataTable plain={true} style={{width:"100%"}}>
                 {Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
                   <TableRow>
                     <TableColumn>
                       <b>{key} : </b>
                     </TableColumn>
-                    <TableColumn>
+                    <TableColumn style = {{wordBreak:"break-all"}}>
                       {props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
                 ))}
-
-
               </DataTable>
 
               <Divider className="m-2" />
@@ -56,9 +45,9 @@ const IpDetails = props => {
                 style={{
                   alignSelf: "center"
                 }}
-                onClick={() => {
+                onClick={ () => {
                   props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
-                }
+                  }
                 }
               >
                 {props.bidFormState ? "Cancel" : "Bid"}
@@ -138,7 +127,7 @@ const IpDetails = props => {
                       maxWidth: 300,
                     }} alt="Something from unsplash it" />
                     :
-                    <div className = "">
+                    <div className="">
 
                       <img
                         src={'http://localhost:3000/assets/music.png'}

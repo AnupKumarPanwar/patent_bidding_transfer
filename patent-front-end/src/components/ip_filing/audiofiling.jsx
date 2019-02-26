@@ -65,10 +65,10 @@ class AudioFiling extends Component {
 
 
                 <ManageCollaborators />
-
                 <Divider className="md-cell md-cell--12 m-3" />
-                patentSubType
-                <ManageFile className="md-cell" />
+                <ManageFile 
+                    type = {this.props.type_visible}
+                />
 
             </div >);
         } else {
