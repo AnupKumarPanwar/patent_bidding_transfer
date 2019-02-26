@@ -63,11 +63,15 @@ const PatentsTable = (props) => {
     );
 };
 
-const mapStateToProps = (state) => {
+let mapStateToProps = (state, ownProps) => {
+    console.log(ownProps);
+    let patents = state.patent.patents;
+    if (ownProps.patents!==undefined) {
+        patents = ownProps.patents;
+    }
     return {
-        patents: state.patent.patents,
-        ascending: state.patent.ascending,
-        user: state.login.userInfo
+        patents: patents,
+        ascending: state.patent.ascending
     }
 }
 

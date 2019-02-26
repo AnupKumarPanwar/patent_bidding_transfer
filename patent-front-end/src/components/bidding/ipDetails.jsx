@@ -18,99 +18,89 @@ const IpDetails = props => {
 
       <section id="IpContainerText" className="    md-cell md-cell--6  d-flex flex-column" >
 
-        {
-
-
           {
-            
-
-          props.auctions.length > 0
-
-            ?
-
-
-            <React.Fragment>
-              <DataTable plain={true}>
-
-
-                {Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
-                  <TableRow>
-                    <TableColumn>
-                      <b>{key} : </b>
-                    </TableColumn>
-                    <TableColumn>
-                      {props.auctions[props.auctionSelectedIndex][key]}
-                    </TableColumn>
-                  </TableRow>
-                ))}
+            props.auctions.length > 0
+              ?
+              <React.Fragment>
+                <DataTable plain={true}>
+                  {Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
+                    <TableRow>
+                      <TableColumn>
+                        <b>{key} : </b>
+                      </TableColumn>
+                      <TableColumn>
+                        {props.auctions[props.auctionSelectedIndex][key]}
+                      </TableColumn>
+                    </TableRow>
+                  ))}
 
 
-              </DataTable>
+                </DataTable>
 
-              <Divider className="m-2" />
+                <Divider className="m-2" />
 
-              <Button
-                primary={!props.bidFormState}
-                raised
-                className="m-4"
-                style={{
-                  alignSelf: "center"
-                }}
-                onClick={() => {
-                  props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
-                }
-                }
-              >
-                {props.bidFormState ? "Cancel" : "Bid"}
-              </Button>
-
-
-            </React.Fragment>
+                <Button
+                  primary={!props.bidFormState}
+                  raised
+                  className="m-4"
+                  style={{
+                    alignSelf: "center"
+                  }}
+                  onClick={() => {
+                    props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
+                  }
+                  }
+                >
+                  {props.bidFormState ? "Cancel" : "Bid"}
+                </Button>
 
 
-            : <TableRow>
-              <TableColumn>
-                <h3 className="m-2" style={{ color: "red" }}>
-                  No Active Auctions
+              </React.Fragment>
+
+
+              : <TableRow>
+                <TableColumn>
+                  <h3 className="m-2" style={{ color: "red" }}>
+                    No Active Auctions
                   </h3>
-              </TableColumn>
-            </TableRow>
+                </TableColumn>
+              </TableRow>
 
-        }
+          }
 
 
         {
-          props.bidFormState
+        props.bidFormState
 
-            ?
+          ?
 
             <div>
-              <TextField
-                id="bid"
-                placeholder="Your Bid"
-                value={props.bidAmount}
-                type="number"
-                onChange={(v, e) => {
-                  props.changeBidAmount(v);
-                }}
-              />
-              <div className="d-flex justify-content-center">
-                <Button
-                  className="m-2 p-2"
-                  primary
-                  raised
-                  onClick={() => {
-                    props.submitBid({
-                      publicAddress: props.userInfo.publicAddress,
-                      auctionId: props.auctions[props.auctionSelectedIndex].auctionId,
-                      bidAmount: props.bidAmount
-                    })
-                  }}
-                >Submit</Button>
-              </div>
-            </div>
+          <TextField
+            id="bid"
+            placeholder="Your Bid"
+            value={props.bidAmount}
+            type="number"
+            onChange={(v, e) => {
+              props.changeBidAmount(v);
+            }}
+          />
+          <div className="d-flex justify-content-center">
+            <Button
+              className="m-2 p-2"
+              primary
+              raised
+              onClick={() => {
+                props.submitBid({
+                  publicAddress: props.userInfo.publicAddress,
+                  auctionId: props.auctions[props.auctionSelectedIndex].auctionId,
+                  bidAmount: props.bidAmount
+                })
+              }}
+            >Submit</Button>
+          </div>
+        </div>
 
-            :
+        :
             <React.Fragment></React.Fragment>
         }
 
@@ -138,7 +128,7 @@ const IpDetails = props => {
                       maxWidth: 300,
                     }} alt="Something from unsplash it" />
                     :
-                    <div className = "">
+                    <div className="">
 
                       <img
                         src={'http://localhost:3000/assets/music.png'}
