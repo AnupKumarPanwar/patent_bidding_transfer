@@ -4,7 +4,7 @@ import { MdArrowDropDown } from 'react-icons/md';
 import { connect } from "react-redux";
 import { changeAuctionDetails, changeBidFormState } from "../../store/actions/bidding/BiddingActions";
 const AuctionsList = (props) => {
-  const audioThumbStyle = { width: '100', height: 100 };
+  
   return (
     <div
       style={{
@@ -43,13 +43,14 @@ const AuctionsList = (props) => {
 
                     <div>
                       {
-                        props.auctions[props.auctionSelectedIndex]["patentType"] === "Image"
+                        props.auctions[index]["patentType"] === "Image"
+                          
                           ?
                           <img className="responsive" src={"http://localhost:4000/static/Image/" + props.auctions[index]["uploadFileName"]} style={{ height: 100, width: 100, borderRadius: "50%" }}
                             alt="Something from unsplash it" />
                           :
 
-                          <img className="responsive"  style={{ height: 100, width: 100, borderRadius: "50%" }}
+                          <img className="responsive" src='http://localhost:3000/assets/music.png' style={{ height: 100, width: 100 }}
                           alt="Something from unsplash it" />
 
 

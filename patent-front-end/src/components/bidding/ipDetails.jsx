@@ -7,7 +7,7 @@ import { submitBid } from "../../store/thunk/biddingThunk";
 
 const IpDetails = props => {
   const imgStyle = { width: '100%', height: 220 };
-  const audioThumbStyle = { width: '180', height: 180 };
+  const audioThumbStyle = { width: '250', height: 250 };
   const audioStyle = { width: "100%" };
   return (
     <Paper
@@ -141,7 +141,7 @@ const IpDetails = props => {
                     <div className = "">
 
                       <img
-                        src={'http://localhost:3000/assets/music.webp'}
+                        src={'http://localhost:3000/assets/music.png'}
                         style={audioThumbStyle}
                         alt=''
                       />
