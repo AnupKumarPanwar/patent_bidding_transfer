@@ -57,7 +57,6 @@ router.post('/getPatents', async function (req, res) {
 router.post('/registerPatent', async function (req, res) {
 
     const patent_data = req.body.data;
-    console.log(patent_data);
     let accounts = await web3.eth.getAccounts();
 
     const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);

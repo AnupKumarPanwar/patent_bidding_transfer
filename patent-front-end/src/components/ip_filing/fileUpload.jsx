@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { MdCheck } from 'react-icons/md';
-import { Button } from 'react-md';
+import { Button, DialogContainer } from 'react-md';
 import service from "../../services/patentService";
 import { changeFileName } from '../../store/actions/patent/PatentAction';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ class ManageFile extends Component {
         file: null,
         similarPatentFound: false,
         checking: false,
-        checked: false
+        checked: false,
     }
 
     progressTimeout = null;
@@ -61,18 +61,31 @@ class ManageFile extends Component {
         alert(response.message);
     }
 
+
+
     render() {
 
+        const type = this.props.type.toLowerCase() + "/*";
+        console.log(type)
+
         return (
-            <div className="md-grid">
+            <div className="md-grid md-cell md-cell--12">
 
-                <input type="file" name="audio" id="audio" allow="audio/*, image/*" onChange={this.handleSelectedFile} />
+                <input className="md-cell md-cell--12" type="file" name="audio" id="audio" allow="audio/*" onChange={this.handleSelectedFile} />
 
-                <Button raised primary className="md-cell md-cell--3" disabled={this.state.checking}
+                <Button raised primary className="m-2 md-cell md-cell--3" disabled={this.state.checking}
                     id="check-audio-file" onClick={this.handleUpload}>Check <MdCheck></MdCheck></Button>
 
-                {this.state.similarPatentFound ?
-                    <span>Similar Patent Already Registered</span> : <Button raised primary className="md-cell md-cell--3" id="check-audio-file" disabled={!this.state.checked} onClick={this.handleSubmit}>Submit</Button>
+                {
+                    this.state.similarPatentFound
+                        ?
+                        <h3 className="md-cell md-cell--9" style={{ color: "red" }}>
+                            <b>
+                                Similar Patent Already Registered
+                            </b>
+                        </h3>
+                        :
+                        <Button raised primary className="m-2  md-cell md-cell--3" id="check-audio-file" disabled={!this.state.checked} onClick={this.handleSubmit}>Submit</Button>
                 }
 
 

@@ -54,11 +54,11 @@ class PictureFiling extends Component {
                     onChange={this.onTypeChange}
                 />
 
-                <ManageCollaborators className="md-cell" />
-
+                <ManageCollaborators />
                 <Divider className="md-cell md-cell--12 m-3" />
-
-                <ManageFile />
+                <ManageFile
+                    type={this.props.type_visible}
+                />
 
             </div>);
         } else {
