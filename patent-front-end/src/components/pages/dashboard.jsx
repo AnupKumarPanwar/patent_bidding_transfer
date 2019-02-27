@@ -63,8 +63,6 @@ class DashBoard extends Component {
 
     componentWillUnmount() {
         this.props.logout();
-        localStorage.setItem('auth', '');
-        localStorage.setItem('userInfo', '');
         this.props.history.push("/")
     }
 

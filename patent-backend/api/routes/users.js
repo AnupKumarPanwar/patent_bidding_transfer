@@ -104,7 +104,8 @@ router.post('/login', function (req, res) {
                     } else {
                         res.status(200).json({
                             success: false,
-                            message: "Invalid password."
+                            message: "Invalid password.",
+                            data: null
                         })
                     }
 
@@ -115,7 +116,8 @@ router.post('/login', function (req, res) {
             else {
                 res.status(200).json({
                     success: false,
-                    message: "User not registered."
+                    message: "User not registered.",
+                    data: null
                 })
             }
         })
@@ -124,7 +126,8 @@ router.post('/login', function (req, res) {
                 console.error("ERROR : " + err)
                 res.status(500).json({
                     success: false,
-                    message: "Server Error."
+                    message: "Server Error.",
+                    data: null
                 })
             }
         )

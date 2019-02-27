@@ -15,11 +15,30 @@ import AuctionForm from './auctionPage';
 import { connect } from "react-redux";
 
 import { showAuctionAction } from "../../store/actions/patent/PatentAction"
+import service from '../../services/patentService';
+
 
 class PatentPage extends Component {
 
-    render() {
+    state = {
+        patent : {},
+        patentIndex: ''
+    }
+
+    componentDidMount() {
         const patentIndex = this.props.match.params.id;
+        
+        service.getPatent({ id: patentIndex })
+            .then(async (res) => {
+                this.setState({patent:res.message, patentIndex});
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+    }
+
+    render() {
         return (
 
             <Card className="md-cell md-cell--12 md-text-container">
@@ -30,13 +49,13 @@ class PatentPage extends Component {
 
                     <DataTable plain={true}>
 
-                        {Object.keys(this.props.patents[patentIndex]).map((key) => (
+                        {Object.keys(this.state.patent).map((key) => (
                             <TableRow>
                                 <TableColumn>
                                     <b>{key}</b>
                                 </TableColumn>
                                 <TableColumn>
-                                    {this.props.patents[patentIndex][key]}
+                                    {this.state.patent[key]}
                                 </TableColumn>
                             </TableRow>
                         ))}
@@ -50,8 +69,8 @@ class PatentPage extends Component {
                 </CardText>
 
                 {this.props.visibleAuction && <AuctionForm
-                    key={patentIndex}
-                    patentIndex={patentIndex}
+                    key={this.state.patentIndex}
+                    patentIndex={this.state.patentIndex}
                     history = {this.props.history}
                     />}
 

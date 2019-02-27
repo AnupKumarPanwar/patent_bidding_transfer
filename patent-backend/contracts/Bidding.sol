@@ -12,12 +12,19 @@ contract Bidding{
         uint bidPrice;
     }
 
+    event printMessage(string msg);
+
     mapping(address => BidPrice[]) public userBidMap;
     mapping(uint => AddressPrice[]) public auctionToBidersMap;
 
     function addBid(uint auctionId, uint bidAmount, address sender) public {
         
-        uint currentTime = block.timestamp;
+        for(uint i = 0; i < userBidMap[sender].length; i++) {  
+            if(userBidMap[sender][i].auctionId==auctionId) {
+                emit printMessage("Bidding already done");
+                return;
+            }
+        }
 
         userBidMap[sender].push(BidPrice(auctionId, bidAmount));
         auctionToBidersMap[auctionId].push(AddressPrice(sender, bidAmount));

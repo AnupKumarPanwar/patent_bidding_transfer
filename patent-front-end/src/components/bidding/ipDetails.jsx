@@ -10,6 +10,7 @@ const IpDetails = props => {
   const audioThumbStyle = { width: '250', height: 250 };
   const audioStyle = { width: "100%" };
   return (
+    
     <Paper
       className="md-grid"
       style={{

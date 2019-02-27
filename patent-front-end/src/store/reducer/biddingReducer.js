@@ -23,8 +23,9 @@ export const biddingReducer = (state = initialState, action) => {
         bidAmount: action.bidAmount
       }
     case POST_BID_ACTION:
+      alert(action.value.data.message);
       return {
-        ...state,
+        ...state
       }
     case UPDATE_AUCTIONS_STATE:
       return {
