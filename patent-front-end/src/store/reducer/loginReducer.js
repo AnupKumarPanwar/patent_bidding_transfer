@@ -21,8 +21,10 @@ const loginReducer = (state = initialState, action) => {
             }
             return { ...state, auth: action.auth, userInfo: action.userInfo }
         case LOGOUT:
+            localStorage.setItem('auth', '');
             return { ...state, auth: action.auth }
         case RESET_AUTH_AFTER_TOAST:
+            localStorage.setItem('auth', '');
             return { ...state, auth: action.auth }
         default:
             return state

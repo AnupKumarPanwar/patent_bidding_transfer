@@ -67,5 +67,13 @@ export default {
         } catch (err) {
             console.log(err);
         }
-    }
+    },
+    getPatent: async function (data) {
+        try {
+            const res = await axios.post(controller.getPatent, { data });
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
 }

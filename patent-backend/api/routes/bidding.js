@@ -21,7 +21,14 @@ router.post("/bidForPatent", async (req, res) => {
       from: accounts[0], gas: 300000
     })
     .on('receipt', (receipt) => {
-      res.send(receipt)
+      let result = receipt;
+      result.success = true;
+      result.message = "Bidding done successfully."
+      if (result['events'].printMessage) {
+        result.success = false;
+        result.message = "You have already bid ."
+      } 
+      res.send(result)
     })
 })
 module.exports = router;

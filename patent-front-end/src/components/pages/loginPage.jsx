@@ -6,6 +6,8 @@ import { MdRemoveRedEye } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { loginThunk } from '../../store/thunk/loginThunk';
 import { resetAuthAfterToast } from '../../store/actions/login/LoginAction';
+import { Link } from 'react-router-dom';
+
 
 class Login extends Component {
   state = {
@@ -42,6 +44,7 @@ class Login extends Component {
     console.log(this.props.auth);
     const { username, password } = this.state;
     await this.props.loginThunk({ username: username, password: password });
+    console.log(this.props.auth);
   }
 
   render() {
@@ -50,6 +53,7 @@ class Login extends Component {
       this.props.routes.push('/dashboard/profile');
     }
     else if (this.props.auth===false){
+      console.log('Invalid');
       this.addToast('Invalid username / password');
     }
 
@@ -87,15 +91,16 @@ class Login extends Component {
               Login
             </Button>
 
+          <Link to='/register'>
             <Button
               raised
               primary
-              onClick={this.verifyUser}
               className='md-cell md-cell--6'
             >
 
               Register
             </Button>
+          </Link>
           </div>
 
 

@@ -35,7 +35,7 @@ contract AuctionProcess is PatentManager, Bidding{
     
     //     return (auctionId);
     // }
-    function createAuction(uint patentId, uint minimumBid, uint numberOfDays, address[] memory publicAddressOwners) public {
+    function createAuction(uint patentId, uint minimumBid, uint numberOfDays, address publicAddressOwner) public {
         
         uint auctionId = patentId;
         uint num_seconds = numberOfDays*24*60*60;
@@ -44,20 +44,19 @@ contract AuctionProcess is PatentManager, Bidding{
         address[] memory ownersList = getOwnerList(patentId);
         Auction memory resultantAuction;
 
-        for (uint i = 0 ; i < publicAddressOwners.length ; i++){
 
-            address publicAddress = publicAddressOwners[i];
-            Auction[] memory auctions = auctioneerAuctionMap[publicAddress];
+        address publicAddress = publicAddressOwner;
+        Auction[] memory auctions = auctioneerAuctionMap[publicAddress];
 
-            for (uint j = 0; j<auctions.length ; j++){
-                Auction memory auction = auctions[j];
-                require(auction.auctionId == auctionId, "Patent already up for auction");
+        for (uint j = 0; j<auctions.length ; j++){
+            Auction memory auction = auctions[j];
+            require(auction.auctionId == auctionId, "Patent already up for auction");
+            
+            resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
+            auctioneerAuctionMap[publicAddress].push(resultantAuction);
                 
-                resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
-                auctioneerAuctionMap[publicAddress].push(resultantAuction);
-                
-            }
-        }    
+        }
+   
         auctionIdToAuctionMap[auctionId] = resultantAuction;
         emit AuctionIdReturn(auctionId);
     }
@@ -98,8 +97,4 @@ contract AuctionProcess is PatentManager, Bidding{
     } 
 
     // function getResult(uint auctionId)
-
-   
-
-    
 }

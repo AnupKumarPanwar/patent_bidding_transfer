@@ -10,5 +10,6 @@ export const controller = {
     getActiveAuctions : ipAddress + "/auction/getActiveAuctions",
     getUserActiveAuctions : ipAddress + "/auction/getUserActiveAuctions",
     submitBid : ipAddress + "/bidding/bidForPatent",
-    userProfile : ipAddress + "/users/userProfile"
+    userProfile : ipAddress + "/users/userProfile",
+    getPatent: ipAddress + "/manage/getPatent"
 }

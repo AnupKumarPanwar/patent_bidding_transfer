@@ -34,6 +34,10 @@ class ProfilePage extends Component {
                 this.setState({ user });
                 // console.log(this.state.user);
 
+                this.props.getPatentThunk({
+                    username: this.state.user.username,
+                    publicAddress: this.state.user.publicAddress
+                });
 
                 service.getMyPatents({
                     username: this.state.user.username,
