@@ -4,16 +4,17 @@ module.exports = {
   networks: {
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
+     port: 9999,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },
     
     live : {
       host : "35.173.245.236",
-      port : 8545,
+      port : 9999,
       network_id : "*",
-    }
+    },
   },
+  
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
