@@ -22,8 +22,8 @@ const TO_PREFIX = "/dashboard";
 
 const navItems = [{
     label: "Profile",
-    to: `${TO_PREFIX}/profile/:username?`,
-    exact: true,
+    to: `${TO_PREFIX}/profile`,
+    exact: false,
 }, {
     label: "Register Patent",
     to: TO_PREFIX,
@@ -108,7 +108,7 @@ class DashBoard extends Component {
 
                         <Switch>
 
-                            <Route path={navItems[0].to} exact component={ProfilePage} />
+                            <Route path={navItems[0].to+'/:username?'} exact component={ProfilePage} />
                             <Route path={navItems[1].to} exact component={HomePatent} />
                             <Route path={navItems[2].to} component={BiddingPage} />
                             <Route path={navItems[3].to} component={ManagePatents} />

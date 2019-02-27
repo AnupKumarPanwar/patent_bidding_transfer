@@ -14,36 +14,42 @@ import service from '../../services/patentService';
 class ProfilePage extends Component {
 
     state = {
-        user: {}
+        user: {},
+        patents: []
     }
 
-    componentDidMount() {
+    componentWillMount() {
         let username = this.props.match.params.username;
+        // console.log(username);
 
         if (username === undefined || username === null) {
             username = this.props.user.username;
         }
 
-        console.log(username);
 
         service.getUserProfile({ username: username })
-            .then((res) => {
+            .then(async (res) => {
+                // console.log(res);
                 var user = res.data;
                 this.setState({ user });
-                console.log(this.state.user);
+                // console.log(this.state.user);
 
-                this.props.getPatentThunk({
+
+                service.getMyPatents({
                     username: this.state.user.username,
                     publicAddress: this.state.user.publicAddress
-                });
+                }).then(res => {
+                    this.setState({ patents: res });
+                }).catch(err => {
+                    console.error(err);
+                })
 
             })
             .catch((err) => {
                 console.log(err);
             })
 
-        console.log(this.props.patents)
-
+        // console.log(this.state.patents)
 
     }
 
@@ -77,7 +83,7 @@ class ProfilePage extends Component {
                                 </h3>
                             </CardTitle>
                             <Divider />
-                            <PatentsTable />
+                            <PatentsTable patents={this.state.patents} />
                             <div className="md-grid">
                                 <div className="md-cell--12">
 

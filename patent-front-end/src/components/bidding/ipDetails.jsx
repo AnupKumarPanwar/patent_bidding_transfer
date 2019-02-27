@@ -23,13 +23,13 @@ const IpDetails = props => {
 
             ?
             <React.Fragment>
-              <DataTable plain={true} style={{width:"100%"}}>
+              <DataTable plain={true} style={{ width: "100%" }}>
                 {Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
                   <TableRow>
                     <TableColumn>
                       <b>{key} : </b>
                     </TableColumn>
-                    <TableColumn style = {{wordBreak:"break-all"}}>
+                    <TableColumn style={{ wordBreak: "break-all" }}>
                       {props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
@@ -45,9 +45,9 @@ const IpDetails = props => {
                 style={{
                   alignSelf: "center"
                 }}
-                onClick={ () => {
+                onClick={() => {
                   props.changeBidFormState(props.bidFormState, props.bidFormState ? null : props.bidAmount)
-                  }
+                }
                 }
               >
                 {props.bidFormState ? "Cancel" : "Bid"}

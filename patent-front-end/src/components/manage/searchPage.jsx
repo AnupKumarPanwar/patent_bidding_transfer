@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextField, Button, TabsContainer, Tabs, Tab, Card, CardTitle, CardText, Slider, Paper, Avatar } from 'react-md';
 import service from '../../services/patentService';
-import {ipAddress} from '../../controller'
+import { ipAddress } from '../../controller'
 import {
     DataTable,
     TableHeader,
@@ -20,7 +20,7 @@ import { patentForAuctionThunk } from '../../store/thunk/managePatentThunk';
 import { connect } from 'react-redux'
 
 const staticImageUrl = ipAddress + '/static/Image/';
-const staticAudioUrl = ipAddress +'/static/Image/';
+const staticAudioUrl = ipAddress + '/static/Image/';
 const TO_PREFIX = "/dashboard";
 
 class AuctionForm extends Component {
@@ -57,52 +57,54 @@ class AuctionForm extends Component {
         const audioStyle = { width: 320 };
 
         const imagePatentRows = this.state.imagePatents.map(({ patentId, patentName, patentType, patentSubType, uploadFileName }, index) => (
-                <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
+            <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
                 <Link to={`${TO_PREFIX}/patent/${patentId}`}>
-                        <img
-                            src={staticImageUrl + uploadFileName}
-                            className='img-fluid hoverable'
-                            style={imgStyle}
-                            alt=''
-                        />
-                    </Link>
-                    <p>
-                        <div style={{ color: '#70757a' }}>{patentName}</div>
-                        <div style={{ color: 'rgba(112, 117, 122, 0.65)' }}>{patentSubType}</div>
-                    </p>
-                </Paper>
+                    <img
+                        src={staticImageUrl + uploadFileName}
+                        className='img-fluid hoverable'
+                        style={imgStyle}
+                        alt=''
+                    />
+                </Link>
+                <p>
+                    <div style={{ color: '#70757a' }}>{patentName}</div>
+                    <div style={{ color: 'rgba(112, 117, 122, 0.65)' }}>{patentSubType}</div>
+                </p>
+            </Paper>
         ));
 
         const audioPatentRows = this.state.audioPatents.map(({ patentName, patentType, patentSubType, uploadFileName }, index) => (
-                <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
+            <Paper style={paperStyle} className='md-block-centered' zDepth={0}>
 
-                    <Link to={staticImageUrl + uploadFileName}>
-                        <img
-                            src={'http://localhost:3000/assets/music.webp'}
-                            className='img-fluid hoverable'
-                            style={audioThumbStyle}
-                            alt=''
-                        />
-                    </Link>
+                <Link to={staticImageUrl + uploadFileName}>
+                    <img
+                        src={'./assets/music.webp'}
+                        className='img-fluid hoverable'
+                        style={audioThumbStyle}
+                        alt=''
+                    />
+                </Link>
 
-                    <audio controls style={audioStyle}>
-                        <source src={staticAudioUrl + uploadFileName} />
-                    </audio>
+                <audio controls style={audioStyle}>
+                    <source src={staticAudioUrl + uploadFileName} />
+                </audio>
 
-                    <p>
-                        <div style={{ color: '#70757a' }}>{patentName}</div>
-                        <div style={{ color: 'rgba(112, 117, 122, 0.65)' }}>{patentSubType}</div>
-                    </p>
-                </Paper>
+                <p>
+                    <div style={{ color: '#70757a' }}>{patentName}</div>
+                    <div style={{ color: 'rgba(112, 117, 122, 0.65)' }}>{patentSubType}</div>
+                </p>
+            </Paper>
 
         ));
 
-        const userRows = this.state.users.map(({ name, email, nationality }, index) => (
+        const userRows = this.state.users.map(({ username, name, email, nationality }, index) => (
             <Paper style={contactCardStyle} className='md-block-centered' zDepth={1}>
                 {/* <Avatar random>{name[0]}</Avatar> */}
-                <h3>{name}</h3>
-                <h6>{email}</h6>
-                <h6>{nationality}</h6>
+                <Link to={`${TO_PREFIX}/profile/${username}`}>
+                    <h3>{name}</h3>
+                    <h6>{email}</h6>
+                    <h6>{nationality}</h6>
+                </Link>
             </Paper>
         ));
 
