@@ -16,6 +16,8 @@ contract Bidding{
     mapping(uint => AddressPrice[]) public auctionToBidersMap;
 
     function addBid(uint auctionId, uint bidAmount, address sender) public {
+        
+        uint currentTime = block.timestamp;
 
         userBidMap[sender].push(BidPrice(auctionId, bidAmount));
         auctionToBidersMap[auctionId].push(AddressPrice(sender, bidAmount));
