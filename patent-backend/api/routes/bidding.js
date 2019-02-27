@@ -26,7 +26,7 @@ router.post("/bidForPatent", async (req, res) => {
       result.message = "Bidding done successfully."
       if (result['events'].printMessage) {
         result.success = false;
-        result.message = "You have already bid ."
+        result.message = "You have already bid for this auction."
       } 
       res.send(result)
     })
