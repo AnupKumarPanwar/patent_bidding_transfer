@@ -15,6 +15,8 @@ contract AuctionProcess is PatentManager, Bidding{
     }
 
     event AuctionIdReturn(uint auctionId);
+    event printRemainingAuctionTime(uint remainingTime);
+    event printAuctionResult(string msg, address winner);
     
     // Maps auctioneer to the aucitonId 
     // May contain multiple auctionIds 
@@ -72,9 +74,12 @@ contract AuctionProcess is PatentManager, Bidding{
         return auctioneerAuctionMap[owner];
     }
 
-    function getResult(uint auctionId) public view returns (string memory , address){
+    function getResult(uint auctionId) public {
         Auction memory auction = auctionIdToAuctionMap[auctionId];
         uint timeNow = block.timestamp;
+
+        uint remianingTime = timeNow - auction.endTime;
+        emit printRemainingAuctionTime(remianingTime);
         
         require(timeNow >= auction.endTime, "{'message':'Cannot get result right now'}");
         
@@ -90,10 +95,11 @@ contract AuctionProcess is PatentManager, Bidding{
 
         if(winner != address(0x0)){
             // addLisenceHolder(auction.patentId, address(uint160(winner)));
-            return ("SUCCESS", winner);
+            emit printAuctionResult("SUCCESS", winner);
         }else{
-            return ("FAILURE", winner);
+            emit printAuctionResult("FAILURE", winner);
         }
+        return;
     } 
 
     // function getResult(uint auctionId)

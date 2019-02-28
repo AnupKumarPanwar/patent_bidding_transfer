@@ -13,6 +13,52 @@ const web3 = new Web3(provider);
 const contractABI = AuctionProcess.abi;
 const contractAddress = ethConfig.auctionContractAddress;
 
+router.post("/getResult", async (req, res) => {
+  const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
+
+  let obj = req.body.data;
+  let accounts = await web3.eth.getAccounts();
+  auctionInstance.methods.getResult(parseInt(obj.auctionId)).send({ from: accounts[0], gas: 3000000 }).
+  on('receipt', (receipt) => {
+    const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
+
+    if (receipt["events"]["printAuctionResult"]) {
+      const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
+
+      Patent.updateOne(
+        {
+          $and: [
+            { patentId: obj.auctionId }
+          ]
+        },
+        {
+          status: "RESULT_AVAILABLE"
+        }
+      ).then((data, err) => {
+        if (!err) {
+          res.status(200).json({
+            success: true,
+            message: "Auction results are available.",
+            data: {
+              remainingTime: remainingTime,
+              winner: winner
+            }
+          })
+        }
+      })   
+    } else {
+      res.status(200).json({
+        success: false,
+        message: "Auction not complete yet.",
+        data: {
+          remainingTime: remainingTime,
+          winner: null
+        }
+      })
+    }
+
+  })
+})
 
 router.post("/setAuction", async function (req, res) {
 
@@ -97,7 +143,7 @@ router.get("/getActiveAuctions", (req, res) => {
       })
     }
   })
-});
+})
 
 // this route will return all the patents that are up 
 router.post("/getUserActiveAuctions", (req, res) => {
@@ -128,5 +174,6 @@ router.post("/getUserActiveAuctions", (req, res) => {
     }
   })
 })
+
 
 module.exports = router;
