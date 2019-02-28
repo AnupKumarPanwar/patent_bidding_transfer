@@ -3,6 +3,7 @@ import { ExpansionList, List, ListItem, Media, Paper, Divider } from "react-md";
 import { MdArrowDropDown } from 'react-icons/md';
 import { connect } from "react-redux";
 import { changeAuctionDetails, changeBidFormState } from "../../store/actions/bidding/BiddingActions";
+import { ipAddress } from '../../controller';
 const AuctionsList = (props) => {
   
   return (
@@ -46,11 +47,11 @@ const AuctionsList = (props) => {
                         props.auctions[index]["patentType"] === "Image"
                           
                           ?
-                          <img className="responsive" src={"http://localhost:4000/static/Image/" + props.auctions[index]["uploadFileName"]} style={{ height: 100, width: 100, borderRadius: "50%" }}
+                          <img className="responsive" src={ipAddress+"/static/Image/" + props.auctions[index]["uploadFileName"]} style={{ height: 100, width: 100, borderRadius: "50%" }}
                             alt="Something from unsplash it" />
                           :
 
-                          <img className="responsive" src='http://localhost:3000/assets/music.png' style={{ height: 100, width: 100 }}
+                          <img className="responsive" src='../assets/music.png' style={{ height: 100, width: 100 }}
                           alt="Something from unsplash it" />
 
 

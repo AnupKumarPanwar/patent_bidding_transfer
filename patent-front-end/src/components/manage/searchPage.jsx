@@ -20,7 +20,7 @@ import { patentForAuctionThunk } from '../../store/thunk/managePatentThunk';
 import { connect } from 'react-redux'
 
 const staticImageUrl = ipAddress + '/static/Image/';
-const staticAudioUrl = ipAddress + '/static/Image/';
+const staticAudioUrl = ipAddress + '/static/Audio/';
 const TO_PREFIX = "/dashboard";
 
 class AuctionForm extends Component {
