@@ -41,6 +41,7 @@ class PatentPage extends Component {
     render() {
         return (
 
+            
             <Card className="md-cell md-cell--12 md-text-container">
                 <CardTitle
                     title={"Patent Name"}
