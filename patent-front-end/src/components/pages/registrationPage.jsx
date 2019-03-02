@@ -1,33 +1,40 @@
 import React, { Component } from "react";
-import { TextField, Divider, DialogContainer, Snackbar } from "react-md";
+import {
+  TextField,
+  Divider,
+  DialogContainer,
+  Snackbar,
+  Button,
+  Paper
+} from "react-md";
 import "../css/RegistrationPage.scss";
-import { MdRemoveRedEye } from 'react-icons/md';
+import { MdRemoveRedEye, MdHome } from "react-icons/md";
 
 import service from "../../services/userService";
 import { loginAction } from "../../store/actions/login/LoginAction";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 class Registration extends Component {
-
   state = {
-    name: '',
-    email: '',
-    username: '',
-    mobile: '',
-    password: '',
-    nationality: '',
-    address: '',
+    name: "",
+    email: "",
+    username: "",
+    mobile: "",
+    password: "",
+    nationality: "",
+    address: "",
     visible: false,
     autohide: true,
     toasts: []
-  }
+  };
 
   addToast = (text, action, autohide = true) => {
-    this.setState((state) => {
+    this.setState(state => {
       const toasts = state.toasts.slice();
       toasts.push({ text, action });
       return { toasts, autohide };
-    })
+    });
     console.log(this.state);
     this.props.resetAuthAfterToast();
   };
@@ -40,8 +47,8 @@ class Registration extends Component {
   handleInputChange = (value, event) => {
     this.setState({
       [event.target.id]: value
-    })
-  }
+    });
+  };
 
   show = () => {
     this.setState({ visible: true });
@@ -55,34 +62,30 @@ class Registration extends Component {
   };
 
   registerUser = () => {
-  
     const data = this.state;
-    service.register(data).then((response) => {
+    service.register(data).then(response => {
       if (response.success) {
-        response.success = '';
+        response.success = "";
         this.props.loginAction(response);
         this.show();
-      }
-      else {
+      } else {
         this.addToast(response.message);
       }
-    })
-  }
+    });
+  };
 
   render() {
-
-
-
     const { visible } = this.state;
-    const actions = [{
-      onClick: this.hide,
-      primary: true,
-      children: 'Okay',
-    }];
+    const actions = [
+      {
+        onClick: this.hide,
+        primary: true,
+        children: "Okay"
+      }
+    ];
 
     return (
-      <div className="main-content-container-div">
-
+      <Paper className="main-content-container-div">
         <DialogContainer
           id="speed-boost"
           visible={visible}
@@ -98,7 +101,19 @@ class Registration extends Component {
         </DialogContainer>
 
         <div className="registration-div">
-          <h3>Registration</h3>
+          <div className="d-flex ">
+            <h3>Registration</h3>
+
+            <div
+              style={{ width: "100vw" }}
+              className="d-flex  align-items-start justify-content-end "
+            >
+              <a href="#">
+                <MdHome className="home-button" />
+              </a>
+            </div>
+          </div>
+
           <Divider style={{ background: "black" }} />
           <div className="md-grid">
             <TextField
@@ -174,8 +189,16 @@ class Registration extends Component {
             />
           </div>
 
-
-          <button onClick={this.registerUser} className="btn btn-primary registration-btn">Register</button>
+          <div className="d-flex justify-content-center">
+            <Button onClick={this.registerUser} secondary raised className="m-2">
+              Register
+            </Button>
+            <a href="#login">
+              <Button primary flat className="m-2">
+                Login ?
+              </Button>
+            </a>
+          </div>
         </div>
         <Snackbar
           id="example-snackbar"
@@ -183,20 +206,19 @@ class Registration extends Component {
           autohide={true}
           onDismiss={this.dismissToast}
         />
-      </div>
-
+      </Paper>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.login.auth
   };
 };
 
 const mapDispatchToProps = {
-  loginAction,
+  loginAction
 };
 
 export default connect(

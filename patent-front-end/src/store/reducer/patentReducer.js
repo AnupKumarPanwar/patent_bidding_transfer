@@ -5,7 +5,7 @@ export const initialState = {
   ascending: false,
   owners: [],
   patentName: '',
-  patentType: '',
+  patentType: 'Audio',
   patentSubType: '',
   issueDate: '',
   uploadFileName: ''
