@@ -17,6 +17,7 @@ class ManageFile extends Component {
   uploadProgressTimeout = null;
 
   handleSelectedFile = event => {
+    // TODO remove console.log where ever not required.
     console.log(event.target.files[0]);
     this.setState({
       selectedFile: event.target.files[0]
@@ -35,6 +36,7 @@ class ManageFile extends Component {
     if (response.data.success) {
       var similarPatentFound = response.data.similarPatentFound;
       var uploadFileName = response.data.message;
+      // TODO Why self(line 40) and then use this(line 41)
       self.setState({ similarPatentFound, checked: true, checking: false });
       this.props.changeFileName(uploadFileName);
     } else {

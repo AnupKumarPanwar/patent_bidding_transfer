@@ -148,6 +148,7 @@ router.get("/getActiveAuctions", (req, res) => {
 // this route will return all the patents that are up 
 router.post("/getUserActiveAuctions", (req, res) => {
   const user = req.body.data;
+  // TODO Remove unwanted comments.
   // console.log(us
   
   Patent.find(

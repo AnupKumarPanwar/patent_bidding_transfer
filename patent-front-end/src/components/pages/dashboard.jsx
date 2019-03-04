@@ -20,6 +20,7 @@ import "../css/dashboard.scss";
 
 const TO_PREFIX = "/dashboard";
 
+// TODO define in constants file.
 const navItems = [
   {
     label: "Profile",
@@ -134,6 +135,7 @@ class DashBoard extends Component {
                 exact
                 component={ProfilePage}
               />
+              {/* // TODO can a loop be defined for this? */}
               <Route path={navItems[1].to} exact render={()=><HomePatent/>} />
               <Route path={navItems[2].to} component={BiddingPage} />
               <Route path={navItems[3].to} component={ManagePatents} />

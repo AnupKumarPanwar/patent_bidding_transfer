@@ -4,6 +4,7 @@ import { MdAdd, MdRemove } from "react-icons/md";
 import { connect } from "react-redux";
 import { changeCollaborators } from "../../store/actions/patent/PatentAction";
 
+// TODO instead of Component use React.Component(line 8) and import only React(line 1).
 class ManageCollaborators extends Component {
   handleInputChange = (index, event) => {
     const cc = [...this.props.owners];

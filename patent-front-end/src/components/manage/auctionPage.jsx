@@ -46,6 +46,7 @@ class AuctionForm extends Component {
                     children="Submit"
                     className="md-cell m-2"
                     onClick={() => {
+                      // TODO define a function at the top.
                         const obj = {
                             username: this.props.user.username,
                             publicAddress: this.props.user.publicAddress,

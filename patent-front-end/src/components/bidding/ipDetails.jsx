@@ -10,6 +10,7 @@ import { submitBid } from "../../store/thunk/biddingThunk";
 import { ipAddress } from "../../controller";
 
 const IpDetails = props => {
+  // TODO remove unused variables.
   const imgStyle = { width: "100%", height: 220 };
   const audioThumbStyle = { width: "250", height: 250 };
   const audioStyle = { width: "100%" };
@@ -26,6 +27,7 @@ const IpDetails = props => {
       >
         {props.auctions.length > 0 ? (
           <React.Fragment>
+            {/* TODO no inline styling, change in other files too. */}
             <DataTable plain={true} style={{ width: "100%" }}>
               {Object.keys(props.auctions[props.auctionSelectedIndex]).map(
                 key => (
@@ -83,6 +85,7 @@ const IpDetails = props => {
             />
             <div className="d-flex justify-content-center">
               <Button
+              // TODO give better CSS class names
                 className="m-2 p-2"
                 primary
                 raised
@@ -106,12 +109,14 @@ const IpDetails = props => {
 
       <section id="IpContainerImage" className="border-left md-cell md-cell--6">
         <section
+        // TODO define a class
           style={{
             display: "flex",
             justifyContent: "center"
           }}
         >
           {props.auctions.length > 0 ? (
+            // TODO remove unwanted comments
             // console.log(props.auctions[props.auctionSelectedIndex]["uploadFileName"])
 
             <div>
@@ -129,11 +134,13 @@ const IpDetails = props => {
                     height: "100%",
                     maxWidth: 300
                   }}
+                  // TODO write an apt alternative.
                   alt="Something from unsplash it"
                 />
               ) : (
                 <div className="">
                   <img
+                  // TODO import it in imports at the top
                     src="../assets/music.png"
                     style={audioThumbStyle}
                     alt=""
@@ -141,6 +148,7 @@ const IpDetails = props => {
 
                   <audio controls className="m-2" style={audioStyle}>
                     <source
+                    // TODO define a variable for this
                       src={
                         ipAddress +
                         "/static/Audio/" +

@@ -1,5 +1,7 @@
 @import '~react-md/src/scss/react-md';
 
+// TODO use scss features if using that
+// for ex: p, h2, span of landing-container can be defined inside the same class.
 .landing-container{
   height: 90vh;
   background-color:	rgb(40,40,40);

@@ -49,9 +49,6 @@ const ActiveAuctionTable = (props) => {
 
         </TableBody>
       </DataTable>
-
-
-
     </Card>
 
   );

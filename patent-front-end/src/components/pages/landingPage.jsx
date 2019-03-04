@@ -35,6 +35,7 @@ class LandingPage extends Component {
           <div className="d-flex flex-column align-items-center p-4">
             <h2 className="">Patent Solutions</h2>
             <p className="">
+            {/* // TODO Define some description of your own */}
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
               accusamus quia nostrum a minus, porro consequuntur voluptas
               deleniti aspernatur incidunt quam animi nihil esse ducimus itaque
