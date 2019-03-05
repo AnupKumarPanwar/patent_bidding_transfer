@@ -8,15 +8,25 @@ class Timer extends Component {
     seconds: 0
   };
 
+  constructor() {
+    super();
+    this.x = null;
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.x);
+  }
+
   render() {
     // const time = this.state.time;
 
     const timer = () => {
-      let countDownDate = this.props.seconds;
 
+      
       // Update the count down every 1 second
       let self = this;
-      let x = setInterval(function() {
+      this.x = setInterval(function() {
+        let countDownDate = self.props.seconds;
         
         let now = new Date().getTime();
 
@@ -35,13 +45,13 @@ class Timer extends Component {
 
         // If the count down is over, write some text
         if (distance < 0) {
-          clearInterval(x);
+          clearInterval(this.x);
         }
       }, 1000);
-      return <p>Hey</p>;
+      // return <p>Hey</p>;
     };
 
-    this.props.seconds > 0 ? timer() : "Hey";
+    (this.props.seconds - new Date().getTime()) > 0 ? timer() : null;
     return (
       <div>
         <div className="border">
