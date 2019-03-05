@@ -45,8 +45,9 @@ export default {
         }
     },
     getActiveAuctions: async function (data) {
+        console.log(data)
         try {
-            const res = await axios.get(controller.getActiveAuctions, { data });
+            const res = await axios.post(controller.getActiveAuctions, { data });
             return res.data;
         } catch (err) {
             console.log(err);

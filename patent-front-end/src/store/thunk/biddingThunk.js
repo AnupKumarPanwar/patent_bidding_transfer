@@ -11,9 +11,9 @@ export const submitBid = (data) => {
   }
 }
 
-export const getAuctions = () => {
+export const getAuctions = (data) => {
   return (dispatch) => {
-    auctionService.getActiveAuctions().then(res=>{
+    auctionService.getActiveAuctions(data).then(res=>{
       return dispatch(updateAuctionsState(res.data));
     })
   }
