@@ -18,6 +18,7 @@ const PICTURE_ITEM = [
   { label: "Logo", value: "Logo" }
 ];
 
+// TODO have the camel casing convention for each and every filename.
 class PictureFiling extends Component {
   handleInputChange = (value, event) => {
     this.props.changePatentName(value);

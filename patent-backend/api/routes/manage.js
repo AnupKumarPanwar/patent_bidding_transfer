@@ -29,6 +29,7 @@ async function getPatents(ownerAddress) {
     try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
 
+        // TODO SPELLINGS CHECK
         patent.map((arraya) => {
             obj = {}
             arraya.map((val, index) => {
@@ -229,6 +230,7 @@ router.post('/checkSignature', function (req, res) {
     let command = '';
 
     if (patentType === "Image") {
+      // TODO Define constants file for this.
         uploadPath = './uploads/Image/' + uploadFileName;
         command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
     }

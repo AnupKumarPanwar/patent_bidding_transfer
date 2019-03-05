@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+
+// TODO Remove unused imports
 import { Link } from "react-router-dom";
 import "../css/Nav.scss";
 import { Divider } from "react-md";

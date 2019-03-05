@@ -1,6 +1,5 @@
 @import '~react-md/src/scss/react-md';
 
-
 .landing-container {
   margin:0;
   display: flex;
@@ -20,7 +19,10 @@
   to {
     background-position: -400px 0;
   }
-}
+
+// TODO use scss features if using that
+// for ex: p, h2, span of landing-container can be defined inside the same class.
+
 
 .para{
   color: white;

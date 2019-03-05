@@ -30,6 +30,7 @@ class TransferForm extends Component {
     render() {
 
         const { visible } = this.state;
+        // TODO define in constants file.
         const actions = [{
             onClick: this.hide,
             primary: true,
@@ -67,6 +68,7 @@ class TransferForm extends Component {
                         actions={actions}
                     >
                         <p id="speed-boost-description" className="md-color--secondary-text">
+                        {/* // TODO define in constants file. */}
                             By tranferring the patent, you transfer all the rights of your work to the other party. This process can not be undone.
           </p>
                         <h4>Receiver's Details</h4>

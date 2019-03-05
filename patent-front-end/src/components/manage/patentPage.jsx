@@ -28,6 +28,7 @@ class PatentPage extends Component {
     componentDidMount() {
         const patentIndex = this.props.match.params.id;
         
+        // TODO Define a thunk for it. also in other files too.
         service.getPatent({ id: patentIndex })
             .then(async (res) => {
                 this.setState({patent:res.message, patentIndex});

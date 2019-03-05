@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { sortPatentAction } from "../../../store/actions/patent/PatentAction";
 import "../../css/manage/manageCommon/patentsTable.scss";
 
+// TODO define it in constants file.
 const TO_PREFIX = "/dashboard";
 
 const PatentsTable = props => {

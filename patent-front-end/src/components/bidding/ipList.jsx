@@ -29,6 +29,7 @@ const AuctionsList = props => {
               alignItems: "center",
               overflowX: "hidden"
             }}
+            // TODO define a function for this, don't call two functions in lambda expression.
             onClick={() => {
               props.changeAuctionDetails(index);
               props.changeBidFormState(

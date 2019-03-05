@@ -6,6 +6,7 @@ import { activeAuctionThunk } from "../../store/thunk/auctionThunk";
 
 
 import { connect } from "react-redux";
+// TODO remove unused imports everywhere.
 import { stat } from 'fs';
 
 
