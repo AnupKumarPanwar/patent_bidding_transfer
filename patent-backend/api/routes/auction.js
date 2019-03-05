@@ -22,42 +22,42 @@ router.post("/getResult", async (req, res) => {
     from: accounts[0],
     gas: 3000000
   }).
-  on('receipt', (receipt) => {
-    const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
+    on('receipt', (receipt) => {
+      const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
 
-    if (receipt["events"]["printAuctionResult"]) {
-      const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
+      if (receipt["events"]["printAuctionResult"]) {
+        const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
 
-      Patent.updateOne({
-        $and: [{
-          patentId: obj.auctionId
-        }]
-      }, {
-        status: "RESULT_AVAILABLE"
-      }).then((data, err) => {
-        if (!err) {
-          res.status(200).json({
-            success: true,
-            message: "Auction results are available.",
-            data: {
-              remainingTime: remainingTime,
-              winner: winner
+        Patent.updateOne({
+          $and: [{
+            patentId: obj.auctionId
+          }]
+        }, {
+            status: "RESULT_AVAILABLE"
+          }).then((data, err) => {
+            if (!err) {
+              res.status(200).json({
+                success: true,
+                message: "Auction results are available.",
+                data: {
+                  remainingTime: remainingTime,
+                  winner: winner
+                }
+              })
             }
           })
-        }
-      })
-    } else {
-      res.status(200).json({
-        success: false,
-        message: "Auction not complete yet.",
-        data: {
-          remainingTime: remainingTime,
-          winner: null
-        }
-      })
-    }
+      } else {
+        res.status(200).json({
+          success: false,
+          message: "Auction not complete yet.",
+          data: {
+            remainingTime: remainingTime,
+            winner: null
+          }
+        })
+      }
 
-  })
+    })
 })
 
 router.post("/setAuction", async function (req, res) {
@@ -66,19 +66,18 @@ router.post("/setAuction", async function (req, res) {
 
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
-  auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), parseInt(obj.numberOfDays), obj.publicAddress).send({
-    from: accounts[0],
-    gas: 3000000
-  }).
-  on('receipt', (receipt) => {
 
-    if (Object.keys(receipt["events"]).includes("AuctionIdReturn")) {
-      const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
+  let endDate = new Date().getTime() + parseInt(obj.numberOfDays) * 24 * 60 * 60 * 1000;
+  let minBid = parseInt(obj.minimumBid);
+  auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
+    on('receipt', (receipt) => {
+      if (Object.keys(receipt["events"]).includes("AuctionIdReturn")) {
+        const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
 
-      if (typeof (auctionId) !== "number") {
+        if (typeof (auctionId) !== "number") {
 
-        Patent.find({
-          $and: [{
+          Patent.find({
+            $and: [{
               patentId: obj.patentId
             },
             {
@@ -87,72 +86,74 @@ router.post("/setAuction", async function (req, res) {
             {
               status: false
             }
-          ]
-        }).then((result, err) => {
-          if (result) {
-            console.log(result)
-            Patent.updateOne({
-              $and: [{
-                  patentId: obj.patentId
+            ]
+          }).then((result, err) => {
+            if (result) {
+              console.log(result)
+              Patent.updateOne(
+                {
+                  $and: [
+                    { patentId: obj.patentId },
+                    { owners: obj.publicAddress }
+                  ]
                 },
                 {
-                  owners: obj.publicAddress
+                  status: true,
+                  auctionId: auctionId,
+                  endDate: endDate,
+                  minBid: minBid
                 }
-              ]
-            }, {
-              status: true,
-              auctionId: auctionId
-            }).then((data, err) => {
-              if (!err) {
-                console.log("Sending Auction id !!")
-                res.status(200).json({
-                  success: true,
-                  message: "IP set for Auction",
-                  auctionId: auctionId
-                })
-              }
-            })
-          } else {
-            res.status(200).json({
-              success: false,
-              message: "Something does not Seems right",
-              auctionId: null
-            })
-          }
-        })
+              ).then((data, err) => {
+                if (!err) {
+                  console.log("Sending Auction id !!")
+                  res.status(200).json({
+                    success: true,
+                    message: "IP set for Auction",
+                    auctionId: auctionId
+                  })
+                }
+              })
+            } else {
+              res.status(200).json({
+                success: false,
+                message: "Something does not Seems right",
+                auctionId: null
+              })
+            }
+          })
 
 
-      } else {
+        } else {
+          res.status(200).json({
+            success: false,
+            message: "IP not set for Auction",
+            auctionId: null
+          })
+        }
+
+      } else if (Object.keys(receipt["events"]).includes("duplicateAuction")) {
         res.status(200).json({
           success: false,
-          message: "IP not set for Auction",
+          message: "This IP is already up for Auction",
           auctionId: null
         })
       }
 
-    } else if (Object.keys(receipt["events"]).includes("duplicateAuction")) {
-      res.status(200).json({
-        success: false,
-        message: "This IP is already up for Auction",
-        auctionId: null
-      })
-    }
-
-  });
+    });
 })
 
 // this route will basically return all the patents that are up for the auction except the one's user has for auction
 router.post("/getActiveAuctions", (req, res) => {
 
   Patent.find({
-      $and: [{
-          status: true
-        },
-        {
-          owners: { $not : { $eq :req.body.data.publicAddress}}
-        }
-      ]
+    $and: [{
+      status: true
+    },
+    {
+      owners: { $not: { $eq: req.body.data.publicAddress } }
     }
+    ]
+  }
 
   ).then((data, err) => {
     console.log(data)
@@ -179,15 +180,14 @@ router.post("/getUserActiveAuctions", (req, res) => {
   // TODO Remove unwanted comments.
   // console.log(us
 
-  Patent.find({
-    $and: [{
-        "status": "true"
-      },
-      {
-        "owners": user.publicAddress
-      }
-    ]
-  }).then((data, err) => {
+  Patent.find(
+    {
+      $and: [
+        { "status": "true" },
+        { "owners": user.publicAddress }
+      ]
+    }
+  ).then((data, err) => {
     // console.log(data)
     if (!err) {
       res.status(200).json({
