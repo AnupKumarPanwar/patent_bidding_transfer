@@ -83,7 +83,11 @@ router.post('/registerPatent', async function (req, res) {
 
             if (patentType === "Audio") {
                 console.log("Audio");
-                exec('python AudioComparision/dejavu.py --config dejavu/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                exec('python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+
+                    console.log('err', err);
+                    console.log('stdout', stdout);
+                    console.log('stderr', stderr);
 
                     patent
                         .save()
