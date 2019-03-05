@@ -17,6 +17,7 @@ contract AuctionProcess is PatentManager, Bidding{
     event AuctionIdReturn(uint auctionId);
     event printRemainingAuctionTime(uint remainingTime);
     event printAuctionResult(string msg, address winner);
+    event duplicateAuction(string msg);
     
     // Maps auctioneer to the aucitonId 
     // May contain multiple auctionIds 
@@ -51,21 +52,24 @@ contract AuctionProcess is PatentManager, Bidding{
         address publicAddress = publicAddressOwner;
         Auction[] memory auctions = auctioneerAuctionMap[publicAddress];
 
-        if(auctions.length > 0){
-            for (uint j = 0; j<auctions.length ; j++){
-                auctionId = patentId;
-                Auction memory auction = auctions[j];
-                require(auction.auctionId == auctionId) throw;
-                
-                resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
-                auctioneerAuctionMap[publicAddress].push(resultantAuction);
-                    
-            }
-        }else{
+        
+        for (uint j = 0; j<auctions.length ; j++){
             auctionId = patentId;
+            Auction memory auction = auctions[j];
+            if(auction.auctionId == auctionId){
+                emit duplicateAuction("Auction Id Already exists");
+                return;
+            }
+            
             resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
             auctioneerAuctionMap[publicAddress].push(resultantAuction);
+                
         }
+    
+        auctionId = patentId;
+        resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
+        auctioneerAuctionMap[publicAddress].push(resultantAuction);
+        
       
    
         auctionIdToAuctionMap[auctionId] = resultantAuction;
