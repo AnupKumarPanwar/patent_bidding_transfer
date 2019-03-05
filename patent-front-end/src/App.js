@@ -36,7 +36,6 @@ class App extends Component {
 
       <div className="App">
         <Provider store = {store}>
-        <Header />
         <Switch>
           <Route path={"/dashboard"} component = {DashBoard} />
           <Route path={"/register"} component={Registration} />

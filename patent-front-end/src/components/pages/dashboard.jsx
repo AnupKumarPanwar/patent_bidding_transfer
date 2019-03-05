@@ -15,6 +15,7 @@ import PatentPage from "../manage/patentPage";
 import HomePatent from "./homePatent";
 import ProfilePage from "../manage/profilePage";
 import NavLinkItem from "../common/navItemLink";
+import Header from "../common/navbar";
 
 import "../css/dashboard.scss";
 
@@ -90,6 +91,7 @@ class DashBoard extends Component {
     if (this.props.auth) {
       return (
         <div className="dashboard">
+          <Header />
           <Toolbar
             colored
             fixed
@@ -108,7 +110,7 @@ class DashBoard extends Component {
                   className="d-flex justify-content-end align-self-center"
                   style={{ width: "90vw" }}
                 >
-                  <div style={{fontSize:"0.75em"}}>
+                  <div style={{ fontSize: "0.75em" }}>
                     {this.props.user.name}{" "}
                     <MdAccountCircle
                       className="m-2"
@@ -126,7 +128,7 @@ class DashBoard extends Component {
             transitionName="md-cross-face"
             transitionEnterTimeout={300}
             transitionLeave={false}
-            className="md-toolbar-relative md-grid"
+            className="md-toolbar-relative md-grid pt-5"
           >
             <Switch>
               <Route
@@ -134,7 +136,11 @@ class DashBoard extends Component {
                 exact
                 component={ProfilePage}
               />
-              <Route path={navItems[1].to} exact render={()=><HomePatent/>} />
+              <Route
+                path={navItems[1].to}
+                exact
+                render={() => <HomePatent />}
+              />
               <Route path={navItems[2].to} component={BiddingPage} />
               <Route path={navItems[3].to} component={ManagePatents} />
               <Route path={navItems[4].to} render={() => <ActiveAuciton />} />
