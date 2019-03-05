@@ -146,6 +146,9 @@ router.post("/setAuction", async function (req, res) {
 router.post("/getActiveAuctions", (req, res) => {
 
   Patent.find({
+
+    
+
     $and: [{
       status: true
     },
