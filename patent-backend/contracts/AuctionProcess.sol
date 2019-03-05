@@ -18,6 +18,7 @@ contract AuctionProcess is PatentManager, Bidding{
     event printRemainingAuctionTime(uint remainingTime);
     event printAuctionResult(string msg, address winner);
     event duplicateAuction(string msg);
+    event earlyTimeEvent(string msg);
     
     // Maps auctioneer to the aucitonId 
     // May contain multiple auctionIds 
@@ -51,7 +52,7 @@ contract AuctionProcess is PatentManager, Bidding{
         address publicAddress = publicAddressOwner;
         Auction[] memory auctions = auctioneerAuctionMap[publicAddress];
 
-        
+        // endTime
         for (uint j = 0; j<auctions.length ; j++){
             Auction memory auction = auctions[j];
             if(auction.auctionId == auctionId){
@@ -78,14 +79,14 @@ contract AuctionProcess is PatentManager, Bidding{
         return auctioneerAuctionMap[owner];
     }
 
-    function getResult(uint auctionId) public {
+    function getResult(uint auctionId, uint nowTime) public {
         Auction memory auction = auctionIdToAuctionMap[auctionId];
-        uint timeNow = block.timestamp;
-
-        uint remianingTime = timeNow - auction.endTime;
-        emit printRemainingAuctionTime(remianingTime);
+        // uint timeNow = block.timestamp*1000;
         
-        require(timeNow >= auction.endTime, "{'message':'Cannot get result right now'}");
+        if(nowTime <= auction.endTime){
+            emit earlyTimeEvent("{ 'message':'Cant get result now'}");
+            return;
+        }
         
         AddressPrice[] memory priceMap = allBids(auctionId);
         uint maxBid = auction.minimumBidAuctioneer;

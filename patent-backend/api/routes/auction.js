@@ -16,14 +16,15 @@ const contractAddress = ethConfig.auctionContractAddress;
 router.post("/getResult", async (req, res) => {
   const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
-  let obj = req.body.data;
+  let obj = req.body;
+  // console.log(obj);
   let accounts = await web3.eth.getAccounts();
-  auctionInstance.methods.getResult(parseInt(obj.auctionId)).send({
+  auctionInstance.methods.getResult(parseInt(obj.auctionId), new Date().getTime()).send({
     from: accounts[0],
     gas: 3000000
   }).
     on('receipt', (receipt) => {
-      const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
+      // const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
 
       if (receipt["events"]["printAuctionResult"]) {
         const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
@@ -40,18 +41,18 @@ router.post("/getResult", async (req, res) => {
                 success: true,
                 message: "Auction results are available.",
                 data: {
-                  remainingTime: remainingTime,
                   winner: winner
                 }
               })
             }
           })
       } else {
+        console.log(receipt)
         res.status(200).json({
           success: false,
           message: "Auction not complete yet.",
           data: {
-            remainingTime: remainingTime,
+            // remainingTime: remainingTime,
             winner: null
           }
         })
@@ -67,7 +68,7 @@ router.post("/setAuction", async function (req, res) {
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
 
-  let endDate = new Date().getTime() + parseInt(obj.numberOfDays) * 24 * 60 * 60 * 1000;
+  let endDate = new Date().getTime() + parseFloat(obj.numberOfDays) * 24 * 60 * 60 * 1000;
   let minBid = parseInt(obj.minimumBid);
   auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
     on('receipt', (receipt) => {
