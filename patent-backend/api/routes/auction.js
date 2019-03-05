@@ -19,45 +19,45 @@ router.post("/getResult", async (req, res) => {
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
   auctionInstance.methods.getResult(parseInt(obj.auctionId)).send({ from: accounts[0], gas: 3000000 }).
-  on('receipt', (receipt) => {
-    const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
+    on('receipt', (receipt) => {
+      const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
 
-    if (receipt["events"]["printAuctionResult"]) {
-      const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
+      if (receipt["events"]["printAuctionResult"]) {
+        const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
 
-      Patent.updateOne(
-        {
-          $and: [
-            { patentId: obj.auctionId }
-          ]
-        },
-        {
-          status: "RESULT_AVAILABLE"
-        }
-      ).then((data, err) => {
-        if (!err) {
-          res.status(200).json({
-            success: true,
-            message: "Auction results are available.",
-            data: {
-              remainingTime: remainingTime,
-              winner: winner
-            }
-          })
-        }
-      })   
-    } else {
-      res.status(200).json({
-        success: false,
-        message: "Auction not complete yet.",
-        data: {
-          remainingTime: remainingTime,
-          winner: null
-        }
-      })
-    }
+        Patent.updateOne(
+          {
+            $and: [
+              { patentId: obj.auctionId }
+            ]
+          },
+          {
+            status: "RESULT_AVAILABLE"
+          }
+        ).then((data, err) => {
+          if (!err) {
+            res.status(200).json({
+              success: true,
+              message: "Auction results are available.",
+              data: {
+                remainingTime: remainingTime,
+                winner: winner
+              }
+            })
+          }
+        })
+      } else {
+        res.status(200).json({
+          success: false,
+          message: "Auction not complete yet.",
+          data: {
+            remainingTime: remainingTime,
+            winner: null
+          }
+        })
+      }
 
-  })
+    })
 })
 
 router.post("/setAuction", async function (req, res) {
@@ -67,7 +67,8 @@ router.post("/setAuction", async function (req, res) {
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
   let endDate = new Date().getTime() + parseInt(obj.numberOfDays);
-  auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
+  let minBid = parseInt(obj.minimumBid);
+  auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
     on('receipt', (receipt) => {
       const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
 
@@ -92,7 +93,8 @@ router.post("/setAuction", async function (req, res) {
               {
                 status: true,
                 auctionId: auctionId,
-                endDate: endDate
+                endDate: endDate,
+                minBid: minBid
               }
             ).then((data, err) => {
               if (!err) {
@@ -136,12 +138,12 @@ router.get("/getActiveAuctions", (req, res) => {
         message: "Success",
         data
       })
-    }else{
+    } else {
       res.status(200).json({
         success: false,
         message: "Not Success",
-        data : [],
-        log : err
+        data: [],
+        log: err
       })
     }
   })
@@ -152,12 +154,12 @@ router.post("/getUserActiveAuctions", (req, res) => {
   const user = req.body.data;
   // TODO Remove unwanted comments.
   // console.log(us
-  
+
   Patent.find(
     {
-      $and : [
-        {"status":"true"},
-        {"owners" : user.publicAddress}
+      $and: [
+        { "status": "true" },
+        { "owners": user.publicAddress }
       ]
     }
   ).then((data, err) => {
@@ -168,11 +170,11 @@ router.post("/getUserActiveAuctions", (req, res) => {
         message: "Success",
         data
       })
-    }else{
+    } else {
       res.status(200).json({
         success: false,
         message: "Failure",
-        data : []
+        data: []
       })
     }
   })

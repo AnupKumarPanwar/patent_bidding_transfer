@@ -12,7 +12,8 @@ const PatentSchema = mongoose.Schema({
     status: { type: String },
     patentId: { type: Number },
     auctionId: { type: Number },
-    endDate: { type: Number, default: null }
+    endDate: { type: Number, default: null },
+    minBid: { type: Number, default: null }
 });
 
 module.exports = mongoose.model('Patents', PatentSchema, 'patent_collection');
