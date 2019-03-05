@@ -1,4 +1,5 @@
 {
-  "networkAddress": "http://localhost:9545",
-  "auctionContractAddress": "0x99AD37D58Fd83558f89b67f950DfE185d522bBB4"
+  "networkAddress": "http://localhost:8545",
+  "auctionContractAddress": "0x3D0086776eed658aBc5eb38538aBA8F96575CF28"
 }
+

@@ -23,7 +23,7 @@ const PatentsTable = props => {
     rows = props.patents.map(({ patentId, patentName, patentType }, index) => (
       <TableRow key={patentId}>
         <TableColumn>
-          <Link to={`${TO_PREFIX}/patent/${index}`}>{patentId}</Link>
+          <Link to={`${TO_PREFIX}/patent/${patentId}`}>{patentId}</Link>
         </TableColumn>
         <TableColumn>{patentName}</TableColumn>
         <TableColumn>{patentType}</TableColumn>
