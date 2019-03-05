@@ -18,34 +18,34 @@ router.post("/getResult", async (req, res) => {
 
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
-  auctionInstance.methods.getResult(parseInt(obj.auctionId)).send({ from: accounts[0], gas: 3000000 }).
+  auctionInstance.methods.getResult(parseInt(obj.auctionId)).send({
+    from: accounts[0],
+    gas: 3000000
+  }).
     on('receipt', (receipt) => {
       const remainingTime = receipt["events"]["printRemainingAuctionTime"]["returnValues"]['remainingTime'];
 
       if (receipt["events"]["printAuctionResult"]) {
         const winner = receipt["events"]["printAuctionResult"]["returnValues"]['winner'];
 
-        Patent.updateOne(
-          {
-            $and: [
-              { patentId: obj.auctionId }
-            ]
-          },
-          {
+        Patent.updateOne({
+          $and: [{
+            patentId: obj.auctionId
+          }]
+        }, {
             status: "RESULT_AVAILABLE"
-          }
-        ).then((data, err) => {
-          if (!err) {
-            res.status(200).json({
-              success: true,
-              message: "Auction results are available.",
-              data: {
-                remainingTime: remainingTime,
-                winner: winner
-              }
-            })
-          }
-        })
+          }).then((data, err) => {
+            if (!err) {
+              res.status(200).json({
+                success: true,
+                message: "Auction results are available.",
+                data: {
+                  remainingTime: remainingTime,
+                  winner: winner
+                }
+              })
+            }
+          })
       } else {
         res.status(200).json({
           success: false,
@@ -66,70 +66,95 @@ router.post("/setAuction", async function (req, res) {
 
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
-  let endDate = new Date().getTime() + parseInt(obj.numberOfDays)*24*60*60*1000;
+
+  let endDate = new Date().getTime() + parseInt(obj.numberOfDays) * 24 * 60 * 60 * 1000;
   let minBid = parseInt(obj.minimumBid);
   auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
     on('receipt', (receipt) => {
-      const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
+      if (Object.keys(receipt["events"]).includes("AuctionIdReturn")) {
+        const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
 
-      if (typeof (auctionId) !== "number") {
+        if (typeof (auctionId) !== "number") {
 
-        Patent.find({
-          $and: [
-            { patentId: obj.patentId },
-            { owners: obj.publicAddress },
-            { status: false }
-          ]
-        }).then((result, err) => {
-          if (result) {
-            console.log(result)
-            Patent.updateOne(
-              {
-                $and: [
-                  { patentId: obj.patentId },
-                  { owners: obj.publicAddress }
-                ]
-              },
-              {
-                status: true,
-                auctionId: auctionId,
-                endDate: endDate,
-                minBid: minBid
-              }
-            ).then((data, err) => {
-              if (!err) {
-                console.log("Sending Auction id !!")
-                res.status(200).json({
-                  success: true,
-                  message: "IP set for Auction",
-                  auctionId: auctionId
-                })
-              }
-            })
-          } else {
-            res.status(200).json({
-              success: false,
-              message: "Something does not Seems right",
-              auctionId: null
-            })
-          }
-        })
+          Patent.find({
+            $and: [{
+              patentId: obj.patentId
+            },
+            {
+              owners: obj.publicAddress
+            },
+            {
+              status: false
+            }
+            ]
+          }).then((result, err) => {
+            if (result) {
+              console.log(result)
+              Patent.updateOne(
+                {
+                  $and: [
+                    { patentId: obj.patentId },
+                    { owners: obj.publicAddress }
+                  ]
+                },
+                {
+                  status: true,
+                  auctionId: auctionId,
+                  endDate: endDate,
+                  minBid: minBid
+                }
+              ).then((data, err) => {
+                if (!err) {
+                  console.log("Sending Auction id !!")
+                  res.status(200).json({
+                    success: true,
+                    message: "IP set for Auction",
+                    auctionId: auctionId
+                  })
+                }
+              })
+            } else {
+              res.status(200).json({
+                success: false,
+                message: "Something does not Seems right",
+                auctionId: null
+              })
+            }
+          })
 
 
-      } else {
+        } else {
+          res.status(200).json({
+            success: false,
+            message: "IP not set for Auction",
+            auctionId: null
+          })
+        }
+
+      } else if (Object.keys(receipt["events"]).includes("duplicateAuction")) {
         res.status(200).json({
           success: false,
-          message: "IP not set for Auction",
+          message: "This IP is already up for Auction",
           auctionId: null
         })
       }
+
     });
 })
 
-// this route will basically return all the patents that are up for the auction 
-router.get("/getActiveAuctions", (req, res) => {
-  Patent.find(
-    { status: true }
+// this route will basically return all the patents that are up for the auction except the one's user has for auction
+router.post("/getActiveAuctions", (req, res) => {
+
+  Patent.find({
+    $and: [{
+      status: true
+    },
+    {
+      owners: { $not: { $eq: req.body.data.publicAddress } }
+    }
+    ]
+  }
+
   ).then((data, err) => {
     console.log(data)
     if (!err) {

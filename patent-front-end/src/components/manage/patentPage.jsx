@@ -39,6 +39,13 @@ class PatentPage extends Component {
       });
   }
 
+  componentWillUnmount() {
+    this.props.showAuctionAction(
+      true,
+      this.props.visibleTransfer
+    );
+  }
+
   render() {
     // console.log(this.propsuserInfo.publicAddress);
     return (
@@ -53,7 +60,11 @@ class PatentPage extends Component {
                 </TableColumn>
 
                 <TableColumn>
-                  {key === "issueDate" ? new Date(parseInt(this.state.patent[key])).toLocaleString() : this.state.patent[key]}
+                  {key === "issueDate"
+                    ? new Date(
+                        parseInt(this.state.patent[key])
+                      ).toLocaleString()
+                    : this.state.patent[key]}
                 </TableColumn>
               </TableRow>
             ))}
