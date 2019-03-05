@@ -1,4 +1,4 @@
-export const ipAddress = "http://localhost:4000";
+export const ipAddress = "http://3.84.234.224:4000";
 export const controller = {
     register: ipAddress + "/users/register",
     login: ipAddress + "/users/login",

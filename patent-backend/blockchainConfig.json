@@ -1,4 +1,4 @@
 {
-  "networkAddress": "http://localhost:8545",
+  "networkAddress": "http://35.173.245.236:9999",
   "auctionContractAddress": "0x6e3504D12800646bFcc575eFF18908212ed8f495"
 }
