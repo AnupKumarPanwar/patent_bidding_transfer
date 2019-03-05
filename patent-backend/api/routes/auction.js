@@ -149,7 +149,7 @@ router.post("/getActiveAuctions", (req, res) => {
           status: true
         },
         {
-          owners: { $not : { $eq :req.body.data.publicAddress}}
+          owners: { $not : { $eq:req.body.data.publicAddress}}
         }
       ]
     }
