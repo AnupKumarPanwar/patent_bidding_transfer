@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import axios from "axios";
+import { ipAddress } from "../../controller";
 
 class Timer extends Component {
   state = {
@@ -8,50 +10,37 @@ class Timer extends Component {
     seconds: 0
   };
 
-  constructor() {
-    super();
-    this.x = null;
-  }
+  componentDidMount() {
+    if (this.props.seconds - new Date().getTime() > 0) {
+      const self = this;
+      let x = setInterval(function() {
+        let distance = self.props.seconds - new Date().getTime();
+        if (distance > 0) {
+          let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          let hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  componentWillUnmount() {
-    clearInterval(this.x);
+          self.setState({ days, hours, minutes, seconds });
+        } else {
+          self.setState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+          clearInterval(x);
+          axios
+            .post(ipAddress + "/auction/getResult", {
+              auctionId: self.props.auctionId
+            })
+            .then(res => {
+              // console.log(res);
+              alert(res.data.data.winner);
+            });
+        }
+      }, 1000);
+    }
   }
 
   render() {
-    // const time = this.state.time;
-
-    const timer = () => {
-
-      
-      // Update the count down every 1 second
-      let self = this;
-      this.x = setInterval(function() {
-        let countDownDate = self.props.seconds;
-        
-        let now = new Date().getTime();
-
-        // Find the distance between now and the count down date
-        let distance = countDownDate - now;
-
-        // Time calculations for days, hours, minutes and seconds
-        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        let hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        self.setState({ days, hours, minutes, seconds });
-
-        // If the count down is over, write some text
-        if (distance < 0) {
-          clearInterval(this.x);
-        }
-      }, 1000);
-      // return <p>Hey</p>;
-    };
-
-    (this.props.seconds - new Date().getTime()) > 0 ? timer() : null;
     return (
       <div>
         <div className="border">

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import Timer from "../../common/Timer";
 
 const ActiveAuctionDetails = props => {
-
   return (
     <div style={{ display: "fixed", height: "85vh" }}>
       <div className="d-flex justify-content-between m-4">
@@ -13,9 +12,14 @@ const ActiveAuctionDetails = props => {
         </h3>
         {props.auctions.length > 0 ? (
           <div>
-            <Timer seconds={props.auctions[props.auctionSelectedIndex].endDate} />
-          </div>) : 
-          (<div></div>)}
+            <Timer
+              seconds={props.auctions[props.auctionSelectedIndex].endDate}
+              auctionId={props.auctions[props.auctionSelectedIndex].auctionId}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
 
       <Divider />
@@ -37,20 +41,26 @@ const ActiveAuctionDetails = props => {
                       <b>{key}</b>
                     </TableColumn>
                     <TableColumn plain adjusted={false}>
-                      {props.auctions[props.auctionSelectedIndex][key]}
+                      {key === "endDate"
+                        ? new Date(
+                            parseInt(
+                              props.auctions[props.auctionSelectedIndex][key]
+                            )
+                          ).toLocaleString()
+                        : props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
                 )
               )
             ) : (
-                <TableRow>
-                  <TableColumn>
-                    <h3 className="m-2" style={{ color: "red" }}>
-                      No Details Available
+              <TableRow>
+                <TableColumn>
+                  <h3 className="m-2" style={{ color: "red" }}>
+                    No Details Available
                   </h3>
-                  </TableColumn>
-                </TableRow>
-              )}
+                </TableColumn>
+              </TableRow>
+            )}
           </DataTable>
         </div>
       </div>
