@@ -1,7 +1,6 @@
 # Pider
 ## Patent management over Blockchain
 
-
 ## Requirements.
 1. Truffle
 2. Node.js
@@ -32,3 +31,4 @@
         2. `migrate --reset`
 4. Copy the deployed contract address of AutionProcess.
 5. In patent-backend/blockchainConfig.json change the networkAdress to the rpc address and auctionContractAddress to the above deployment address.
+
