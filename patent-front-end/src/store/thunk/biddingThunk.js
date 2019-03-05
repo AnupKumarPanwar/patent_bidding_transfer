@@ -2,6 +2,7 @@ import service from "../../services/biddingService";
 import auctionService from "../../services/patentService";
 import {postBidAction, updateAuctionsState} from "../actions/bidding/BiddingActions";
 
+// TODO apply catch also, for each.
 export const submitBid = (data) => {
   return (dispatch) => {
     service.submitBid(data).then(res => {

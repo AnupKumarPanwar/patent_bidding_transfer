@@ -64,6 +64,7 @@ class SearchPage extends Component {
   };
 
   render() {
+    // TODO Make CSS classes for each.
     const paperStyle = { maxWidth: 320, margin: 10, height: 300 };
     const contactCardStyle = {
       maxWidth: 320,
@@ -190,7 +191,10 @@ class SearchPage extends Component {
               autoComplete={false}
             />
 
+            {/* // TODO make a function using switch case having type as the label(eg, imagePatentLabel)
+            and then call the function here by passing the label value as parameter to it. */}
             <Tab label={imagePatentLabel}>
+            {/* // TODO use a variable instead of using this.state.query.length every time, for better readability */}
               {this.state.query.length > 0
                 ? this.state.imagePatents.length > 0
                   ? imagePatentRows

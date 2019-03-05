@@ -10,6 +10,7 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, res, next) {
 	//   print(req);
 	res.status(200).json({
+    // TODO REGISTRATION
 		message: "Got Regis form"
 	})
 })

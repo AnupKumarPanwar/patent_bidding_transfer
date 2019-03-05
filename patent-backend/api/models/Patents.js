@@ -8,6 +8,7 @@ const PatentSchema = mongoose.Schema({
     issueDate: { type: String },
     uploadFileName: { type: String },
     owners: [{ type: String }],
+    // TODO SPELLING CHECK
     lisenceHolders: [{ type: String }],
     status: { type: String },
     patentId: {type: Number},
