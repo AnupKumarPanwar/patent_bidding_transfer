@@ -66,7 +66,8 @@ router.post("/setAuction", async function (req, res) {
 
   let obj = req.body.data;
   let accounts = await web3.eth.getAccounts();
-  auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), parseInt(obj.numberOfDays), obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
+  let endDate = new Date().getTime() + parseInt(obj.numberOfDays);
+  auctionInstance.methods.createAuction(parseInt(obj.patentId), parseInt(obj.minimumBid), endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
     on('receipt', (receipt) => {
       const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
 
@@ -90,7 +91,8 @@ router.post("/setAuction", async function (req, res) {
               },
               {
                 status: true,
-                auctionId: auctionId
+                auctionId: auctionId,
+                endDate: endDate
               }
             ).then((data, err) => {
               if (!err) {
