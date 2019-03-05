@@ -39,25 +39,34 @@ contract AuctionProcess is PatentManager, Bidding{
     // }
     function createAuction(uint patentId, uint minimumBid, uint numberOfDays, address publicAddressOwner) public {
         
-        uint auctionId = patentId;
+     
         uint num_seconds = numberOfDays*24*60*60;
         uint endTime = block.timestamp + num_seconds;
         string memory patentType = getPatentType(patentId);
         address[] memory ownersList = getOwnerList(patentId);
         Auction memory resultantAuction;
+        uint auctionId = 123123;
 
 
         address publicAddress = publicAddressOwner;
         Auction[] memory auctions = auctioneerAuctionMap[publicAddress];
 
-        for (uint j = 0; j<auctions.length ; j++){
-            Auction memory auction = auctions[j];
-            require(auction.auctionId == auctionId, "Patent already up for auction");
-            
+        if(auctions.length > 0){
+            for (uint j = 0; j<auctions.length ; j++){
+                auctionId = patentId;
+                Auction memory auction = auctions[j];
+                require(auction.auctionId == auctionId) throw;
+                
+                resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
+                auctioneerAuctionMap[publicAddress].push(resultantAuction);
+                    
+            }
+        }else{
+            auctionId = patentId;
             resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
             auctioneerAuctionMap[publicAddress].push(resultantAuction);
-                
         }
+      
    
         auctionIdToAuctionMap[auctionId] = resultantAuction;
         emit AuctionIdReturn(auctionId);

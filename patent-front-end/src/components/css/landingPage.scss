@@ -1,40 +1,58 @@
 @import '~react-md/src/scss/react-md';
 
-// TODO use scss features if using that
-// for ex: p, h2, span of landing-container can be defined inside the same class.
-.landing-container{
-  height: 90vh;
-  background-color:	rgb(40,40,40);
+.landing-container {
+  margin:0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: black url(http://papers.co/wallpaper/papers.co-vb40-wallpaper-geometry-black-pattern-36-3840x2400-4k-wallpaper.jpg) repeat 0 0;
+  background-size:contain;
+  box-sizing: border-box;
+  -webkit-animation: slide 20s linear infinite;
 }
 
-.landing-container p{
-  color:white;
+@-webkit-keyframes slide {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: -400px 0;
+  }
+
+// TODO use scss features if using that
+// for ex: p, h2, span of landing-container can be defined inside the same class.
+
+
+.para{
+  color: white;
   text-align: justify;
   width: 60%;
 }
 
-.main-content{
+.main-content {
   height: 80vh;
 }
 
-.landing-container h2{
+.landing-container h2 {
   color: white;
   text-align: center;
 }
 
-.landing-container span{
-  color:white;
-}
+// .landing-container span {
+//   color: white;
+// }
 
-.goals button{
-  background-color:	rgb(31, 31, 31);
-  color:black;
-  border-radius: 50%;;
-  width:100px;
+.goals button {
+  background-color: rgb(31, 31, 31);
+  color: black;
+  border-radius: 50%;
+  ;
+  width: 100px;
   height: 100px;
 }
 
-.pill{
+.pill {
   border-radius: 10px;
 }
 

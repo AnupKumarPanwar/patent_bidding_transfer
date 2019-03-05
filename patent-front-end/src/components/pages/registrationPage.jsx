@@ -190,7 +190,12 @@ class Registration extends Component {
           </div>
 
           <div className="d-flex justify-content-center">
-            <Button onClick={this.registerUser} secondary raised className="m-2">
+            <Button
+              onClick={this.registerUser}
+              secondary
+              raised
+              className="m-2"
+            >
               Register
             </Button>
             <a href="#login">

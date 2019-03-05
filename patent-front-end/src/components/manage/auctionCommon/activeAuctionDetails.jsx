@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
-import { Card, CardTitle, DataTable, Divider, TableRow, TableColumn, TableBody } from 'react-md';
+import React from "react";
+import { DataTable, Divider, TableRow, TableColumn } from "react-md";
 import { connect } from "react-redux";
+import Timer from "../../common/Timer";
 
-const ActiveAuctionDetails = (props) => {
+const ActiveAuctionDetails = props => {
   
   return (
     <div style={{ display: "fixed", height: "85vh" }}>
-      <CardTitle>
-          <h3>
-            <b>Auction details</b>
-          </h3>
-      </CardTitle>
+      <div className="d-flex justify-content-between m-4">
+        <h3>
+          <b>Auction details</b>
+        </h3>
+        {/* <div>
+          <Timer seconds={new Date("March 5, 2019 15:37:25").getTime()} />
+        </div> */}
+      </div>
+
       <Divider />
 
       <div className="md-grid">
@@ -22,46 +27,40 @@ const ActiveAuctionDetails = (props) => {
             }}
             plain={true}
           >
-            {
-              props.auctions.length > 0
-
-                ?
-
-                Object.keys(props.auctions[props.auctionSelectedIndex]).map(key => (
+            {props.auctions.length > 0 ? (
+              Object.keys(props.auctions[props.auctionSelectedIndex]).map(
+                key => (
                   <TableRow>
                     <TableColumn>
                       <b>{key}</b>
                     </TableColumn>
-                    <TableColumn
-                      plain
-                      adjusted={false}
-                    >
+                    <TableColumn plain adjusted={false}>
                       {props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
-                ))
-
-                : <TableRow>
-                  <TableColumn>
-                    <h3 className="m-2" style={{ color: "red" }}>
-                      No Details Available
+                )
+              )
+            ) : (
+              <TableRow>
+                <TableColumn>
+                  <h3 className="m-2" style={{ color: "red" }}>
+                    No Details Available
                   </h3>
-                  </TableColumn>
-                </TableRow>
-            }
+                </TableColumn>
+              </TableRow>
+            )}
           </DataTable>
         </div>
       </div>
     </div>
   );
-}
+};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auctions: state.auction.auctions,
     auctionSelectedIndex: state.auction.auctionSelectedIndex
-  }
-}
-
+  };
+};
 
 export default connect(mapStateToProps)(ActiveAuctionDetails);

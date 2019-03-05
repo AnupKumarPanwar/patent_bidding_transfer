@@ -9,8 +9,13 @@ class LandingPage extends Component {
   // state = {};
   render() {
     return (
-      <div className="landing-container md-grid pt-2">
+      <div className="border landing-container md-grid">
         <div className="md-cell md-cell--12 d-flex flex-column justify-content-center">
+          <div className="d-flex justify-content-center">
+            <span className="h1 mt-2" style={{ color: "white" }}>
+              Pider
+            </span>
+          </div>
           <div className="d-flex justify-content-center">
             <div className="d-flex align-items-center ml-3">
               <Link to="/" className="nav-link">
@@ -34,8 +39,11 @@ class LandingPage extends Component {
         <div className="md-cell md-cell--12 main-content">
           <div className="d-flex flex-column align-items-center p-4">
             <h2 className="">Patent Solutions</h2>
-            <p className="">
+
+            <p className="para">
+
             {/* // TODO Define some description of your own */}
+
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
               accusamus quia nostrum a minus, porro consequuntur voluptas
               deleniti aspernatur incidunt quam animi nihil esse ducimus itaque
@@ -45,19 +53,19 @@ class LandingPage extends Component {
 
           <div className="d-flex  goals justify-content-center">
             <div className="md-grid">
-              <button className="m-5 md-cell md-cell--3 border border-primary bg-white ">
-                <span className="text-dark" >AUCTION</span>
+              <button className="m-5 md-cell md-cell--4 border border-primary bg-white ">
+                <span className="text-dark">AUCTION</span>
               </button>
-              <button className="m-5 md-cell md-cell--3 border border-primary bg-white ">
+              <button className="m-5 md-cell md-cell--4 border border-primary bg-white ">
                 <span className="text-dark">BID</span>
               </button>
-              <button className="m-5 md-cell md-cell--3 border  border-primary bg-white  ">
+              <button className="m-5 md-cell md-cell--4 border  border-primary bg-white  ">
                 <span className="text-dark">TRANSFER</span>
               </button>
             </div>
           </div>
 
-          <div className="md-grid">
+          <div className="d-flex md-grid">
             <div className="md-cell md-cell--6">
               <div className="d-flex flex-column align-items-center">
                 <div className="m-3 ">
@@ -99,7 +107,7 @@ class LandingPage extends Component {
 
         <div className="md-cell md-cell--12">
           <a id="register">
-            <Registration routes={this.props.history}/>
+            <Registration history={this.props.history} />
           </a>
         </div>
         <div className="md-cell md-cell--12">
