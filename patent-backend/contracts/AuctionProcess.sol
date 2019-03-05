@@ -38,15 +38,14 @@ contract AuctionProcess is PatentManager, Bidding{
     
     //     return (auctionId);
     // }
-    function createAuction(uint patentId, uint minimumBid, uint numberOfDays, address publicAddressOwner) public {
+    function createAuction(uint patentId, uint minimumBid, uint endDate, address publicAddressOwner) public {
         
      
-        uint num_seconds = numberOfDays*24*60*60;
-        uint endTime = block.timestamp + num_seconds;
+        uint endTime = endDate;
         string memory patentType = getPatentType(patentId);
         address[] memory ownersList = getOwnerList(patentId);
         Auction memory resultantAuction;
-        uint auctionId = 123123;
+        uint auctionId = patentId;
 
 
         address publicAddress = publicAddressOwner;
@@ -54,24 +53,16 @@ contract AuctionProcess is PatentManager, Bidding{
 
         
         for (uint j = 0; j<auctions.length ; j++){
-            auctionId = patentId;
             Auction memory auction = auctions[j];
             if(auction.auctionId == auctionId){
                 emit duplicateAuction("Auction Id Already exists");
                 return;
-            }
-            
-            resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
-            auctioneerAuctionMap[publicAddress].push(resultantAuction);
-                
+            }                
         }
-    
-        auctionId = patentId;
-        resultantAuction = Auction(auctionId, auctionId, endTime, minimumBid, patentType, ownersList);
-        auctioneerAuctionMap[publicAddress].push(resultantAuction);
         
-      
-   
+        resultantAuction = Auction(auctionId, patentId, endTime, minimumBid, patentType, ownersList);
+        auctioneerAuctionMap[publicAddress].push(resultantAuction);
+
         auctionIdToAuctionMap[auctionId] = resultantAuction;
         emit AuctionIdReturn(auctionId);
     }
