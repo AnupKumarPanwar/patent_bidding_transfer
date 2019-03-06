@@ -237,6 +237,14 @@ router.post('/checkSignature', function (req, res) {
         }
         let uploadFileName = 'u' + Date.now() + req.files.file.name;
         let fileExtention = path.extname(uploadFileName);
+
+        uploadFileName = uploadFileName.replace(fileExtention, '');
+
+        uploadFileName = uploadFileName.replace(/\W/g, '');
+
+        uploadFileName = uploadFileName + fileExtention;
+
+        console.log(uploadFileName);
         let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
         let allowedAudioExtentions = ['.mp3', '.wav'];
 
