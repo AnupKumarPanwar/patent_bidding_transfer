@@ -169,7 +169,7 @@ router.post('/getPatent', async function (req, res) {
 router.post('/transferPatent', async function (req, res) {
     const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
     const obj = req.body.data;
-    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver).send({
+    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver, obj.sender).send({
             from: accounts[0],
             gas: 3000000
         })

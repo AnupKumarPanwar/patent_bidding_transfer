@@ -44,34 +44,34 @@ contract PatentManager {
         patents[patentId].lisenceHolders.push(person);
     }
     
-    function transferPatent(uint patentId, address payable receiver) public {
+    function transferPatent(uint patentId, address payable receiver, address payable sender) public {
         for (uint i = 0; i < patents[patentId].owners.length; i++) {
-            if (patents[patentId].owners[i]==msg.sender) {
+            if (patents[patentId].owners[i]==sender) {
                 patents[patentId].owners[i]=receiver;
                 break;
             }
         }
 
-        for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
+        for (uint i = 0; i < ownerPatentsMap[sender].length; i++) {
             uint pos = 0;
-            if (ownerPatentsMap[msg.sender][i].patentId==patentId) {
+            if (ownerPatentsMap[sender][i].patentId==patentId) {
                 pos = i;
                 break;
             }
-            uint last = ownerPatentsMap[msg.sender].length - 1;
-            ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
-            delete ownerPatentsMap[msg.sender][last];
+            uint last = ownerPatentsMap[sender].length - 1;
+            ownerPatentsMap[sender][pos] = ownerPatentsMap[sender][last];
+            delete ownerPatentsMap[sender][last];
         }
 
-        for (uint i = 0; i < ownerPatentsMap[msg.sender].length; i++) {
+        for (uint i = 0; i < ownerPatentsMap[sender].length; i++) {
             uint pos = 0;
-            if (ownerPatentsMap[msg.sender][i].patentId==patentId) {
+            if (ownerPatentsMap[sender][i].patentId==patentId) {
                 pos = i;
                 break;
             }
-            uint last = ownerPatentsMap[msg.sender].length - 1;
-            ownerPatentsMap[msg.sender][pos] = ownerPatentsMap[msg.sender][last];
-            delete ownerPatentsMap[msg.sender][last];
+            uint last = ownerPatentsMap[sender].length - 1;
+            ownerPatentsMap[sender][pos] = ownerPatentsMap[sender][last];
+            delete ownerPatentsMap[sender][last];
         }
     }
 
