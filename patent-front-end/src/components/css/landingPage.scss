@@ -1,7 +1,7 @@
 @import '~react-md/src/scss/react-md';
 
 .landing-container {
-  margin: 0;
+  position:fixed;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -40,9 +40,6 @@
   text-align: center;
 }
 
-// .landing-container span {
-//   color: white;
-// }
 
 .goals button {
   background-color: rgb(31, 31, 31);
@@ -57,4 +54,7 @@
   border-radius: 10px;
 }
 
+.above_button_text{
+  color:white;
+}
 // .intro-para
