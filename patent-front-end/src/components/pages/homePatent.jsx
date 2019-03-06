@@ -10,11 +10,11 @@ import "../css/homePatent.scss";
 
 const OBJECT_ITEMS = [
   {
-    label: "Audio Files",
+    label: "Audio",
     value: "Audio"
   },
   {
-    label: "Pictures",
+    label: "Image",
     value: "Image"
   }
 ];
@@ -30,21 +30,21 @@ class FilePatent extends Component {
     return (
       <div className="d-flex p-0 bg-light">
         <Card className="md-cell md-cell--12">
-          <div className="d-flex md-grid">
-            <h3 className="ml-3 pt-3 md-cell--4">
-              Registration : {this.props.patentType}
-            </h3>
-            <div class="ml-3 md-cell--6">
+          <div className=" d-flex md-grid">
+            <div class="ml-3 md-cell--3">
               <SelectField
                 id="type"
                 placeholder="Select the type of Intellectual Property"
-                className="pl-4 pr-4 pt-2 pb-1 border selectField"
+                className="md-cell--12 pl-4 pr-4 pt-2 pb-1 selectField"
                 menuItems={OBJECT_ITEMS}
                 simplifiedMenu={true}
                 dropdownIcon={<MdArrowDropDown />}
                 onChange={this.onTypeChange}
               />
             </div>
+            <h3 className="ml-3 pt-3 md-cell--4">
+              Registration : {this.props.patentType}
+            </h3>
           </div>
 
           <Divider className="bg-dark ml-3 mr-3" />

@@ -11,9 +11,31 @@ import { ipAddress } from "../../controller";
 
 const IpDetails = props => {
   // TODO remove unused variables.
-  const imgStyle = { width: "100%", height: 220 };
   const audioThumbStyle = { width: "250", height: 250 };
   const audioStyle = { width: "100%" };
+  const onSubmitBid = () => {
+    console.log(props.bidAmount);
+    console.log(props.auctions[props.auctionSelectedIndex]["minBid"]);
+    if (
+      props.bidAmount <= props.auctions[props.auctionSelectedIndex]["minBid"]
+    ) {
+      alert("Your Bid is less than the minimum Bid !");
+    } else {
+      if (
+        props.auctions[props.auctionSelectedIndex]["endDate"] <
+        new Date().getTime()
+      ) {
+        alert("Sorry You cant Bid for this patent Now !")
+      } else {
+        props.submitBid({
+          publicAddress: props.userInfo.publicAddress,
+          auctionId: props.auctions[props.auctionSelectedIndex].auctionId,
+          bidAmount: props.bidAmount
+        });
+      }
+    }
+  };
+
   return (
     <Paper
       className="md-grid bg-white rounded"
@@ -36,7 +58,13 @@ const IpDetails = props => {
                       <b>{key} : </b>
                     </TableColumn>
                     <TableColumn style={{ wordBreak: "break-all" }}>
-                      {props.auctions[props.auctionSelectedIndex][key]}
+                      {key === "endDate"
+                        ? new Date(
+                            parseInt(
+                              props.auctions[props.auctionSelectedIndex][key]
+                            )
+                          ).toLocaleString()
+                        : props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
                 )
@@ -85,18 +113,11 @@ const IpDetails = props => {
             />
             <div className="d-flex justify-content-center">
               <Button
-              // TODO give better CSS class names
+                // TODO give better CSS class names
                 className="m-2 p-2"
                 primary
                 raised
-                onClick={() => {
-                  props.submitBid({
-                    publicAddress: props.userInfo.publicAddress,
-                    auctionId:
-                      props.auctions[props.auctionSelectedIndex].auctionId,
-                    bidAmount: props.bidAmount
-                  });
-                }}
+                onClick={() => onSubmitBid()}
               >
                 Submit
               </Button>
@@ -109,7 +130,7 @@ const IpDetails = props => {
 
       <section id="IpContainerImage" className="border-left md-cell md-cell--6">
         <section
-        // TODO define a class
+          // TODO define a class
           style={{
             display: "flex",
             justifyContent: "center"
@@ -140,7 +161,7 @@ const IpDetails = props => {
               ) : (
                 <div className="">
                   <img
-                  // TODO import it in imports at the top
+                    // TODO import it in imports at the top
                     src="../assets/music.png"
                     style={audioThumbStyle}
                     alt=""
@@ -148,7 +169,7 @@ const IpDetails = props => {
 
                   <audio controls className="m-2" style={audioStyle}>
                     <source
-                    // TODO define a variable for this
+                      // TODO define a variable for this
                       src={
                         ipAddress +
                         "/static/Audio/" +
