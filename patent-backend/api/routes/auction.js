@@ -151,7 +151,7 @@ router.post("/getActiveAuctions", (req, res) => {
     
 
     $and: [{
-      status: [true, "RESULT_AVAILABLE"]
+      status: true
     },
     {
       owners: { $not: { $eq: req.body.data.publicAddress } }
@@ -187,7 +187,7 @@ router.post("/getUserActiveAuctions", (req, res) => {
   Patent.find(
     {
       $and: [
-        { "status": "true" },
+        { "status": ["true", "RESULT_AVAILABLE"] },
         { "owners": user.publicAddress }
       ]
     }

@@ -27,29 +27,38 @@ class ManageFile extends Component {
   };
 
   handleUpload = async () => {
-    this.setState({ checking: true });
-    const data = new FormData();
+    if (this.state.selectedFile !== undefined) {
+      this.setState({ checking: true });
+      const data = new FormData();
+      data.append(
+        "file",
+        this.state.selectedFile,
+        this.state.selectedFile.name
+      );
 
-    data.append("file", this.state.selectedFile, this.state.selectedFile.name);
-
-    var self = this;
-    this.setState({ showLoader: true });
-    var response = await service.fileUpload(data);
-
-    if (response.data.success) {
-      var similarPatentFound = response.data.similarPatentFound;
-      var uploadFileName = response.data.message;
-      // TODO Why self(line 40) and then use this(line 41)
-      self.setState({ similarPatentFound, checked: true, checking: false });
-      this.props.changeFileName(uploadFileName);
-      this.setState({ showLoader: false });
+      var self = this;
+      this.setState({ showLoader: true });
+      var response = await service.fileUpload(data);
+      console.log(response);
+      if (response.data.success) {
+        alert(response.data.message);
+        var similarPatentFound = response.data.similarPatentFound;
+        var uploadFileName = response.data.fileName;
+        // TODO Why self(line 40) and then use this(line 41)
+        self.setState({ similarPatentFound, checked: true, checking: false });
+        this.props.changeFileName(uploadFileName);
+        this.setState({ showLoader: false });
+      } else {
+        alert(response.data.message);
+        self.setState({
+          similarPatentFound: true,
+          checked: true,
+          checking: false
+        });
+        this.setState({ showLoader: false });
+      }
     } else {
-      self.setState({
-        similarPatentFound: true,
-        checked: true,
-        checking: false
-      });
-      this.setState({ showLoader: false });
+      alert("Please Choose a file !");
     }
   };
 
@@ -104,9 +113,16 @@ class ManageFile extends Component {
           </Button>
 
           {this.state.similarPatentFound ? (
-            <h3 className="md-cell md-cell--9" style={{ color: "red" }}>
-              <b>Similar Patent Already Registered</b>
-            </h3>
+            <Button
+              raised
+              primary
+              className="m-2  md-cell md-cell--3"
+              id="check-audio-file"
+              disabled={this.state.checked}
+              onClick={this.handleSubmit}
+            >
+              Submit
+            </Button>
           ) : (
             <Button
               raised
