@@ -6,6 +6,7 @@ import AudioFiling from "../ip_filing/audiofiling";
 import PictureFiling from "../ip_filing/picturefiling";
 import { changePatentType } from "../../store/actions/patent/PatentAction";
 import { connect } from "react-redux";
+import "../css/homePatent.scss";
 
 const OBJECT_ITEMS = [
   {
@@ -20,11 +21,12 @@ const OBJECT_ITEMS = [
 
 class FilePatent extends Component {
   onTypeChange = (value, event) => {
-    console.log(value);
+    console.log("lol" + value);
     this.props.changePatentType(value);
   };
 
   render() {
+    // console.log("lol" + this.props.patentType);
     return (
       <div className="d-flex p-0 bg-light">
         <Card className="md-cell md-cell--12">
@@ -35,11 +37,9 @@ class FilePatent extends Component {
             <div class="ml-3 md-cell--6">
               <SelectField
                 id="type"
-                placeholder={<p>Select the type of Intellectual Property</p>}
-                className="pl-4 pr-4 pt-2 pb-1 border"
-                style={{borderRadius:"15px"}}
+                placeholder="Select the type of Intellectual Property"
+                className="pl-4 pr-4 pt-2 pb-1 border selectField"
                 menuItems={OBJECT_ITEMS}
-                value={<p></p>}
                 simplifiedMenu={true}
                 dropdownIcon={<MdArrowDropDown />}
                 onChange={this.onTypeChange}
