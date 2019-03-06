@@ -25,7 +25,6 @@ async function getPatents(ownerAddress) {
     let patentRes = [];
     const list = ["owners", "licenseHolders", "patentName", "patentType", "patentSubType", "issueDate", "patentId"];
 
-
     try {
         const patent = await auctionInstance.methods.getPatentsByOwner(ownerAddress).call();
 
@@ -57,87 +56,97 @@ router.post('/getPatents', async function (req, res) {
 
 router.post('/registerPatent', async function (req, res) {
 
-    const patent_data = req.body.data;
-    let accounts = await web3.eth.getAccounts();
+    try {
 
-    const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
+        const patent_data = req.body.data;
+        let accounts = await web3.eth.getAccounts();
 
-    let owners = patent_data.owners;
-    let lisenceHolders = []
-    let patentName = patent_data.patentName;
-    let patentType = patent_data.patentType;
-    let patentSubType = patent_data.patentSubType;
-    let issueDate = '' + new Date().getTime();
-    let uploadFileName = patent_data.uploadFileName;
-    patent_data.status = 'false';
+        const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
 
-    auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({
+        let owners = patent_data.owners;
+        let lisenceHolders = []
+        let patentName = patent_data.patentName;
+        let patentType = patent_data.patentType;
+        let patentSubType = patent_data.patentSubType;
+        let issueDate = '' + new Date().getTime();
+        let uploadFileName = patent_data.uploadFileName;
+        patent_data.status = 'false';
+
+        auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({
             from: accounts[0],
             gas: 3000000
         })
-        .on('receipt', function (data) {
+            .on('receipt', function (data) {
 
-            let patentId = data['events'].printIntValue.returnValues.value;
+                let patentId = data['events'].printIntValue.returnValues.value;
 
-            patent_data.patentId = parseInt(patentId);
-            patent_data.auctionId = null;
+                patent_data.patentId = parseInt(patentId);
+                patent_data.auctionId = null;
 
-            const patent = new Patent(patent_data);
+                const patent = new Patent(patent_data);
 
-            if (patentType === "Audio") {
-                console.log("Audio");
-                exec('python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
+                if (patentType === "Audio") {
+                    console.log("Audio");
+                    exec('python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --fingerprint uploads/Audio/' + uploadFileName, (err, stdout, stderr) => {
 
-                    console.log('err', err);
-                    console.log('stdout', stdout);
-                    console.log('stderr', stderr);
+                        console.log('err', err);
+                        console.log('stdout', stdout);
+                        console.log('stderr', stderr);
 
-                    patent
-                        .save()
-                        .then(msg => {
-                            console.log("saved")
-                            res.status(201).json({
-                                success: true,
-                                message: 'Patent registered successfully',
-                                data: data
+                        patent
+                            .save()
+                            .then(msg => {
+                                console.log("saved")
+                                res.status(201).json({
+                                    success: true,
+                                    message: 'Patent registered successfully',
+                                    data: data
+                                })
                             })
-                        })
-                        .catch(err => {
-                            res.status(200).json({
-                                success: false,
-                                message: 'Patent registration failed.',
-                                data: err
+                            .catch(err => {
+                                res.status(200).json({
+                                    success: false,
+                                    message: 'Patent registration failed.',
+                                    data: err
+                                })
                             })
-                        })
-                })
-            } else if (patentType === "Image") {
-                console.log("Image");
+                    })
+                } else if (patentType === "Image") {
+                    console.log("Image");
 
-                exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
-                    console.log(err);
-                    console.log(stdout);
-                    console.log(stderr);
-                    patent
-                        .save()
-                        .then(msg => {
-                            console.log(msg)
-                            res.status(201).json({
-                                success: true,
-                                message: 'Patent registered successfully',
-                                data: data
+                    exec('python ImageComparision/dejavu.py --fingerprint uploads/Image/' + uploadFileName, (err, stdout, stderr) => {
+                        console.log(err);
+                        console.log(stdout);
+                        console.log(stderr);
+                        patent
+                            .save()
+                            .then(msg => {
+                                console.log(msg)
+                                res.status(201).json({
+                                    success: true,
+                                    message: 'Patent registered successfully',
+                                    data: data
+                                })
                             })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(200).json({
-                                success: false,
-                                message: 'Patent registration failed.',
-                                data: err
+                            .catch(err => {
+                                console.log(err);
+                                res.status(200).json({
+                                    success: false,
+                                    message: 'Patent registration failed.',
+                                    data: err
+                                })
                             })
-                        })
-                })
-            }
+                    })
+                }
+            })
+    }
+    catch (error) {
+        res.status(200).json({
+            success: false,
+            message: 'Server error.',
+            data: error
         })
+    }
 })
 
 router.post('/getPatent', async function (req, res) {
@@ -169,10 +178,10 @@ router.post('/getPatent', async function (req, res) {
 router.post('/transferPatent', async function (req, res) {
     const auctionInstance = new web3.eth.Contract(contractABI, contractAddress);
     const obj = req.body.data;
-    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver).send({
-            from: accounts[0],
-            gas: 3000000
-        })
+    let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver, obj.sender).send({
+        from: accounts[0],
+        gas: 3000000
+    })
         .on('receipt', function (data) {
             console.log(data);
             Patent.findOne({
@@ -192,16 +201,16 @@ router.post('/transferPatent', async function (req, res) {
                             patentId: obj.patentId
                         }]
                     }, {
-                        owners: owners
-                    }).then((data, err) => {
-                        if (!err) {
-                            console.log("Sending Auction id !!")
-                            res.status(200).json({
-                                success: true,
-                                message: "Patent transferred successfully"
-                            })
-                        }
-                    })
+                            owners: owners
+                        }).then((data, err) => {
+                            if (!err) {
+                                console.log("Sending Auction id !!")
+                                res.status(200).json({
+                                    success: true,
+                                    message: "Patent transferred successfully"
+                                })
+                            }
+                        })
                 } else {
                     res.status(200).json({
                         success: false,
@@ -214,53 +223,79 @@ router.post('/transferPatent', async function (req, res) {
 
 router.post('/checkSignature', function (req, res) {
 
-    let uploadFile = req.files.file;
-    let uploadFileName = 'u' + Date.now() + req.files.file.name;
-    let fileExtention = path.extname(uploadFileName);
-    let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
-    let allowedAudioExtentions = ['.mp3', '.wav'];
+    try {
 
-    if (allowedImageExtentions.includes(fileExtention)) {
-        patentType = "Image";
-    } else if (allowedAudioExtentions.includes(fileExtention)) {
-        patentType = "Audio";
-    } else {
-        res.status(200).json({
-            success: false,
-            message: 'Invalid file format.'
-        })
-    }
+        let uploadFile = req.files.file;
+        let size = uploadFile.size;
+        if (size > 1 * 1024 * 1024) {
+            res.status(200).json({
+                success: false,
+                message: 'Upload file too large.',
+                data: null
+            })
+            return;
+        }
+        let uploadFileName = 'u' + Date.now() + req.files.file.name;
+        let fileExtention = path.extname(uploadFileName);
 
-    let uploadPath = '';
-    let command = '';
+        uploadFileName = uploadFileName.replace(fileExtention, '');
 
-    if (patentType === "Image") {
-        // TODO Define constants file for this.
-        uploadPath = './uploads/Image/' + uploadFileName;
-        command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
-    } else if (patentType === "Audio") {
-        uploadPath = './uploads/Audio/' + uploadFileName;
-        command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
-    }
+        uploadFileName = uploadFileName.replace(/\W/g, '');
+
+        uploadFileName = uploadFileName + fileExtention;
+
+        console.log(uploadFileName);
+        let allowedImageExtentions = ['.jpg', '.png', '.jpeg'];
+        let allowedAudioExtentions = ['.mp3', '.wav'];
+
+        if (allowedImageExtentions.includes(fileExtention)) {
+            patentType = "Image";
+        } else if (allowedAudioExtentions.includes(fileExtention)) {
+            patentType = "Audio";
+        } else {
+            res.status(200).json({
+                success: false,
+                message: 'Invalid file format.'
+            })
+        }
+
+        let uploadPath = '';
+        let command = '';
+
+        if (patentType === "Image") {
+            // TODO Define constants file for this.
+            uploadPath = './uploads/Image/' + uploadFileName;
+            command = 'python ImageComparision/dejavu.py --recognize "uploads/Image/' + uploadFileName + '"';
+        } else if (patentType === "Audio") {
+            uploadPath = './uploads/Audio/' + uploadFileName;
+            command = 'python AudioComparision/dejavu.py --config AudioComparision/dejavu.cnf.SAMPLE --recognize file "uploads/Audio/' + uploadFileName + '"';
+        }
 
 
-    uploadFile.mv(uploadPath, (err) => {
-        if (err) console.log('error' + err);
-        exec(command, (err, stdout, stderr) => {
-            console.log(stderr);
-            console.log(err);
-            console.log(stdout);
-            let result = stdout.replace(/\'/g, '"');
-            if (result[0] !== 'N') {
-                result = JSON.parse(result);
-                console.log(result);
-                if (parseInt(result.confidence) > 100) {
-                    res.status(200).json({
-                        success: true,
-                        message: uploadFileName,
-                        similarPatentFound: true,
-                        similarPatent: result
-                    })
+        uploadFile.mv(uploadPath, (err) => {
+            if (err) console.log('error' + err);
+            exec(command, (err, stdout, stderr) => {
+                console.log(stderr);
+                console.log(err);
+                console.log(stdout);
+                let result = stdout.replace(/\'/g, '"');
+                if (result[0] !== 'N') {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    if (parseInt(result.confidence) > 100) {
+                        res.status(200).json({
+                            success: true,
+                            message: uploadFileName,
+                            similarPatentFound: true,
+                            similarPatent: result
+                        })
+                    } else {
+                        res.status(201).json({
+                            success: true,
+                            message: uploadFileName,
+                            similarPatentFound: false
+                        })
+                    }
                 } else {
                     res.status(201).json({
                         success: true,
@@ -268,15 +303,16 @@ router.post('/checkSignature', function (req, res) {
                         similarPatentFound: false
                     })
                 }
-            } else {
-                res.status(201).json({
-                    success: true,
-                    message: uploadFileName,
-                    similarPatentFound: false
-                })
-            }
+            })
         })
-    })
+    }
+    catch (error) {
+        res.status(200).json({
+            success: false,
+            message: 'Server error.',
+            data: error
+        })
+    }
 })
 
 router.post('/search', async function (req, res) {
@@ -287,20 +323,20 @@ router.post('/search', async function (req, res) {
     let audioPatents = [];
     let users = [];
     await Patent.find({
-            $and: [{
-                    'patentType': 'Image'
-                },
-                {
-                    $or: [{
-                            'patentName': query
-                        },
-                        {
-                            'patentSubType': query
-                        }
-                    ]
-                }
+        $and: [{
+            'patentType': 'Image'
+        },
+        {
+            $or: [{
+                'patentName': query
+            },
+            {
+                'patentSubType': query
+            }
             ]
-        })
+        }
+        ]
+    })
         .then((res_patents) => {
             imagePatents = res_patents;
         })
@@ -312,20 +348,20 @@ router.post('/search', async function (req, res) {
         )
 
     await Patent.find({
-            $and: [{
-                    'patentType': 'Audio'
-                },
-                {
-                    $or: [{
-                            'patentName': query
-                        },
-                        {
-                            'patentSubType': query
-                        }
-                    ]
-                }
+        $and: [{
+            'patentType': 'Audio'
+        },
+        {
+            $or: [{
+                'patentName': query
+            },
+            {
+                'patentSubType': query
+            }
             ]
-        })
+        }
+        ]
+    })
         .then((res_patents) => {
             audioPatents = res_patents;
         })
@@ -337,20 +373,20 @@ router.post('/search', async function (req, res) {
         )
 
     await User.find({
-            $or: [{
-                    'name': query
-                },
-                {
-                    'email': query
-                },
-                {
-                    'username': query
-                },
-                {
-                    'nationality': query
-                }
-            ]
-        })
+        $or: [{
+            'name': query
+        },
+        {
+            'email': query
+        },
+        {
+            'username': query
+        },
+        {
+            'nationality': query
+        }
+        ]
+    })
         .then((res_user) => {
             users = res_user;
         })
