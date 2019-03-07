@@ -57,7 +57,7 @@ contract PatentManager {
             if (ownerPatentsMap[sender][i].patentId==patentId) {
                 uint last = ownerPatentsMap[sender].length - 1;
                 ownerPatentsMap[sender][i] = ownerPatentsMap[sender][last];
-                delete ownerPatentsMap[sender][last];
+                ownerPatentsMap[sender].pop();
                 break;
             }
         }
