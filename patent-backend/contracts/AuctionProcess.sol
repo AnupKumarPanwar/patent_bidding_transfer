@@ -39,8 +39,7 @@ contract AuctionProcess is PatentManager, Bidding{
     
     //     return (auctionId);
     // }
-    function createAuction(uint patentId, uint minimumBid, uint endDate, address publicAddressOwner) public {
-        
+    function createAuction(uint patentId, uint minimumBid, uint endDate, address publicAddressOwner) public {        
      
         uint endTime = endDate;
         string memory patentType = getPatentType(patentId);

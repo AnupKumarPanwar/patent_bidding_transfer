@@ -73,9 +73,9 @@ router.post('/registerPatent', async function (req, res) {
         patent_data.status = 'false';
 
         auctionInstance.methods.registerPatent(owners, lisenceHolders, patentName, issueDate, patentType, patentSubType).send({
-                from: accounts[0],
-                gas: 3000000
-            })
+            from: accounts[0],
+            gas: 3000000
+        })
             .on('receipt', function (data) {
 
                 let patentId = data['events'].printIntValue.returnValues.value;
@@ -138,6 +138,13 @@ router.post('/registerPatent', async function (req, res) {
                             })
                     })
                 }
+                else {
+                    res.status(200).json({
+                        success: false,
+                        message: 'Invalid file type.',
+                        data: null
+                    })
+                }
             })
     } catch (error) {
         res.status(200).json({
@@ -179,9 +186,9 @@ router.post('/transferPatent', async function (req, res) {
     const accounts = await new web3.eth.getAccounts();
     const obj = req.body.data;
     let patent = await auctionInstance.methods.transferPatent(obj.patentId, obj.receiver, obj.sender).send({
-            from: accounts[0],
-            gas: 3000000
-        })
+        from: accounts[0],
+        gas: 3000000
+    })
         .on('receipt', function (data) {
             console.log(data);
             Patent.findOne({
@@ -201,19 +208,19 @@ router.post('/transferPatent', async function (req, res) {
                             patentId: obj.patentId
                         }]
                     }, {
-                        owners: owners, 
-                        status : "false",
-                        endDate:null,
-                        minBid:null
-                    }).then((data, err) => {
-                        if (!err) {
-                            console.log("Sending Auction id !!")
-                            res.status(200).json({
-                                success: true,
-                                message: "Patent transferred successfully"
-                            })
-                        }
-                    })
+                            owners: owners,
+                            status: "false",
+                            endDate: null,
+                            minBid: null
+                        }).then((data, err) => {
+                            if (!err) {
+                                console.log("Sending Auction id !!")
+                                res.status(200).json({
+                                    success: true,
+                                    message: "Patent transferred successfully"
+                                })
+                            }
+                        })
                 } else {
                     res.status(200).json({
                         success: false,
@@ -327,20 +334,20 @@ router.post('/search', async function (req, res) {
     let audioPatents = [];
     let users = [];
     await Patent.find({
-            $and: [{
-                    'patentType': 'Image'
-                },
-                {
-                    $or: [{
-                            'patentName': query
-                        },
-                        {
-                            'patentSubType': query
-                        }
-                    ]
-                }
+        $and: [{
+            'patentType': 'Image'
+        },
+        {
+            $or: [{
+                'patentName': query
+            },
+            {
+                'patentSubType': query
+            }
             ]
-        })
+        }
+        ]
+    })
         .then((res_patents) => {
             imagePatents = res_patents;
         })
@@ -352,20 +359,20 @@ router.post('/search', async function (req, res) {
         )
 
     await Patent.find({
-            $and: [{
-                    'patentType': 'Audio'
-                },
-                {
-                    $or: [{
-                            'patentName': query
-                        },
-                        {
-                            'patentSubType': query
-                        }
-                    ]
-                }
+        $and: [{
+            'patentType': 'Audio'
+        },
+        {
+            $or: [{
+                'patentName': query
+            },
+            {
+                'patentSubType': query
+            }
             ]
-        })
+        }
+        ]
+    })
         .then((res_patents) => {
             audioPatents = res_patents;
         })
@@ -377,20 +384,20 @@ router.post('/search', async function (req, res) {
         )
 
     await User.find({
-            $or: [{
-                    'name': query
-                },
-                {
-                    'email': query
-                },
-                {
-                    'username': query
-                },
-                {
-                    'nationality': query
-                }
-            ]
-        })
+        $or: [{
+            'name': query
+        },
+        {
+            'email': query
+        },
+        {
+            'username': query
+        },
+        {
+            'nationality': query
+        }
+        ]
+    })
         .then((res_user) => {
             users = res_user;
         })

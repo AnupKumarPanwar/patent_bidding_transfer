@@ -141,7 +141,7 @@ router.post('/userProfile', function (req, res) {
         .then((res_user) => {
             let result = res_user;
             console.log(result);
-            result["password"]="";
+            result["password"] = "";
             console.log(result);
             res.status(200).json({
                 success: true,
