@@ -48,13 +48,13 @@ const PatentsTable = props => {
                 }}
                 sortIcon={<MdArrowDownward style={{ color: "white" }} />}
               >
-                <span>Patent Id</span>{" "}
+                <span className="colLable">Patent Id</span>{" "}
               </TableColumn>
               <TableColumn>
-                <span>Patent Name</span>
+                <span className="colLable">Patent Name</span>
               </TableColumn>
               <TableColumn>
-                <span>Patent Type</span>
+                <span className="colLable"> Patent Type</span>
               </TableColumn>
             </TableRow>
           </TableHeader>

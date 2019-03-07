@@ -14,6 +14,8 @@ import service from "../../services/userService";
 import { loginAction } from "../../store/actions/login/LoginAction";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import Joi from "joi";
+// import
 
 class Registration extends Component {
   state = {
@@ -28,6 +30,24 @@ class Registration extends Component {
     autohide: true,
     toasts: []
   };
+
+  // constructor() {
+  //   super();
+  //   this.schema = Joi.object().keys({
+  //     username: Joi.string()
+  //       .alphanum()
+  //       .min(3)
+  //       .max(30),
+  //     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+  //     email: Joi.string().email({ minDomainAtoms: 2 }),
+  //     name: Joi.string()
+  //       .alphanum()
+  //       .min(3)
+  //       .max(30),
+  //     nationality: Joi.string().alphanum(),
+  //     mobile: Joi.string().length(10)
+  //   });
+  // }
 
   addToast = (text, action, autohide = true) => {
     this.setState(state => {
@@ -45,6 +65,34 @@ class Registration extends Component {
   };
 
   handleInputChange = (value, event) => {
+    // console.log(event.target.id);
+    // let result;
+    // switch (event.target.id) {
+    //   case "name":
+    //     const result = Joi.validate({  "name": value }, this.schema);
+    //     break;
+    //   case "email":
+    //     const result = Joi.validate({ "email": value }, this.schema);
+    //     break;
+    //   case "nationality":
+    //     const result = Joi.validate({ "nationality": value }, this.schema);
+    //     break;
+    //   case "password":
+    //     const result = Joi.validate({"password": value }, this.schema);
+    //     break;
+    //   case "username":
+    //     const result = Joi.validate({ "username": value }, this.schema);
+    //     break;
+    //   case "mobile":
+    //     const result = Joi.validate({ "mobile": value }, this.schema);
+    //     break;
+    //   case "address":
+    //     const result = Joi.validate({ "address": value }, this.schema);
+    //     break;
+    // }
+    // // const key = event.target.id;
+    // // const result = Joi.validate({ key: value }, this.schema);
+    // console.log(result);
     this.setState({
       [event.target.id]: value
     });
@@ -108,9 +156,9 @@ class Registration extends Component {
               style={{ width: "100vw" }}
               className="d-flex  align-items-start justify-content-end "
             >
-              <a href="#">
+              <Link to="/">
                 <MdHome className="home-button" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -198,11 +246,11 @@ class Registration extends Component {
             >
               Register
             </Button>
-            <a href="#login">
+            <Link to="login">
               <Button primary flat className="m-2">
                 Login ?
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
         <Snackbar

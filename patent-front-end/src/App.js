@@ -18,6 +18,7 @@ import Registration from "./components/pages/registrationPage";
 import LandingPage from "./components/pages/landingPage";
 import Header from "./components/common/navbar";
 import DashBoard from "./components/pages/dashboard";
+import Login from "./components/pages/loginPage";
 // import { NavigationDrawer } from 'react-md';
 
 class App extends Component {
@@ -39,6 +40,7 @@ class App extends Component {
         <Switch>
           <Route path={"/dashboard"} component = {DashBoard} />
           <Route path={"/register"} component={Registration} />
+          <Route path={"/login"} render={(routeProps)=><Login {...routeProps} />}/>
           <Route path={"/"} exact render={(routeProps) => <LandingPage {...routeProps} />} />
         </Switch>
         </Provider>

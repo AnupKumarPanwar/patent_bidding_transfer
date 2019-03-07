@@ -70,7 +70,7 @@ router.post("/setAuction", async function (req, res) {
 
   let endDate = new Date().getTime() + parseFloat(obj.numberOfDays) * 24 * 60 * 60 * 1000;
   let minBid = parseInt(obj.minimumBid);
-  auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, endDate, obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
+  auctionInstance.methods.createAuction(parseInt(obj.patentId), minBid, parseInt(endDate), obj.publicAddress).send({ from: accounts[0], gas: 3000000 }).
     on('receipt', (receipt) => {
       if (Object.keys(receipt["events"]).includes("AuctionIdReturn")) {
         const auctionId = receipt["events"]["AuctionIdReturn"]["returnValues"]['auctionId'];
@@ -187,7 +187,7 @@ router.post("/getUserActiveAuctions", (req, res) => {
   Patent.find(
     {
       $and: [
-        { "status": "true" },
+        { "status": ["true", "RESULT_AVAILABLE"] },
         { "owners": user.publicAddress }
       ]
     }

@@ -53,13 +53,13 @@ class LandingPage extends Component {
 
           <div className="d-flex  goals justify-content-center">
             <div className="md-grid">
-              <button className="m-5 md-cell md-cell--4 border border-primary bg-white ">
+              <button className="m-5 md-cell md-cell--4 border border-primary bg-white" disabled>
                 <span className="text-dark">AUCTION</span>
               </button>
-              <button className="m-5 md-cell md-cell--4 border border-primary bg-white ">
+              <button className="m-5 md-cell md-cell--4 border border-primary bg-white " disabled>
                 <span className="text-dark">BID</span>
               </button>
-              <button className="m-5 md-cell md-cell--4 border  border-primary bg-white  ">
+              <button className="m-5 md-cell md-cell--4 border  border-primary bg-white  " disabled>
                 <span className="text-dark">TRANSFER</span>
               </button>
             </div>
@@ -69,43 +69,43 @@ class LandingPage extends Component {
             <div className="md-cell md-cell--6">
               <div className="d-flex flex-column align-items-center">
                 <div className="m-3 ">
-                  <span>
+                  <span className="above_button_text">
                     Found our idea interesting ? <br /> Register by Clicking on
                     the Registration Button Below
                   </span>
                 </div>
 
                 <div>
-                  <a href="#register">
+                  <Link to="/register">
                     <Button floating secondary>
                       Register
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
             <div className="md-cell md-cell--6">
               <div className="d-flex flex-column align-items-center">
                 <div className="m-3">
-                  <span>
+                  <span className="above_button_text">
                     Existing User ?<br />
                     Login
                   </span>
                 </div>
 
                 <div>
-                  <a href="#login">
+                <Link to="/login">
                     <Button secondary floating>
                       Login
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="md-cell md-cell--12">
+        {/* <div className="md-cell md-cell--12">
           <a id="register">
             <Registration history={this.props.history} />
           </a>
@@ -117,7 +117,7 @@ class LandingPage extends Component {
               routes={this.props.history}
             />
           </a>
-        </div>
+        </div> */}
       </div>
     );
   }

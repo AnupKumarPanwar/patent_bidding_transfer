@@ -48,25 +48,25 @@ class Login extends Component {
   render() {
     
     if (this.props.auth) {
-      this.props.routes.push("/dashboard/profile");
+      this.props.history.push("/dashboard/profile");
     } else if (this.props.auth === false) {
       console.log("Invalid");
       this.addToast("Invalid username / password");
     }
 
     return (
+      
       <div className="main-container">
         <div className="login-div ">
           <div className="d-flex ">
             <h3>Login</h3>
-
             <div
               style={{ width: "100vw" }}
-              className="d-flex  align-items-start justify-content-end "
+              className="d-flex  align-items-start justify-content-end"
             >
-              <a href="#">
+              <Link to="/">
                 <MdHome className="home-button" />
-              </a>
+              </Link>
             </div>
           </div>
           <Divider style={{ background: "black" }} />
@@ -95,11 +95,11 @@ class Login extends Component {
               Login
             </Button>
 
-            <a href="#register">
+            <Link to="register">
               <Button  primary flat className="m-2 p-2">
                 Register
               </Button>
-            </a>
+            </Link>
           </div>
           <Snackbar
             id="example-snackbar"

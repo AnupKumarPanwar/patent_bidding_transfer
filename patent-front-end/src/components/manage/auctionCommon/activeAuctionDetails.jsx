@@ -2,6 +2,7 @@ import React from "react";
 import { DataTable, Divider, TableRow, TableColumn } from "react-md";
 import { connect } from "react-redux";
 import Timer from "../../common/Timer";
+import { userInfo } from "os";
 
 const ActiveAuctionDetails = props => {
   return (
@@ -15,6 +16,8 @@ const ActiveAuctionDetails = props => {
             <Timer
               seconds={props.auctions[props.auctionSelectedIndex].endDate}
               auctionId={props.auctions[props.auctionSelectedIndex].auctionId}
+              patentId={props.auctions[props.auctionSelectedIndex].patentId}
+              sender={props.userInfo.publicAddress}
             />
           </div>
         ) : (
@@ -71,7 +74,8 @@ const ActiveAuctionDetails = props => {
 const mapStateToProps = state => {
   return {
     auctions: state.auction.auctions,
-    auctionSelectedIndex: state.auction.auctionSelectedIndex
+    auctionSelectedIndex: state.auction.auctionSelectedIndex,
+    userInfo : state.login.userInfo
   };
 };
 

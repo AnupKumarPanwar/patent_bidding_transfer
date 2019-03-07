@@ -4,13 +4,15 @@ import { Button, DialogContainer } from "react-md";
 import service from "../../services/patentService";
 import { changeFileName } from "../../store/actions/patent/PatentAction";
 import { connect } from "react-redux";
+import "../css/manage/fileUpload.scss";
 
 class ManageFile extends Component {
   state = {
     file: null,
     similarPatentFound: false,
     checking: false,
-    checked: false
+    checked: false,
+    showLoader: false
   };
 
   progressTimeout = null;
@@ -25,30 +27,43 @@ class ManageFile extends Component {
   };
 
   handleUpload = async () => {
-    this.setState({ checking: true });
-    const data = new FormData();
+    if (this.state.selectedFile !== undefined) {
+      this.setState({ checking: true });
+      const data = new FormData();
+      data.append(
+        "file",
+        this.state.selectedFile,
+        this.state.selectedFile.name
+      );
 
-    data.append("file", this.state.selectedFile, this.state.selectedFile.name);
-
-    var self = this;
-    var response = await service.fileUpload(data);
-
-    if (response.data.success) {
-      var similarPatentFound = response.data.similarPatentFound;
-      var uploadFileName = response.data.message;
-      // TODO Why self(line 40) and then use this(line 41)
-      self.setState({ similarPatentFound, checked: true, checking: false });
-      this.props.changeFileName(uploadFileName);
+      var self = this;
+      this.setState({ showLoader: true });
+      var response = await service.fileUpload(data);
+      console.log(response);
+      if (response.data.success) {
+        alert(response.data.message);
+        var similarPatentFound = response.data.similarPatentFound;
+        var uploadFileName = response.data.fileName;
+        // TODO Why self(line 40) and then use this(line 41)
+        self.setState({ similarPatentFound, checked: true, checking: false });
+        this.props.changeFileName(uploadFileName);
+        this.setState({ showLoader: false });
+      } else {
+        alert(response.data.message);
+        self.setState({
+          similarPatentFound: true,
+          checked: true,
+          checking: false
+        });
+        this.setState({ showLoader: false });
+      }
     } else {
-      self.setState({
-        similarPatentFound: true,
-        checked: true,
-        checking: false
-      });
+      alert("Please Choose a file !");
     }
   };
 
   handleSubmit = async () => {
+    this.setState({ showLoader: true });
     let data = {
       uploadFileName: this.props.uploadFileName,
       owners: [...this.props.owners],
@@ -61,6 +76,7 @@ class ManageFile extends Component {
     data.owners.push(this.props.user.publicAddress);
     var response = await service.registerPatent(data);
     console.log(response);
+    this.setState({ showLoader: false });
     alert(response.message);
   };
 
@@ -71,30 +87,42 @@ class ManageFile extends Component {
     return (
       <div className="d-flex flex-column align-items-center md-grid md-cell md-cell--12">
         <input
-          className="md-cell border p-3 rounded border-dark"
+          className="md-cell border p-3 m-0 rounded border-dark"
           type="file"
           name="audio"
           id="audio"
           allow="audio/*"
           onChange={this.handleSelectedFile}
         />
+        <p className="disclaimer text-danger md-cell m-0">
+          * Make sure the size of the file is less than 1 MB
+        </p>
 
-        <div>
+        <div className="m-2 d-flex align-items-center">
           <Button
             raised
-            primary
+            secondary
             className="m-2 md-cell md-cell--3"
             disabled={this.state.checking}
             id="check-audio-file"
             onClick={this.handleUpload}
           >
-            Check <MdCheck />
+            <div className="d-flex">
+              Check <MdCheck />
+            </div>
           </Button>
 
           {this.state.similarPatentFound ? (
-            <h3 className="md-cell md-cell--9" style={{ color: "red" }}>
-              <b>Similar Patent Already Registered</b>
-            </h3>
+            <Button
+              raised
+              primary
+              className="m-2  md-cell md-cell--3"
+              id="check-audio-file"
+              disabled={this.state.checked}
+              onClick={this.handleSubmit}
+            >
+              Submit
+            </Button>
           ) : (
             <Button
               raised
@@ -106,6 +134,17 @@ class ManageFile extends Component {
             >
               Submit
             </Button>
+          )}
+
+          {this.state.showLoader ? (
+            <div class="lds-ring m-2">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          ) : (
+            <React.Fragment />
           )}
         </div>
       </div>
