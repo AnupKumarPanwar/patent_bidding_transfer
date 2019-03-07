@@ -53,25 +53,13 @@ contract PatentManager {
         }
 
         for (uint i = 0; i < ownerPatentsMap[sender].length; i++) {
-            uint pos = 0;
             if (ownerPatentsMap[sender][i].patentId==patentId) {
-                pos = i;
+                ownerPatentsMap[receiver].push(ownerPatentsMap[sender][i]);
+                uint last = ownerPatentsMap[sender].length - 1;
+                ownerPatentsMap[sender][i] = ownerPatentsMap[sender][last];
+                delete ownerPatentsMap[sender][last];
                 break;
             }
-            uint last = ownerPatentsMap[sender].length - 1;
-            ownerPatentsMap[sender][pos] = ownerPatentsMap[sender][last];
-            delete ownerPatentsMap[sender][last];
-        }
-
-        for (uint i = 0; i < ownerPatentsMap[sender].length; i++) {
-            uint pos = 0;
-            if (ownerPatentsMap[sender][i].patentId==patentId) {
-                pos = i;
-                break;
-            }
-            uint last = ownerPatentsMap[sender].length - 1;
-            ownerPatentsMap[sender][pos] = ownerPatentsMap[sender][last];
-            delete ownerPatentsMap[sender][last];
         }
     }
 
