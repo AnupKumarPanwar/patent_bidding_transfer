@@ -112,13 +112,18 @@ class Registration extends Component {
   registerUser = () => {
     const data = this.state;
     service.register(data).then(response => {
-      if (response.success) {
-        response.success = "";
-        this.props.loginAction(response);
-        this.show();
-      } else {
-        this.addToast(response.message);
+      if(response !== undefined){
+        if (response.success) {
+          response.success = "";
+          this.props.loginAction(response);
+          this.show();
+        } else {
+          this.addToast(response.message);
+        }
+      }else{
+        alert("No response from the server");
       }
+    
     });
   };
 

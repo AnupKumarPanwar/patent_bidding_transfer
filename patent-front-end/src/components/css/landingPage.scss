@@ -1,7 +1,8 @@
 @import '~react-md/src/scss/react-md';
 
 .landing-container {
-  position:fixed;
+  position: fixed;
+
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -29,6 +30,7 @@
   color: white;
   text-align: justify;
   width: 60%;
+  font-weight: bold
 }
 
 .main-content {
@@ -54,7 +56,8 @@
   border-radius: 10px;
 }
 
-.above_button_text{
-  color:white;
+.above_button_text {
+  color: white;
 }
+
 // .intro-para
