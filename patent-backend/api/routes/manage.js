@@ -47,6 +47,7 @@ async function getPatents(ownerAddress) {
 }
 
 router.post('/getPatents', async function (req, res) {
+    
     const ownerAddress = req.body.data.publicAddress;
     let patentRes = await getPatents(ownerAddress);
 

@@ -112,7 +112,7 @@ class Registration extends Component {
   registerUser = () => {
     const data = this.state;
     service.register(data).then(response => {
-      if(response !== undefined){
+      if (response !== undefined) {
         if (response.success) {
           response.success = "";
           this.props.loginAction(response);
@@ -120,10 +120,9 @@ class Registration extends Component {
         } else {
           this.addToast(response.message);
         }
-      }else{
+      } else {
         alert("No response from the server");
       }
-    
     });
   };
 
@@ -154,8 +153,20 @@ class Registration extends Component {
         </DialogContainer>
 
         <div className="registration-div">
-          <div className="d-flex ">
-            <h3>Registration</h3>
+          <div className="d-flex">
+            <div>
+              <div className="d-flex">
+              <img
+                className="mr-2"
+                style={{ height: 30, width: 30 }}
+                src="/assets/logo.png"
+              />
+              <h3>Pider</h3>
+
+              </div>
+             
+              <h4>Registration</h4>
+            </div>
 
             <div
               style={{ width: "100vw" }}

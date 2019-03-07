@@ -59,7 +59,19 @@ class Login extends Component {
       <div className="main-container">
         <div className="login-div ">
           <div className="d-flex ">
-            <h3>Login</h3>
+          <div>
+              <div className="d-flex">
+              <img
+                className="mr-2"
+                style={{ height: 30, width: 30 }}
+                src="/assets/logo.png"
+              />
+              <h3>Pider</h3>
+
+              </div>
+             
+              <h4>Login</h4>
+            </div>
             <div
               style={{ width: "100vw" }}
               className="d-flex  align-items-start justify-content-end"

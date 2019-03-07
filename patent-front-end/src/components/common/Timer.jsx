@@ -43,6 +43,23 @@ class Timer extends Component {
             });
         }
       }, 1000);
+    } else {
+      try{
+        axios
+        .post(ipAddress + "/auction/getResult", {
+          auctionId: this.props.auctionId
+        })
+        .then(res => {
+          alert(res.data.data.winner);
+          this.setState({
+            transferButtonVisibility: true,
+            winner: res.data.data.winner
+          });
+        });
+      }catch(ex){
+        console.log(ex)
+      }
+      
     }
   }
 
