@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Button } from "react-md";
 import axios from "axios";
 import { ipAddress } from "../../controller";
+import { connect } from "react-redux";
+import CustomModal from "../common/CustomModal";
+import { changeModal } from "../../store/actions/modal/ModalActions";
 
 class Timer extends Component {
   state = {
@@ -16,7 +19,7 @@ class Timer extends Component {
   componentDidMount() {
     if (this.props.seconds - new Date().getTime() > 0) {
       const self = this;
-      let x = setInterval(function() {
+      let x = setInterval(function () {
         let distance = self.props.seconds - new Date().getTime();
         if (distance > 0) {
           let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -35,7 +38,7 @@ class Timer extends Component {
               auctionId: self.props.auctionId
             })
             .then(res => {
-              alert(res.data.data.winner);
+              this.props.changeModal(true, 'Winner', res.data.data.winner);
               self.setState({
                 transferButtonVisibility: true,
                 winner: res.data.data.winner
@@ -44,22 +47,22 @@ class Timer extends Component {
         }
       }, 1000);
     } else {
-      try{
+      try {
         axios
-        .post(ipAddress + "/auction/getResult", {
-          auctionId: this.props.auctionId
-        })
-        .then(res => {
-          alert(res.data.data.winner);
-          this.setState({
-            transferButtonVisibility: true,
-            winner: res.data.data.winner
+          .post(ipAddress + "/auction/getResult", {
+            auctionId: this.props.auctionId
+          })
+          .then(res => {
+            this.props.changeModal(true, 'Winner', res.data.data.winner);
+            this.setState({
+              transferButtonVisibility: true,
+              winner: res.data.data.winner
+            });
           });
-        });
-      }catch(ex){
+      } catch (ex) {
         console.log(ex)
       }
-      
+
     }
   }
 
@@ -73,7 +76,13 @@ class Timer extends Component {
         }
       })
       .then(res => {
-        alert(res.data);
+        if (res.data.success) {
+          this.props.changeModal(true, 'Winner', res.data.message);
+        }
+        else {
+          this.props.changeModal(true, 'Error', res.data.message);
+        }
+        // alert(res.data);
         // self.setState({
         //   transferButtonVisibility: true,
         //   winner: res.data.data.winner
@@ -85,6 +94,7 @@ class Timer extends Component {
     return (
       <div>
         <div>
+          <CustomModal visible={this.props.showModal} />
           {this.state.transferButtonVisibility ? (
             <div className="d-flex flex-column">
               <p>
@@ -100,18 +110,36 @@ class Timer extends Component {
               </Button>{" "}
             </div>
           ) : (
-            <div>
-              Time left :
+              <div>
+                Time left :
               <p className="text-primary">
-                {this.state.days} d {this.state.hours} h {this.state.minutes} m{" "}
-                {this.state.seconds} s
+                  {this.state.days} d {this.state.hours} h {this.state.minutes} m{" "}
+                  {this.state.seconds} s
               </p>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </div>
     );
   }
 }
 
-export default Timer;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    showModal: state.modal.visible,
+    seconds: ownProps.seconds,
+    auctionId: ownProps.auctionId,
+    patentId: ownProps.patentId,
+    sender: ownProps.sender
+  };
+};
+
+
+const mapDispatchToProps = {
+  changeModal
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Timer);

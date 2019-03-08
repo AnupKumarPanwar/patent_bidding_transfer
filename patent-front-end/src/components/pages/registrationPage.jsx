@@ -104,9 +104,6 @@ class Registration extends Component {
 
   hide = () => {
     this.setState({ visible: false });
-    if (!this.props.auth) {
-      this.props.history.push("/");
-    }
   };
 
   registerUser = () => {
