@@ -1,6 +1,8 @@
 import React from "react";
 import { Paper, Divider, TextField } from "react-md";
 import { DataTable, TableRow, TableColumn, Button } from "react-md";
+import CustomModal from "../common/CustomModal";
+import { changeModal } from "../../store/actions/modal/ModalActions";
 import { connect } from "react-redux";
 import {
   changeBidAmount,
@@ -20,15 +22,18 @@ const IpDetails = props => {
     if (
       props.bidAmount <= props.auctions[props.auctionSelectedIndex]["minBid"]
     ) {
-      alert("Your Bid is less than the minimum Bid !");
+      props.changeModal(true, 'Error', "Your Bid is less than the minimum Bid !");
       props.changeBiddingSubmitState(false);
+
     } else {
       if (
         props.auctions[props.auctionSelectedIndex]["endDate"] <
         new Date().getTime()
       ) {
-        alert("Sorry You cant Bid for this patent Now !");
+
+        props.changeModal(true, 'Error', "Sorry You cant Bid for this patent Now !");
         props.changeBiddingSubmitState(false);
+
       } else {
         props.submitBid({
           publicAddress: props.userInfo.publicAddress,
@@ -46,12 +51,14 @@ const IpDetails = props => {
         height: "100%"
       }}
     >
+
       <section
         id="IpContainerText"
         className="    md-cell md-cell--6  d-flex flex-column"
       >
         {props.auctions.length > 0 ? (
           <React.Fragment>
+            <CustomModal visible={props.showModal} />
             {/* TODO no inline styling, change in other files too. */}
             <DataTable plain={true} style={{ width: "100%" }}>
               {Object.keys(props.auctions[props.auctionSelectedIndex]).map(
@@ -63,10 +70,10 @@ const IpDetails = props => {
                     <TableColumn style={{ wordBreak: "break-all" }}>
                       {key === "endDate"
                         ? new Date(
-                            parseInt(
-                              props.auctions[props.auctionSelectedIndex][key]
-                            )
-                          ).toLocaleString()
+                          parseInt(
+                            props.auctions[props.auctionSelectedIndex][key]
+                          )
+                        ).toLocaleString()
                         : props.auctions[props.auctionSelectedIndex][key]}
                     </TableColumn>
                   </TableRow>
@@ -94,14 +101,14 @@ const IpDetails = props => {
             </Button>
           </React.Fragment>
         ) : (
-          <TableRow>
-            <TableColumn>
-              <h3 className="m-2" style={{ color: "red" }}>
-                No Active Auctions
+            <TableRow>
+              <TableColumn>
+                <h3 className="m-2" style={{ color: "red" }}>
+                  No Active Auctions
               </h3>
-            </TableColumn>
-          </TableRow>
-        )}
+              </TableColumn>
+            </TableRow>
+          )}
 
         {props.bidFormState ? (
           <div>
@@ -128,8 +135,8 @@ const IpDetails = props => {
             </div>
           </div>
         ) : (
-          <React.Fragment />
-        )}
+            <React.Fragment />
+          )}
       </section>
 
       <section id="IpContainerImage" className="border-left md-cell md-cell--6">
@@ -146,49 +153,49 @@ const IpDetails = props => {
 
             <div>
               {props.auctions[props.auctionSelectedIndex]["patentType"] ===
-              "Image" ? (
-                <img
-                  className="responsive"
-                  src={
-                    ipAddress +
-                    "/static/Image/" +
-                    props.auctions[props.auctionSelectedIndex]["uploadFileName"]
-                  }
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    maxWidth: 300
-                  }}
-                  // TODO write an apt alternative.
-                  alt="Something from unsplash it"
-                />
-              ) : (
-                <div className="">
+                "Image" ? (
                   <img
-                    // TODO import it in imports at the top
-                    src="../assets/music.png"
-                    style={audioThumbStyle}
-                    alt=""
+                    className="responsive"
+                    src={
+                      ipAddress +
+                      "/static/Image/" +
+                      props.auctions[props.auctionSelectedIndex]["uploadFileName"]
+                    }
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      maxWidth: 300
+                    }}
+                    // TODO write an apt alternative.
+                    alt="Something from unsplash it"
                   />
-
-                  <audio controls className="m-2" style={audioStyle}>
-                    <source
-                      // TODO define a variable for this
-                      src={
-                        ipAddress +
-                        "/static/Audio/" +
-                        props.auctions[props.auctionSelectedIndex][
-                          "uploadFileName"
-                        ]
-                      }
+                ) : (
+                  <div className="">
+                    <img
+                      // TODO import it in imports at the top
+                      src="../assets/music.png"
+                      style={audioThumbStyle}
+                      alt=""
                     />
-                  </audio>
-                </div>
-              )}
+
+                    <audio controls className="m-2" style={audioStyle}>
+                      <source
+                        // TODO define a variable for this
+                        src={
+                          ipAddress +
+                          "/static/Audio/" +
+                          props.auctions[props.auctionSelectedIndex][
+                          "uploadFileName"
+                          ]
+                        }
+                      />
+                    </audio>
+                  </div>
+                )}
             </div>
           ) : (
-            <React.Fragment />
-          )}
+              <React.Fragment />
+            )}
         </section>
       </section>
     </Paper>
@@ -202,6 +209,7 @@ const mapStateToProps = state => {
     auctions: state.bidding.auctions,
     auctionSelectedIndex: state.bidding.auctionSelectedIndex,
     userInfo: state.login.userInfo,
+    showModal: state.modal.visible,
     biddingButtonState: state.bidding.biddingSubmitButtonState
   };
 };
@@ -210,6 +218,7 @@ const mapDispatchToProps = {
   changeBidFormState,
   changeBidAmount,
   submitBid,
+  changeModal,
   changeBiddingSubmitState
 };
 
