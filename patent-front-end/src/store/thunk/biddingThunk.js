@@ -3,11 +3,13 @@ import auctionService from "../../services/patentService";
 import {postBidAction, updateAuctionsState} from "../actions/bidding/BiddingActions";
 import { changeModal } from "../../store/actions/modal/ModalActions";
 
-// TODO apply catch also, for each.
+import {changeBiddingSubmitState} from "../actions/bidding/BiddingActions";
+
 export const submitBid = (data) => {
   return (dispatch) => {
     service.submitBid(data).then(res => {
       dispatch(changeModal(true, 'Bid', res.data.message));
+      dispatch(changeBiddingSubmitState(false));
       return dispatch(postBidAction(res))
     })
   }

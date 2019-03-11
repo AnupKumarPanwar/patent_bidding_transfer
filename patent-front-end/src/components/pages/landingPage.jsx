@@ -86,7 +86,7 @@ class LandingPage extends Component {
                 </span>
 
                 <Link to="/register">
-                  <Button className="mt-3" floating secondary>
+                  <Button className="mt-3" raised secondary>
                     Register
                   </Button>
                 </Link>
@@ -103,7 +103,7 @@ class LandingPage extends Component {
 
                 <div>
                   <Link to="/login">
-                    <Button secondary floating>
+                    <Button raised secondary>
                       Login
                     </Button>
                   </Link>

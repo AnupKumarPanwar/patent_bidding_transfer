@@ -28,7 +28,8 @@ class Registration extends Component {
     address: "",
     visible: false,
     autohide: true,
-    toasts: []
+    toasts: [],
+    buttonState:false
   };
 
   // constructor() {
@@ -107,6 +108,7 @@ class Registration extends Component {
   };
 
   registerUser = () => {
+    this.setState({buttonState:true})
     const data = this.state;
     service.register(data).then(response => {
       if (response !== undefined) {
@@ -120,7 +122,10 @@ class Registration extends Component {
       } else {
         alert("No response from the server");
       }
+
+      this.setState({buttonState:false})
     });
+    
   };
 
   render() {
@@ -256,6 +261,7 @@ class Registration extends Component {
               secondary
               raised
               className="m-2"
+              disabled={this.state.buttonState}
             >
               Register
             </Button>
