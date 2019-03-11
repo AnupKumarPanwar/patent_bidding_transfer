@@ -1,3 +1,5 @@
+import { CardActions } from "react-md";
+import { changeModal } from "../../store/actions/modal/ModalActions";
 import {
   CHANGE_BID_FORM,
   CHANGE_BID_AMOUNT,
@@ -6,9 +8,6 @@ import {
   CHANGE_AUCTION_DETAILS,
   CHANGE_SUBMIT_BUTTON_STATE
 } from "../actions/bidding/BiddingActionTypes";
-import {
-  CardActions
-} from "react-md";
 
 const initialState = {
   bidFormState: false,
@@ -33,7 +32,6 @@ export const biddingReducer = (state = initialState, action) => {
         bidAmount: action.bidAmount
       }
     case POST_BID_ACTION:
-      alert(action.value.data.message);
       return {
         ...state
       }

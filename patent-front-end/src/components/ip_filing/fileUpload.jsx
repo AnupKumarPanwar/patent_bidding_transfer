@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { MdCheck } from "react-icons/md";
-import { Button, DialogContainer } from "react-md";
+import { Button } from "react-md";
 import service from "../../services/patentService";
 import { changeFileName } from "../../store/actions/patent/PatentAction";
+import CustomModal from "../common/CustomModal";
+import { changeModal } from "../../store/actions/modal/ModalActions";
 import { connect } from "react-redux";
 import "../css/manage/fileUpload.scss";
 
@@ -14,6 +16,10 @@ class ManageFile extends Component {
     checked: false,
     showLoader: false
   };
+
+  // componentDidMount() {
+  //   this.setState({ showModal: this.props.showModal });
+  // }
 
   progressTimeout = null;
   uploadProgressTimeout = null;
@@ -41,7 +47,7 @@ class ManageFile extends Component {
       var response = await service.fileUpload(data);
       console.log(response);
       if (response.data.success) {
-        alert(response.data.message);
+        this.props.changeModal(true, 'Success', response.data.message);
         var similarPatentFound = response.data.similarPatentFound;
         var uploadFileName = response.data.fileName;
         // TODO Why self(line 40) and then use this(line 41)
@@ -49,7 +55,7 @@ class ManageFile extends Component {
         this.props.changeFileName(uploadFileName);
         this.setState({ showLoader: false });
       } else {
-        alert(response.data.message);
+        this.props.changeModal(true, 'Success', response.data.message);
         self.setState({
           similarPatentFound: true,
           checked: true,
@@ -58,8 +64,9 @@ class ManageFile extends Component {
         this.setState({ showLoader: false });
       }
     } else {
-      alert("Please Choose a file !");
+      this.props.changeModal(true, 'Error', 'Please Choose a file !');
     }
+    console.log(this.state);
   };
 
   handleSubmit = async () => {
@@ -77,7 +84,7 @@ class ManageFile extends Component {
     var response = await service.registerPatent(data);
     console.log(response);
     this.setState({ showLoader: false });
-    alert(response.message);
+    this.props.changeModal(true, 'Success', response.message);
   };
 
   render() {
@@ -86,6 +93,7 @@ class ManageFile extends Component {
 
     return (
       <div className="d-flex flex-column align-items-center md-grid md-cell md-cell--12">
+        <CustomModal visible={this.props.showModal} />
         <input
           className="md-cell border p-3 m-0 rounded border-dark"
           type="file"
@@ -124,17 +132,17 @@ class ManageFile extends Component {
               Submit
             </Button>
           ) : (
-            <Button
-              raised
-              primary
-              className="m-2  md-cell md-cell--3"
-              id="check-audio-file"
-              disabled={!this.state.checked}
-              onClick={this.handleSubmit}
-            >
-              Submit
+              <Button
+                raised
+                primary
+                className="m-2  md-cell md-cell--3"
+                id="check-audio-file"
+                disabled={!this.state.checked}
+                onClick={this.handleSubmit}
+              >
+                Submit
             </Button>
-          )}
+            )}
 
           {this.state.showLoader ? (
             <div class="lds-ring m-2">
@@ -144,8 +152,8 @@ class ManageFile extends Component {
               <div />
             </div>
           ) : (
-            <React.Fragment />
-          )}
+              <React.Fragment />
+            )}
         </div>
       </div>
     );
@@ -159,12 +167,14 @@ const mapStateToProps = state => {
     owners: state.patent.owners,
     patentName: state.patent.patentName,
     patentType: state.patent.patentType,
-    patentSubType: state.patent.patentSubType
+    patentSubType: state.patent.patentSubType,
+    showModal: state.modal.visible
   };
 };
 
 const mapDispatchToProps = {
-  changeFileName
+  changeFileName,
+  changeModal
 };
 
 export default connect(
