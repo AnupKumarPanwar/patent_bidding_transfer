@@ -4,28 +4,31 @@ import { DataTable, TableRow, TableColumn, Button } from "react-md";
 import { connect } from "react-redux";
 import {
   changeBidAmount,
-  changeBidFormState
+  changeBidFormState,
+  changeBiddingSubmitState
 } from "../../store/actions/bidding/BiddingActions";
 import { submitBid } from "../../store/thunk/biddingThunk";
 import { ipAddress } from "../../controller";
 
 const IpDetails = props => {
   // TODO remove unused variables.
+
   const audioThumbStyle = { width: "250", height: 250 };
   const audioStyle = { width: "100%" };
   const onSubmitBid = () => {
-    console.log(props.bidAmount);
-    console.log(props.auctions[props.auctionSelectedIndex]["minBid"]);
+    props.changeBiddingSubmitState(true);
     if (
       props.bidAmount <= props.auctions[props.auctionSelectedIndex]["minBid"]
     ) {
       alert("Your Bid is less than the minimum Bid !");
+      props.changeBiddingSubmitState(false);
     } else {
       if (
         props.auctions[props.auctionSelectedIndex]["endDate"] <
         new Date().getTime()
       ) {
-        alert("Sorry You cant Bid for this patent Now !")
+        alert("Sorry You cant Bid for this patent Now !");
+        props.changeBiddingSubmitState(false);
       } else {
         props.submitBid({
           publicAddress: props.userInfo.publicAddress,
@@ -117,6 +120,7 @@ const IpDetails = props => {
                 className="m-2 p-2"
                 primary
                 raised
+                disabled={props.biddingButtonState}
                 onClick={() => onSubmitBid()}
               >
                 Submit
@@ -197,14 +201,16 @@ const mapStateToProps = state => {
     bidAmount: state.bidding.bidAmount,
     auctions: state.bidding.auctions,
     auctionSelectedIndex: state.bidding.auctionSelectedIndex,
-    userInfo: state.login.userInfo
+    userInfo: state.login.userInfo,
+    biddingButtonState: state.bidding.biddingSubmitButtonState
   };
 };
 
 const mapDispatchToProps = {
   changeBidFormState,
   changeBidAmount,
-  submitBid
+  submitBid,
+  changeBiddingSubmitState
 };
 
 export default connect(

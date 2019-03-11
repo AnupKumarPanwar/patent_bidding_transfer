@@ -106,15 +106,15 @@ class DashBoard extends Component {
                   className="align-self-center m-3"
                   onClick={this.showDrawer}
                 />
-                <div className="font-weight-bold align-self-center">Pider</div>
+                <div className="d-flex font-weight-bold align-items-center"> <p className="ml-2"></p>Pider</div>
                 <div
                   className="d-flex justify-content-end align-self-center"
                   style={{ width: "90vw" }}
                 >
-                  <div style={{ fontSize: "0.75em" }}>
+                  <div className="mr-3" style={{ fontSize: "0.75em" }}>
                     {this.props.user.name}{" "}
                     <MdAccountCircle
-                      className="m-2"
+                      className="m-2 "
                       style={{ fontSize: "1.5em" }}
                     />
                   </div>

@@ -9,10 +9,13 @@ class LandingPage extends Component {
   // state = {};
   render() {
     return (
-      <div className="border landing-container md-grid">
+      <div className="landing-container md-grid">
         <div className="md-cell md-cell--12 d-flex flex-column justify-content-center">
           <div className="d-flex justify-content-center">
-            <span className="h1 mt-2" style={{ color: "white" }}>
+            <span
+              className="h1 mt-1"
+              style={{ fontWeight: "bolder", color: "white" }}
+            >
               Pider
             </span>
           </div>
@@ -30,61 +33,66 @@ class LandingPage extends Component {
 
           <div className="d-flex justify-content-center">
             <Divider
-              className="m-2"
+              className="mt-2"
               style={{ width: "70vw", height: "1", background: "white" }}
             />
           </div>
         </div>
 
         <div className="md-cell md-cell--12 main-content">
-          <div className="d-flex flex-column align-items-center p-4">
+          <div className="d-flex flex-column align-items-center p-3">
             <h2 className="">Patent Solutions</h2>
 
             <p className="para">
-
-            {/* // TODO Define some description of your own */}
-
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis
-              accusamus quia nostrum a minus, porro consequuntur voluptas
-              deleniti aspernatur incidunt quam animi nihil esse ducimus itaque
-              sed sit ea. Pariatur.
+              A platform to securely manage your intellectual property with
+              blockchain based technology. We take you to a journey from
+              successfully registering your ideas ; to successfully getting the
+              right value for your ideas. Right now we manage the rhythms close
+              to your hearts (Audios) and your creative visual thoughts ( Images
+              ). So go ahead and register yourself and get the right value for
+              your product.
             </p>
           </div>
 
           <div className="d-flex  goals justify-content-center">
             <div className="md-grid">
-              <button className="m-5 md-cell md-cell--4 border border-primary bg-white" disabled>
+              <button
+                className="m-4 md-cell md-cell--4 border border-primary bg-white"
+                disabled
+              >
                 <span className="text-dark">AUCTION</span>
               </button>
-              <button className="m-5 md-cell md-cell--4 border border-primary bg-white " disabled>
+              <button
+                className="m-4 md-cell md-cell--4 border border-primary bg-white "
+                disabled
+              >
                 <span className="text-dark">BID</span>
               </button>
-              <button className="m-5 md-cell md-cell--4 border  border-primary bg-white  " disabled>
+              <button
+                className="m-4 md-cell md-cell--4 border  border-primary bg-white  "
+                disabled
+              >
                 <span className="text-dark">TRANSFER</span>
               </button>
             </div>
           </div>
 
-          <div className="d-flex md-grid">
-            <div className="md-cell md-cell--6">
+          <div className="md-grid mt-3 ">
+            <div className="d-flex  justify-content-end p-2 pr-5 md-cell md-cell--6">
               <div className="d-flex flex-column align-items-center">
-                <div className="m-3 ">
-                  <span className="above_button_text">
-                    Found our idea interesting ? <br /> Register by Clicking on
-                    the Registration Button Below
-                  </span>
-                </div>
+                <span className="above_button_text">
+                  Found our idea interesting ? <br /> Register by Clicking on
+                  the Registration Button Below
+                </span>
 
-                <div>
-                  <Link to="/register">
-                    <Button floating secondary>
-                      Register
-                    </Button>
-                  </Link>
-                </div>
+                <Link to="/register">
+                  <Button className="mt-3" raised secondary>
+                    Register
+                  </Button>
+                </Link>
               </div>
             </div>
-            <div className="md-cell md-cell--6">
+            <div className="d-flex  justify-content-center md-cell md-cell--6">
               <div className="d-flex flex-column align-items-center">
                 <div className="m-3">
                   <span className="above_button_text">
@@ -94,8 +102,8 @@ class LandingPage extends Component {
                 </div>
 
                 <div>
-                <Link to="/login">
-                    <Button secondary floating>
+                  <Link to="/login">
+                    <Button raised secondary>
                       Login
                     </Button>
                   </Link>
@@ -104,20 +112,6 @@ class LandingPage extends Component {
             </div>
           </div>
         </div>
-
-        {/* <div className="md-cell md-cell--12">
-          <a id="register">
-            <Registration history={this.props.history} />
-          </a>
-        </div>
-        <div className="md-cell md-cell--12">
-          <a id="login">
-            <Login
-              changeAuth={this.props.changeAuth}
-              routes={this.props.history}
-            />
-          </a>
-        </div> */}
       </div>
     );
   }

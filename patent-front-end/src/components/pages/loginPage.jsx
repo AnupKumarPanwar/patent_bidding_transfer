@@ -14,7 +14,8 @@ class Login extends Component {
     password: "",
     modal_visible: false,
     autohide: true,
-    toasts: []
+    toasts: [],
+    loginButtonState: false
   };
 
   addToast = (text, action, autohide = true) => {
@@ -41,25 +42,36 @@ class Login extends Component {
   verifyUser = async () => {
     console.log(this.props.auth);
     const { username, password } = this.state;
-    await this.props.loginThunk({ username: username, password: password });
-    console.log(this.props.auth);
+    this.setState({ loginButtonState: true });
+    this.props.loginThunk({ username: username, password: password });
   };
 
   render() {
-    
     if (this.props.auth) {
       this.props.history.push("/dashboard/profile");
+      this.setState({ loginButtonState: false });
     } else if (this.props.auth === false) {
       console.log("Invalid");
       this.addToast("Invalid username / password");
+      this.setState({ loginButtonState: false });
     }
 
     return (
-      
       <div className="main-container">
         <div className="login-div ">
           <div className="d-flex ">
-            <h3>Login</h3>
+            <div>
+              <div className="d-flex">
+                <img
+                  className="mr-2"
+                  style={{ height: 30, width: 30 }}
+                  src="/assets/logo.png"
+                />
+                <h3>Pider</h3>
+              </div>
+
+              <h4>Login</h4>
+            </div>
             <div
               style={{ width: "100vw" }}
               className="d-flex  align-items-start justify-content-end"
@@ -91,12 +103,18 @@ class Login extends Component {
             />
           </div>
           <div className=" m-3 d-flex justify-content-center">
-            <Button  secondary raised className="m-2 p-2" onClick={this.verifyUser}>
+            <Button
+              secondary
+              raised
+              className="m-2 p-2"
+              disabled={this.state.loginButtonState}
+              onClick={this.verifyUser}
+            >
               Login
             </Button>
 
             <Link to="register">
-              <Button  primary flat className="m-2 p-2">
+              <Button primary flat className="m-2 p-2">
                 Register
               </Button>
             </Link>

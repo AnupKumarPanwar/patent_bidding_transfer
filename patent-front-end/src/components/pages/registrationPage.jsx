@@ -28,7 +28,8 @@ class Registration extends Component {
     address: "",
     visible: false,
     autohide: true,
-    toasts: []
+    toasts: [],
+    buttonState:false
   };
 
   // constructor() {
@@ -110,16 +111,24 @@ class Registration extends Component {
   };
 
   registerUser = () => {
+    this.setState({buttonState:true})
     const data = this.state;
     service.register(data).then(response => {
-      if (response.success) {
-        response.success = "";
-        this.props.loginAction(response);
-        this.show();
+      if (response !== undefined) {
+        if (response.success) {
+          response.success = "";
+          this.props.loginAction(response);
+          this.show();
+        } else {
+          this.addToast(response.message);
+        }
       } else {
-        this.addToast(response.message);
+        alert("No response from the server");
       }
+
+      this.setState({buttonState:false})
     });
+    
   };
 
   render() {
@@ -149,8 +158,20 @@ class Registration extends Component {
         </DialogContainer>
 
         <div className="registration-div">
-          <div className="d-flex ">
-            <h3>Registration</h3>
+          <div className="d-flex">
+            <div>
+              <div className="d-flex">
+              <img
+                className="mr-2"
+                style={{ height: 30, width: 30 }}
+                src="/assets/logo.png"
+              />
+              <h3>Pider</h3>
+
+              </div>
+             
+              <h4>Registration</h4>
+            </div>
 
             <div
               style={{ width: "100vw" }}
@@ -243,6 +264,7 @@ class Registration extends Component {
               secondary
               raised
               className="m-2"
+              disabled={this.state.buttonState}
             >
               Register
             </Button>
