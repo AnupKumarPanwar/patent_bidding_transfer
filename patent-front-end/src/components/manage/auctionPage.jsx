@@ -8,11 +8,31 @@ import service from "../../services/patentService";
 class AuctionForm extends Component {
   state = {
     minimumBid: "",
-    numberOfDays: ""
+    numberOfDays: "",
+    submitButtonState: false
   };
 
   handleFieldChange = (value, event) => {
     this.setState({ [event.target.id]: value });
+  };
+
+  handleOnSubmit = () => {
+    console.log("on Submit")
+    this.setState({ submitButtonState: true });
+    const obj = {
+      username: this.props.user.username,
+      publicAddress: this.props.user.publicAddress,
+      patentId: this.props.patentIndex,
+      minimumBid: this.state.minimumBid,
+      numberOfDays: this.state.numberOfDays
+    };
+    service.auctionMyPatent(obj).then(res => {
+      alert(res.message);
+      if (res.success) {
+        this.props.history.replace("/dashboard/auction");
+      }
+      this.setState({ submitButtonState: false });
+    });
   };
 
   render() {
@@ -39,21 +59,9 @@ class AuctionForm extends Component {
           primary
           children="Submit"
           className="md-cell m-2"
+          disabled={this.state.submitButtonState}
           onClick={() => {
-            // TODO define a function at the top.
-            const obj = {
-              username: this.props.user.username,
-              publicAddress: this.props.user.publicAddress,
-              patentId: this.props.patentIndex,
-              minimumBid: this.state.minimumBid,
-              numberOfDays: this.state.numberOfDays
-            };
-            service.auctionMyPatent(obj).then(res => {
-              alert(res.message);
-              if (res.success) {
-                this.props.history.replace("/dashboard/auction");
-              }
-            });
+            this.handleOnSubmit();
           }}
         />
       </div>

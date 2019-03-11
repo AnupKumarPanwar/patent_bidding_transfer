@@ -7,6 +7,8 @@ import IpDetails from "./ipDetails";
 import { getAuctions } from "../../store/thunk/biddingThunk";
 
 class BiddingPage extends Component {
+ 
+
   componentWillMount() {
     this.props.getAuctions(this.props.userInfo);
   }

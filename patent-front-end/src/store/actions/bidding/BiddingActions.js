@@ -1,4 +1,4 @@
-import { CHANGE_BID_FORM,CHANGE_AUCTION_DETAILS ,CHANGE_BID_AMOUNT, POST_BID_ACTION, UPDATE_AUCTIONS_STATE } from "./BiddingActionTypes";
+import { CHANGE_BID_FORM,CHANGE_AUCTION_DETAILS ,CHANGE_BID_AMOUNT, POST_BID_ACTION, UPDATE_AUCTIONS_STATE, CHANGE_SUBMIT_BUTTON_STATE } from "./BiddingActionTypes";
 
 export const changeBidFormState = (bidFormState, amount) => {
   return {
@@ -34,5 +34,12 @@ export const changeAuctionDetails = (auctionSelectedIndex) => {
   return{
     type : CHANGE_AUCTION_DETAILS,
     auctionSelectedIndex,
+  }
+}
+
+export const changeBiddingSubmitState = (biddingSubmitButtonState) => {
+  return {
+    type : CHANGE_SUBMIT_BUTTON_STATE,
+    biddingSubmitButtonState 
   }
 }

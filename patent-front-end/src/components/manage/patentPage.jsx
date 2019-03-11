@@ -23,7 +23,8 @@ class PatentPage extends Component {
     patent: {
       owners: []
     },
-    patentIndex: ""
+    patentIndex: "",
+    
   };
 
   componentDidMount() {
@@ -159,7 +160,7 @@ class PatentPage extends Component {
                   </div>
                 )
               ) : (
-                "lol"
+                "Please wait ... Loading Your Patent "
               )}
             </div>
           </div>
